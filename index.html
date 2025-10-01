@@ -479,7 +479,189 @@
             white-space: nowrap; /* 防止文字换行 */
             flex-shrink: 0; /* 防止标签文字被压缩 */
         }
-        
+
+        /* 侧边栏遮罩 */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .sidebar-overlay.active {
+            display: block;
+            opacity: 1;
+        }
+
+        /* 侧边栏面板 */
+        .sidebar-panel {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 400px;
+            height: 100%;
+            background: white;
+            box-shadow: -2px 0 10px rgba(0,0,0,0.2);
+            z-index: 2001;
+            overflow-y: auto;
+            transition: right 0.3s;
+            padding: 30px;
+        }
+
+        .sidebar-panel.active {
+            right: 0;
+        }
+
+        .sidebar-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .sidebar-close:hover {
+            color: #333;
+        }
+
+        .sidebar-title {
+            text-align: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+
+        .sidebar-seed {
+            text-align: center;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-copy-seed {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8em;
+        }
+
+        .btn-copy-seed:hover {
+            background: #5568d3;
+        }
+
+        .sidebar-footer {
+            text-align: center;
+            font-size: 0.9em;
+            color: #999;
+            margin: 15px 0;
+        }
+
+        .sidebar-footer a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .sidebar-section {
+            margin-top: 25px;
+        }
+
+        .sidebar-section h4 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .weather-season {
+            margin-bottom: 15px;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 6px;
+        }
+
+        .weather-season-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #555;
+        }
+
+        .weather-days {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .green-rain {
+            color: #4caf50;
+            font-weight: 600;
+        }
+
+        /* 按钮组 */
+        .seed-item-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-detail, .btn-copy {
+            padding: 4px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .btn-detail {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-detail:hover {
+            background: #5568d3;
+        }
+
+        .btn-copy {
+            background: #4caf50;
+            color: white;
+        }
+
+        .btn-copy:hover {
+            background: #45a049;
+        }
+
+        .copy-toast {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background: #4caf50;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            z-index: 3000;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .copy-toast.show {
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
@@ -598,6 +780,27 @@
         </div>
     </div>
 
+    <!-- 侧边栏 -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+    <div class="sidebar-panel" id="sidebarPanel">
+        <button class="sidebar-close" onclick="closeSidebar()">✕</button>
+        <div class="sidebar-title">种子简介</div>
+        <div class="sidebar-seed">
+            种子号：<span id="sidebarSeedNumber"></span>
+            <button class="btn-copy-seed" onclick="copySeedFromSidebar()">📋</button>
+        </div>
+        <div class="sidebar-footer">
+            星露谷搜种器 by<a href="https://space.bilibili.com/349111916" target="_blank">脆音音</a>
+        </div>
+        <div class="sidebar-section">
+            <h4>天气</h4>
+            <div id="sidebarWeatherContent"></div>
+        </div>
+    </div>
+
+    <!-- 复制提示 -->
+    <div class="copy-toast" id="copyToast">已复制</div>
+
     <a href="https://space.bilibili.com/349111916" target="_blank" class="bilibili-link">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
             <path d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858 0 17.347v-7.36c.036-1.511.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 0 1-.373-.906c0-.356.124-.658.373-.907l.027-.027c.267-.249.573-.373.92-.373.347 0 .653.124.92.373L9.653 4.44c.071.071.134.142.187.213h4.267a.836.836 0 0 1 .16-.213l2.853-2.747c.267-.249.573-.373.92-.373.347 0 .662.151.929.4.267.249.391.551.391.907 0 .355-.124.657-.373.906zM5.333 7.24c-.746.018-1.373.276-1.88.773-.506.498-.769 1.13-.786 1.894v7.52c.017.764.28 1.395.786 1.893.507.498 1.134.756 1.88.773h13.334c.746-.017 1.373-.275 1.88-.773.506-.498.769-1.129.786-1.893v-7.52c-.017-.765-.28-1.396-.786-1.894-.507-.497-1.134-.755-1.88-.773zM8 11.107c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c0-.373.129-.689.386-.947.258-.257.574-.386.947-.386zm8 0c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373Z"/>
@@ -616,6 +819,7 @@
         let ws = null;
         let foundSeeds = [];
         let conditions = [];
+        let seedDetailsCache = {};
         let nextIndex = 1;
 
         const elements = {
@@ -826,10 +1030,24 @@
                     foundSeeds.push(data.seed);
                     elements.foundCount.textContent = foundSeeds.length;
                     
+                    // 缓存天气详情
+                    if (data.weatherDetail) {
+                        seedDetailsCache[data.seed] = data.weatherDetail;
+                    }
+                    
                     if (foundSeeds.length <= 20) {
                         const seedItem = document.createElement('div');
                         seedItem.className = 'seed-item';
-                        seedItem.textContent = `种子: ${data.seed}`;
+                        seedItem.innerHTML = `
+                            <span>种子: ${data.seed}</span>
+                            <div class="seed-item-actions">
+                                <button class="btn-detail" onclick="showSeedDetail(${data.seed})">简介</button>
+                                <button class="btn-copy" onclick="copySeed(${data.seed})">复制</button>
+                            </div>
+                        `;
+                        seedItem.style.display = 'flex';
+                        seedItem.style.justifyContent = 'space-between';
+                        seedItem.style.alignItems = 'center';
                         elements.seedList.appendChild(seedItem);
                     }
                     
@@ -949,6 +1167,79 @@
                 elements.searchBtn.textContent = '🔍 开始搜索';
             }
         });
+
+        // 显示种子详情
+        function showSeedDetail(seed) {
+            const detail = seedDetailsCache[seed];
+            if (!detail) return;
+            
+            document.getElementById('sidebarSeedNumber').textContent = seed;
+            
+            // 渲染天气信息
+            const seasonNames = ['春季', '夏季', '秋季'];
+            const seasons = [
+                { name: seasonNames[0], days: detail.springRain, greenRainDay: null },
+                { name: seasonNames[1], days: detail.summerRain, greenRainDay: detail.greenRainDay },
+                { name: seasonNames[2], days: detail.fallRain, greenRainDay: null }
+            ];
+            
+            let weatherHtml = '';
+            seasons.forEach(season => {
+                const count = season.days.length;
+                let daysText = '';
+                
+                if (count > 0) {
+                    daysText = season.days.map(day => {
+                        const isGreenRain = season.greenRainDay === day;
+                        const dayText = `${season.name.charAt(0)}${day}`;
+                        return isGreenRain ? `<span class="green-rain">${dayText}（绿雨）</span>` : dayText;
+                    }).join(', ');
+                }
+                
+                weatherHtml += `
+                    <div class="weather-season">
+                        <div class="weather-season-title">${season.name}雨天（${count}个）：</div>
+                        <div class="weather-days">${count > 0 ? daysText : '无'}</div>
+                    </div>
+                `;
+            });
+            
+            document.getElementById('sidebarWeatherContent').innerHTML = weatherHtml;
+            
+            // 显示侧边栏
+            document.getElementById('sidebarOverlay').classList.add('active');
+            document.getElementById('sidebarPanel').classList.add('active');
+        }
+
+        // 关闭侧边栏
+        function closeSidebar() {
+            document.getElementById('sidebarOverlay').classList.remove('active');
+            document.getElementById('sidebarPanel').classList.remove('active');
+        }
+
+        // 复制种子号
+        function copySeed(seed) {
+            navigator.clipboard.writeText(seed).then(() => {
+                showCopyToast();
+            });
+        }
+
+        // 从侧边栏复制
+        function copySeedFromSidebar() {
+            const seed = document.getElementById('sidebarSeedNumber').textContent;
+            navigator.clipboard.writeText(seed).then(() => {
+                showCopyToast();
+            });
+        }
+
+        // 显示复制提示
+        function showCopyToast() {
+            const toast = document.getElementById('copyToast');
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2000);
+        }
 
         connectWebSocket();
     </script>

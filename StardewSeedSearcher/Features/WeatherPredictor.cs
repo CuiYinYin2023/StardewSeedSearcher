@@ -104,13 +104,20 @@ namespace StardewSeedSearcher.Features
         public Dictionary<int, bool> PredictWeather(int gameID, bool useLegacyRandom)
         {
             var weather = new Dictionary<int, bool>();
+            
+            // 预先计算绿雨日期
+            int year = 1;
+            int greenRainSeed = HashHelper.GetRandomSeed(year * 777, gameID, 0, 0, 0, useLegacyRandom);
+            Random greenRainRng = new Random(greenRainSeed);
+            int[] greenRainDays = { 5, 6, 7, 14, 15, 16, 18, 23 };
+            int greenRainDay = greenRainDays[greenRainRng.Next(greenRainDays.Length)];
 
             for (int absoluteDay = 1; absoluteDay <= 84; absoluteDay++)
             {
                 int season = (absoluteDay - 1) / 28;       // 0=春, 1=夏, 2=秋
                 int dayOfMonth = ((absoluteDay - 1) % 28) + 1;
 
-                bool isRain = IsRainyDay(season, dayOfMonth, absoluteDay, gameID, useLegacyRandom);
+                bool isRain = IsRainyDay(season, dayOfMonth, absoluteDay, gameID, useLegacyRandom, greenRainDay);
                 weather[absoluteDay] = isRain;
             }
 
@@ -119,14 +126,17 @@ namespace StardewSeedSearcher.Features
         /// <summary>
         /// 判断某一天是否下雨
         /// </summary>
-        private bool IsRainyDay(int season, int dayOfMonth, int absoluteDay, int gameID, bool useLegacyRandom)
+        private bool IsRainyDay(int season, int dayOfMonth, int absoluteDay, int gameID, bool useLegacyRandom, int greenRainDay)
         {
             // 固定天气规则
-            
+            if (dayOfMonth == 1)
+            {
+                return false; // 季节第一天强制晴天
+            }
             // 春季 (season 0)
             if (season == 0)
             {
-                if (dayOfMonth == 1 || dayOfMonth == 2 || dayOfMonth == 4)
+                if (dayOfMonth == 2 || dayOfMonth == 4)
                     return false; // 晴天
                 if (dayOfMonth == 3)
                     return true; // 雨天
@@ -137,15 +147,8 @@ namespace StardewSeedSearcher.Features
             // 夏季 (season 1)
             else if (season == 1)
             {
-                // 夏季特殊：绿雨日判断
-                int year = 1; // 第一年
-                int greenRainSeed = HashHelper.GetRandomSeed(year * 777, gameID, 0, 0, 0, useLegacyRandom);
-                Random greenRainRng = new Random(greenRainSeed);
-                int[] greenRainDays = { 5, 6, 7, 14, 15, 16, 18, 23 };
-                int greenRainDay = greenRainDays[greenRainRng.Next(greenRainDays.Length)];
-
-                if (dayOfMonth == greenRainDay)
-                    return true; // 绿雨（算雨天）
+                if (dayOfMonth == greenRainDay)  // 绿雨直接用传入的参数
+                    return true;
                 if (dayOfMonth == 11 || dayOfMonth == 28)
                     return false; // 节日固定晴天
                 if (dayOfMonth % 13 == 0) // 第13、26天
@@ -173,20 +176,57 @@ namespace StardewSeedSearcher.Features
         }
 
         /// <summary>
-        /// 预测春季雨天日期（保留此方法用于测试脚本）
+        /// 预测天气并返回详细信息（用于前端展示）
         /// </summary>
-        public List<int> PredictSpringRain(int gameID, bool useLegacyRandom = false)
+        public (Dictionary<int, bool> weather, int greenRainDay) PredictWeatherWithDetail(int gameID, bool useLegacyRandom)
         {
-            var weather = PredictWeather(gameID, useLegacyRandom);
-            var rainyDays = new List<int>();
+            var weather = new Dictionary<int, bool>();
+            
+            // 计算绿雨日期
+            int year = 1;
+            int greenRainSeed = HashHelper.GetRandomSeed(year * 777, gameID, 0, 0, 0, useLegacyRandom);
+            Random greenRainRng = new Random(greenRainSeed);
+            int[] greenRainDays = { 5, 6, 7, 14, 15, 16, 18, 23 };
+            int greenRainDay = greenRainDays[greenRainRng.Next(greenRainDays.Length)];
 
-            for (int day = 1; day <= 28; day++)
+            for (int absoluteDay = 1; absoluteDay <= 84; absoluteDay++)
             {
-                if (weather.ContainsKey(day) && weather[day])
-                    rainyDays.Add(day);
+                int season = (absoluteDay - 1) / 28;
+                int dayOfMonth = ((absoluteDay - 1) % 28) + 1;
+
+                bool isRain = IsRainyDay(season, dayOfMonth, absoluteDay, gameID, useLegacyRandom, greenRainDay);
+                weather[absoluteDay] = isRain;
             }
 
-            return rainyDays;
+            return (weather, greenRainDay);
         }
+
+        /// <summary>
+        /// 从天气字典提取雨天列表和详细信息
+        /// </summary>
+        public static WeatherDetailResult ExtractWeatherDetail(Dictionary<int, bool> weather, int greenRainDay)
+        {
+            var result = new WeatherDetailResult { GreenRainDay = greenRainDay };
+            
+            for (int day = 1; day <= 28; day++)
+            {
+                if (weather[day]) result.SpringRain.Add(day);
+                if (weather[day + 28]) result.SummerRain.Add(day);
+                if (weather[day + 56]) result.FallRain.Add(day);
+            }
+            
+            return result;
+        }
+    }
+
+    /// <summary>
+    /// 天气详情结果
+    /// </summary>
+    public class WeatherDetailResult
+    {
+        public List<int> SpringRain { get; set; } = new List<int>();
+        public List<int> SummerRain { get; set; } = new List<int>();
+        public List<int> FallRain { get; set; } = new List<int>();
+        public int GreenRainDay { get; set; }
     }
 }

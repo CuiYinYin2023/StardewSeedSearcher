@@ -73,6 +73,7 @@ namespace StardewSeedSearcher
             // 搜索 API
             app.MapPost("/api/search", async (SearchRequest request) =>
             {
+                var weatherDetailsCache = new ConcurrentDictionary<int, WeatherDetailResult>();
                 var results = new List<int>();
                 var stopwatch = Stopwatch.StartNew();
                 int totalSeeds = request.EndSeed - request.StartSeed + 1;
@@ -124,11 +125,28 @@ namespace StardewSeedSearcher
                         if (allMatch)
                         {
                             results.Add(seed);
-                            // 立即推送找到的种子
+                            
+                            // 计算并缓存详细天气数据
+                            WeatherDetailResult weatherDetail = null;
+                            if (features.Count > 0 && features[0] is WeatherPredictor predictor)
+                            {
+                                var (weather, greenRainDay) = predictor.PredictWeatherWithDetail(seed, request.UseLegacyRandom);
+                                weatherDetail = WeatherPredictor.ExtractWeatherDetail(weather, greenRainDay);
+                                weatherDetailsCache[seed] = weatherDetail;
+                            }
+                            
+                            // 推送找到的种子和详细数据
                             await BroadcastMessage(new
                             {
                                 type = "found",
-                                seed = seed
+                                seed = seed,
+                                weatherDetail = weatherDetail != null ? new
+                                {
+                                    springRain = weatherDetail.SpringRain,
+                                    summerRain = weatherDetail.SummerRain,
+                                    fallRain = weatherDetail.FallRain,
+                                    greenRainDay = weatherDetail.GreenRainDay
+                                } : null
                             });
                             
                             if (results.Count >= request.OutputLimit)
