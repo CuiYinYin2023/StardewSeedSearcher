@@ -129,14 +129,12 @@
         }
 
         .condition-row {
-            display: flex;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
             gap: 10px;
             align-items: center;
             margin-bottom: 10px;
-            padding: 12px;
             background-color: #f9f9f9;
-            border-radius: 6px;
-            border: 1px solid #e0e0e0;
         }
 
         .condition-row select,
@@ -145,6 +143,7 @@
             border: 1px solid #ddd;
             border-radius: 4px;
             font-size: 14px;
+            text-align: center; 
         }
 
         .condition-row select {
@@ -154,6 +153,13 @@
         .condition-row input {
             flex: 1;
             min-width: 80px;
+        }
+
+        .condition-grid {
+            padding: 8px;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+            gap: 10px;
         }
 
         .btn-remove {
@@ -702,22 +708,28 @@
                     <input type="checkbox" id="weatherEnabled" checked>
                     <label for="weatherEnabled">启用天气预测</label>
                 </div>
-
                 <div class="condition-config" id="weatherConfig">
                     <h4 style="margin-bottom: 15px;">天气筛选条件</h4>
-                    
                     <!-- 新的容器,用来放所有可编辑的条件行 -->
-                    <div class="conditions-container" id="conditionsContainer">
+                    <div class="conditions-container" id="conditionsContainer">  
+                        <!-- 字段标签 -->
+                        <div class="condition-grid" style="margin-bottom: 5px;">
+                            <div style="font-size: 13px; color: #000000; text-align: center;">季节</div>
+                            <div style="font-size: 13px; color: #000000; text-align: center;">起始日期</div>
+                            <div style="font-size: 13px; color: #000000; text-align: center;">结束日期</div>
+                            <div style="font-size: 13px; color: #000000; text-align: center;">最小雨天数量</div>
+                            <div style="font-size: 13px; color: #000000; text-align: center;"></div>
+                        </div>                  
                         <!-- 第一个编辑框(初始存在) -->
-                        <div class="condition-row" data-index="0">
-                            <select onchange="updateCondition(0)">
+                        <div class="condition-row">                          
+                            <select>
                                 <option value="Spring">春季</option>
                                 <option value="Summer">夏季</option>
                                 <option value="Fall">秋季</option>
                             </select>
-                            <input type="number" placeholder="起始 (1-28)" min="1" max="28" value="1" onchange="updateCondition(0)">
-                            <input type="number" placeholder="结束 (1-28)" min="1" max="28" value="28" onchange="updateCondition(0)">
-                            <input type="number" placeholder="最少雨天" min="1" value="10" onchange="updateCondition(0)">
+                            <input type="number" placeholder="起始 (1-28)" min="1" max="28" value="1">
+                            <input type="number" placeholder="结束 (1-28)" min="1" max="28" value="28">
+                            <input type="number" placeholder="最少雨天" min="1" value="10">
                             <button type="button" class="btn-remove" onclick="removeCondition(0)">删除</button>
                         </div>
                     </div>
@@ -793,7 +805,7 @@
             星露谷搜种器 by<a href="https://space.bilibili.com/349111916" target="_blank">脆音音</a>
         </div>
         <div class="sidebar-section">
-            <h4>天气</h4>
+            <h4>雨天</h4>
             <div id="sidebarWeatherContent"></div>
         </div>
     </div>
@@ -820,7 +832,6 @@
         let foundSeeds = [];
         let conditions = [];
         let seedDetailsCache = {};
-        let nextIndex = 1;
 
         const elements = {
             form: document.getElementById('searchForm'),
@@ -846,59 +857,56 @@
             elements.weatherConfig.style.display = e.target.checked ? 'block' : 'none';
         });
 
-        // 初始化第一个条件(放在页面加载后执行)
-        document.addEventListener('DOMContentLoaded', function() {
-            updateCondition(0);
-        });
-
-        // 添加新条件
+        // 添加条件
         function addCondition() {
             const container = document.getElementById('conditionsContainer');
-            const index = nextIndex++;
             
             const newRow = document.createElement('div');
             newRow.className = 'condition-row';
-            newRow.setAttribute('data-index', index);
             newRow.innerHTML = `
-                <select onchange="updateCondition(${index})">
+                <select>
                     <option value="Spring">春季</option>
                     <option value="Summer">夏季</option>
                     <option value="Fall">秋季</option>
                 </select>
-                <input type="number" placeholder="起始 (1-28)" min="1" max="28" value="1" onchange="updateCondition(${index})">
-                <input type="number" placeholder="结束 (1-28)" min="1" max="28" value="28" onchange="updateCondition(${index})">
-                <input type="number" placeholder="最少雨天" min="1" value="10" onchange="updateCondition(${index})">
-                <button type="button" class="btn-remove" onclick="removeCondition(${index})">删除</button>
+                <input type="number" placeholder="起始 (1-28)" min="1" max="28" value="1">
+                <input type="number" placeholder="结束 (1-28)" min="1" max="28" value="28">
+                <input type="number" placeholder="最少雨天" min="1" value="10">
+                <button type="button" class="btn-remove">删除</button>
             `;
             
             container.appendChild(newRow);
-            updateCondition(index);
+            
+            // 添加删除事件
+            newRow.querySelector('.btn-remove').addEventListener('click', function() {
+                newRow.remove();
+                syncConditions();
+            });
+            
+            // 添加输入变化事件
+            newRow.querySelectorAll('select, input').forEach(el => {
+                el.addEventListener('change', syncConditions);
+            });
+            
+            syncConditions();
             hideError();
         }
 
-        // 更新条件数据
-        function updateCondition(index) {
-            const row = document.querySelector(`.condition-row[data-index="${index}"]`);
-            if (!row) return;
-            
-            const inputs = row.querySelectorAll('select, input');
-            const season = inputs[0].value;
-            const startDay = parseInt(inputs[1].value) || 1;
-            const endDay = parseInt(inputs[2].value) || 28;
-            const minRain = parseInt(inputs[3].value) || 1;
-            
-            conditions[index] = { season, startDay, endDay, minRain };
+        // 同步条件数据（从DOM读取）
+        function syncConditions() {
+            const rows = document.querySelectorAll('.condition-row');
+            conditions = Array.from(rows).map(row => {
+                const inputs = row.querySelectorAll('select, input');
+                return {
+                    season: inputs[0].value,
+                    startDay: parseInt(inputs[1].value) || 1,
+                    endDay: parseInt(inputs[2].value) || 28,
+                    minRain: parseInt(inputs[3].value) || 1
+                };
+            });
         }
 
-        // 删除条件
-        function removeCondition(index) {
-            const row = document.querySelector(`.condition-row[data-index="${index}"]`);
-            if (row) {
-                row.remove();
-                delete conditions[index];
-                hideError();
-            }
-        }
+
 
         // 验证单个条件
         function validateCondition(condition) {
@@ -924,13 +932,19 @@
 
         // 检查条件重叠
         function hasOverlap(newCondition, excludeIndex) {
-            const validConditions = conditions.filter((c, i) => c && i !== excludeIndex);
-            
-            for (let condition of validConditions) {
-                if (condition.season === newCondition.season) {
-                    if (!(newCondition.endDay < condition.startDay || newCondition.startDay > condition.endDay)) {
-                        return true;
-                    }
+            const seasonOffset = { 'Spring': 0, 'Summer': 28, 'Fall': 56 };
+            const newStart = seasonOffset[newCondition.season] + newCondition.startDay;
+            const newEnd = seasonOffset[newCondition.season] + newCondition.endDay;
+
+            for (let i = 0; i < conditions.length; i++) {
+                if (i === excludeIndex) continue;
+                
+                const cond = conditions[i];
+                const start = seasonOffset[cond.season] + cond.startDay;
+                const end = seasonOffset[cond.season] + cond.endDay;
+
+                if (!(newEnd < start || end < newStart)) {
+                    return true;
                 }
             }
             return false;
@@ -975,6 +989,24 @@
                 outputLimitInput.removeAttribute('max');
             }
         }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const firstRow = document.querySelector('.condition-row');
+            if (firstRow) {
+                // 为第一行添加删除事件
+                firstRow.querySelector('.btn-remove').addEventListener('click', function() {
+                    firstRow.remove();
+                    syncConditions();
+                });
+                
+                // 为第一行添加输入变化事件
+                firstRow.querySelectorAll('select, input').forEach(el => {
+                    el.addEventListener('change', syncConditions);
+                });
+                
+                syncConditions();
+            }
+        });
 
         // 让页面加载后，以及每次修改种子范围时，都更新这个最大值
         document.addEventListener('DOMContentLoaded', updateOutputLimitMax);
@@ -1089,20 +1121,10 @@
                 return;
             }
 
-            if (weatherEnabled && conditions.length === 0) {
-                alert('请至少添加一个天气筛选条件！');
-                return;
-            }
-
             if (weatherEnabled) {
                 hideError();
                 
                 const validConditions = conditions.filter(c => c);
-                
-                if (validConditions.length === 0) {
-                    showError('请至少添加一个条件');
-                    return;
-                }
                 
                 for (let i = 0; i < conditions.length; i++) {
                     const condition = conditions[i];
@@ -1191,14 +1213,13 @@
                 if (count > 0) {
                     daysText = season.days.map(day => {
                         const isGreenRain = season.greenRainDay === day;
-                        const dayText = `${season.name.charAt(0)}${day}`;
-                        return isGreenRain ? `<span class="green-rain">${dayText}（绿雨）</span>` : dayText;
+                        return isGreenRain ? `<span class="green-rain">${day}（绿雨）</span>` : day;
                     }).join(', ');
                 }
                 
                 weatherHtml += `
                     <div class="weather-season">
-                        <div class="weather-season-title">${season.name}雨天（${count}个）：</div>
+                        <div class="weather-season-title">${season.name}（${count}个）：</div>
                         <div class="weather-days">${count > 0 ? daysText : '无'}</div>
                     </div>
                 `;
