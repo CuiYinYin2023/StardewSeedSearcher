@@ -136,7 +136,7 @@ namespace StardewSeedSearcher.Features
             // 春季 (season 0)
             if (season == 0)
             {
-                if (dayOfMonth == 2 || dayOfMonth == 4)
+                if (dayOfMonth == 2 || dayOfMonth == 4 || dayOfMonth == 5)
                     return false; // 晴天
                 if (dayOfMonth == 3)
                     return true; // 雨天
