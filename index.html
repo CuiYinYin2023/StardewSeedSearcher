@@ -297,6 +297,10 @@
             border-radius: 6px;
             border-left: 4px solid #667eea;
             animation: slideIn 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: flex-start;
         }
 
         @keyframes slideIn {
@@ -488,16 +492,7 @@
 
         /* 侧边栏遮罩 */
         .sidebar-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 2000;
-            opacity: 0;
-            transition: opacity 0.3s;
+            display: none !important;
         }
 
         .sidebar-overlay.active {
@@ -518,6 +513,8 @@
             overflow-y: auto;
             transition: right 0.3s;
             padding: 30px;
+            pointer-events: auto; /* 确保侧边栏可以点击 */
+            cursor: default; /* 侧边栏内恢复默认鼠标 */
         }
 
         .sidebar-panel.active {
@@ -1077,9 +1074,6 @@
                                 <button class="btn-copy" onclick="copySeed(${data.seed})">复制</button>
                             </div>
                         `;
-                        seedItem.style.display = 'flex';
-                        seedItem.style.justifyContent = 'space-between';
-                        seedItem.style.alignItems = 'center';
                         elements.seedList.appendChild(seedItem);
                     }
                     
@@ -1228,13 +1222,11 @@
             document.getElementById('sidebarWeatherContent').innerHTML = weatherHtml;
             
             // 显示侧边栏
-            document.getElementById('sidebarOverlay').classList.add('active');
             document.getElementById('sidebarPanel').classList.add('active');
         }
 
         // 关闭侧边栏
         function closeSidebar() {
-            document.getElementById('sidebarOverlay').classList.remove('active');
             document.getElementById('sidebarPanel').classList.remove('active');
         }
 
