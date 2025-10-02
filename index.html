@@ -694,8 +694,12 @@
                         <input type="number" id="startSeed" value="0" required>
                     </div>
                     <div class="form-group">
-                        <label for="endSeed">结束种子</label>
-                        <input type="number" id="endSeed" value="100000" max="2147483647" required>
+                        <label for="searchRange">搜索范围</label>
+                        <input type="number" id="searchRange" value="100000" min="1" required>
+                    </div>                    
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="loopSearch" checked>
+                        <label for="loopSearch">循环搜索</label>
                     </div>
                 </div>
 
@@ -832,6 +836,7 @@
         let foundSeeds = [];
         let conditions = [];
         let seedDetailsCache = {};
+        let nextStartSeed = 0;
 
         const elements = {
             form: document.getElementById('searchForm'),
@@ -970,23 +975,15 @@
 
         // 最大输出种子数量
         function updateOutputLimitMax() {
-            const startSeedInput = document.getElementById('startSeed');
-            const endSeedInput = document.getElementById('endSeed');
+            const searchRangeInput = document.getElementById('searchRange');
             const outputLimitInput = document.getElementById('outputLimit');
 
-            const start = parseInt(startSeedInput.value) || 0;
-            const end = parseInt(endSeedInput.value) || 0;
+            const range = parseInt(searchRangeInput.value) || 0;
+            const limit = parseInt(outputLimitInput.value) || 0;
 
-            if (start <= end) {
-                const maxLimit = end - start + 1;
-                outputLimitInput.max = maxLimit;
+            if (range <= limit) {
                 // 如果当前值超过了新的最大值，就把它降下来
-                if (parseInt(outputLimitInput.value) > maxLimit) {
-                    outputLimitInput.value = maxLimit;
-                }
-            } else {
-                // 如果起始种子大于结束种子，就暂时不设上限
-                outputLimitInput.removeAttribute('max');
+                outputLimitInput.value = range;
             }
         }
 
@@ -1008,10 +1005,29 @@
             }
         });
 
+        // 监听起始种子修改,重置循环
+        document.getElementById('startSeed').addEventListener('change', function() {
+            nextStartSeed = parseInt(this.value) || 0;
+        });
+
+        // 监听搜索范围修改,重置循环
+        document.getElementById('searchRange').addEventListener('change', function() {
+            const startSeed = parseInt(document.getElementById('startSeed').value) || 0;
+            nextStartSeed = startSeed;
+        });
+
+        // 监听循环搜索复选框
+        document.getElementById('loopSearch').addEventListener('change', function() {
+            if (!this.checked) {
+                // 取消循环时重置
+                const startSeed = parseInt(document.getElementById('startSeed').value) || 0;
+                nextStartSeed = startSeed;
+            }
+        });
+
         // 让页面加载后，以及每次修改种子范围时，都更新这个最大值
         document.addEventListener('DOMContentLoaded', updateOutputLimitMax);
         document.getElementById('startSeed').addEventListener('input', updateOutputLimitMax);
-        document.getElementById('endSeed').addEventListener('input', updateOutputLimitMax);
 
         function connectWebSocket() {
             elements.connectionStatus.textContent = '连接中...';
@@ -1088,6 +1104,18 @@
                     elements.statusMessage.className = 'status-message status-complete';
                     elements.searchBtn.disabled = false;
                     elements.searchBtn.textContent = '🔍 开始搜索';
+
+                    const loopSearch = document.getElementById('loopSearch').checked;
+                    if (loopSearch) {
+                        const searchRange = parseInt(document.getElementById('searchRange').value);
+                        nextStartSeed += searchRange;
+                        
+                        if (nextStartSeed > 2147483647) {
+                            document.getElementById('loopSearch').checked = false;
+                            alert('已搜索完所有种子范围');
+                        }
+                    }
+
                     updateResultsSummary();
                     break;
             }
@@ -1098,31 +1126,50 @@
             const shown = Math.min(total, 20);
             elements.resultsSummary.textContent = `共找到 ${total} 个 (显示前 ${shown} 个)`;
         }
-
         elements.form.addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            const startSeed = parseInt(document.getElementById('startSeed').value);
-            const endSeed = parseInt(document.getElementById('endSeed').value);
+            const loopSearch = document.getElementById('loopSearch').checked;
+            const searchRange = parseInt(document.getElementById('searchRange').value);
             const useLegacy = document.getElementById('useLegacy').checked;
             const weatherEnabled = elements.weatherEnabled.checked;
             const outputLimit = parseInt(document.getElementById('outputLimit').value); // 读取输出数量
+            
+            // 计算起始种子
+            let startSeed = loopSearch && nextStartSeed > 0 
+                ? nextStartSeed 
+                : parseInt(document.getElementById('startSeed').value);
 
-            if (startSeed >= endSeed) {
-                alert('结束种子必须大于起始种子！');
+            // 更新输入框显示
+            document.getElementById('startSeed').value = startSeed;
+            
+            // 计算结束种子,不超过最大值
+            const endSeed = Math.min(startSeed + searchRange - 1, 2147483647);
+            
+            // 检查是否已到最大值
+            if (startSeed >= 2147483647) {
+                alert('已达到最大种子值,无法继续搜索');
                 return;
             }
 
-            if (endSeed > 2147483647) {
-                alert('结束种子不能超过 2147483647！');
+            // 检查搜索范围是否有效
+            if (searchRange < 1) {
+                alert('搜索范围必须大于0!');
                 return;
             }
 
+            // 天气条件验证
             if (weatherEnabled) {
                 hideError();
                 
                 const validConditions = conditions.filter(c => c);
                 
+                if (validConditions.length === 0) {
+                    showError('请至少添加一个条件');
+                    return;
+                }
+                
+                // 验证所有条件
                 for (let i = 0; i < conditions.length; i++) {
                     const condition = conditions[i];
                     if (!condition) continue;
@@ -1140,11 +1187,15 @@
                 }
             }
 
+            // 显示进度区域
             elements.progressSection.style.display = 'block';
             elements.resultsSection.style.display = 'block';
             elements.searchBtn.disabled = true;
             elements.searchBtn.textContent = '搜索中...';
-            elements.statusMessage.textContent = '正在搜索中...';
+            
+            // 更新状态消息(显示搜索范围)
+            elements.statusMessage.textContent = `正在搜索: ${startSeed.toLocaleString()}-${endSeed.toLocaleString()}`;
+
             elements.statusMessage.className = 'status-message status-searching';
             elements.progressBar.style.width = '0%';
             elements.progressBar.textContent = '0%';
@@ -1154,8 +1205,9 @@
             elements.speed.textContent = '0';
             elements.elapsed.textContent = '0.0s';
 
+            // 发送搜索请求
             try {
-                const weatherConditions = weatherEnabled ? conditions.filter(c => c).map(c => ({ // filter(c => c) 确保过滤掉已删除的条件
+                const weatherConditions = weatherEnabled ? conditions.map(c => ({
                     season: c.season,
                     startDay: c.startDay,
                     endDay: c.endDay,
@@ -1181,7 +1233,7 @@
                 }
             } catch (error) {
                 console.error('搜索错误:', error);
-                alert('搜索失败，请确保后端服务正在运行！');
+                alert('搜索失败,请确保后端服务正在运行!');
                 elements.searchBtn.disabled = false;
                 elements.searchBtn.textContent = '🔍 开始搜索';
             }
