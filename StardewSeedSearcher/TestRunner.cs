@@ -18,6 +18,7 @@ namespace StardewSeedSearcher
                 Console.WriteLine("=================================\n");
                 Console.WriteLine("选择要测试的功能：");
                 Console.WriteLine("1. 天气预测");
+                Console.WriteLine("2. 仙子预测");
                 Console.WriteLine("0. 退出\n");
                 Console.Write("请输入选项：");
 
@@ -28,6 +29,10 @@ namespace StardewSeedSearcher
                     case "1":
                         Console.Clear();
                         WeatherTests.Run();
+                        break;
+                    case "2":
+                        Console.Clear();
+                        FairyTests.Run();
                         break;
                     case "0":
                         Console.WriteLine("再见！");
