@@ -668,6 +668,33 @@
         .copy-toast.show {
             opacity: 1;
         }
+
+        .fairy-condition-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 12px;
+            background-color: #f9f9f9;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .fairy-condition-row select,
+        .fairy-condition-row input {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .fairy-condition-row input[type="number"] {
+            width: 80px;
+        }
+
+        .fairy-condition-row select {
+            width: 100px;
+        }        
     </style>
 </head>
 <body>
@@ -709,10 +736,10 @@
                 </div>
 
                 <div class="checkbox-group">
-                    <input type="checkbox" id="weatherEnabled" checked>
+                    <input type="checkbox" id="weatherEnabled">
                     <label for="weatherEnabled">启用天气预测</label>
                 </div>
-                <div class="condition-config" id="weatherConfig">
+                <div class="condition-config" id="weatherConfig" style="display: none;">
                     <h4 style="margin-bottom: 15px;">天气筛选条件</h4>
                     <!-- 新的容器,用来放所有可编辑的条件行 -->
                     <div class="conditions-container" id="conditionsContainer">  
@@ -741,6 +768,50 @@
                     <button type="button" class="btn-add-condition" onclick="addCondition()">添加条件</button>
                     
                     <div class="error-message" id="conditionError"></div>
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="fairyEnabled" checked>
+                    <label for="fairyEnabled">启用仙子预测</label>
+                </div>
+                <div class="condition-config" id="fairyConfig">
+                    <h4 style="margin-bottom: 15px;">仙子筛选条件</h4>
+                    
+                    <div class="fairy-conditions-container" id="fairyConditionsContainer">
+                        <div class="fairy-condition-row" data-index="0">
+                            <label>年</label>
+                            <input type="number" min="1" max="10" value="1" class="fairy-year" onchange="updateFairyCondition(0)">
+                            <label>季</label>
+                            <select class="fairy-season" onchange="updateFairyCondition(0)">
+                                <option value="Spring">春</option>
+                                <option value="Summer">夏</option>
+                                <option value="Fall">秋</option>
+                            </select>
+                            <label>日</label>
+                            <input type="number" min="1" max="28" value="1" class="fairy-day" onchange="updateFairyCondition(0)">
+                            <button type="button" class="btn-remove" onclick="removeFairyCondition(0)">删除</button>
+                        </div>
+                    </div>
+                    
+                    <template id="fairyConditionTemplate">
+                        <div class="fairy-condition-row">
+                            <label>年</label>
+                            <input type="number" min="1" max="10" value="1" class="fairy-year">
+                            <label>季</label>
+                            <select class="fairy-season">
+                                <option value="Spring">春</option>
+                                <option value="Summer">夏</option>
+                                <option value="Fall">秋</option>
+                            </select>
+                            <label>日</label>
+                            <input type="number" min="1" max="28" value="1" class="fairy-day">
+                            <button type="button" class="btn-remove">删除</button>
+                        </div>
+                    </template>
+                    
+                    <button type="button" class="btn-add-condition" onclick="addFairyCondition()">添加条件</button>
+                    
+                    <div class="error-message" id="fairyConditionError"></div>
                 </div>
 
                 <hr class="form-separator">
@@ -837,6 +908,8 @@
         let conditions = [];
         let seedDetailsCache = {};
         let nextStartSeed = 0;
+        let fairyConditions = [];
+        let nextFairyIndex = 1;
 
         const elements = {
             form: document.getElementById('searchForm'),
@@ -855,11 +928,19 @@
             weatherEnabled: document.getElementById('weatherEnabled'),
             weatherConfig: document.getElementById('weatherConfig'),
             conditionsList: document.getElementById('conditionsList'),
-            conditionError: document.getElementById('conditionError')
+            conditionError: document.getElementById('conditionError'),
+            fairyEnabled: document.getElementById('fairyEnabled'),
+            fairyConfig: document.getElementById('fairyConfig'),
+            fairyConditionError: document.getElementById('fairyConditionError')
         };
 
+        // 天气
         elements.weatherEnabled.addEventListener('change', (e) => {
             elements.weatherConfig.style.display = e.target.checked ? 'block' : 'none';
+        });
+        // 仙子
+        elements.fairyEnabled.addEventListener('change', (e) => {
+            elements.fairyConfig.style.display = e.target.checked ? 'block' : 'none';
         });
 
         // 添加条件
@@ -973,6 +1054,72 @@
             }
         }
 
+        function addFairyCondition() {
+            const container = document.getElementById('fairyConditionsContainer');
+            const template = document.getElementById('fairyConditionTemplate');
+            const index = nextFairyIndex++;
+            
+            // 克隆模板
+            const clone = template.content.cloneNode(true);
+            const row = clone.querySelector('.fairy-condition-row');
+            row.setAttribute('data-index', index);
+            
+            // 绑定事件
+            row.querySelector('.fairy-year').onchange = () => updateFairyCondition(index);
+            row.querySelector('.fairy-season').onchange = () => updateFairyCondition(index);
+            row.querySelector('.fairy-day').onchange = () => updateFairyCondition(index);
+            row.querySelector('.btn-remove').onclick = () => removeFairyCondition(index);
+            
+            container.appendChild(clone);
+            updateFairyCondition(index);
+        }
+
+        function updateFairyCondition(index) {
+            const row = document.querySelector(`.fairy-condition-row[data-index="${index}"]`);
+            if (!row) return;
+            
+            const year = parseInt(row.querySelector('.fairy-year').value) || 1;
+            const season = row.querySelector('.fairy-season').value;
+            const day = parseInt(row.querySelector('.fairy-day').value) || 1;
+            
+            fairyConditions[index] = { year, season, day };
+        }
+
+        function removeFairyCondition(index) {
+            const row = document.querySelector(`.fairy-condition-row[data-index="${index}"]`);
+            if (row) {
+                row.remove();
+                delete fairyConditions[index];
+            }
+        }
+
+        function validateFairyCondition(condition) {
+            const { year, day } = condition;
+            
+            if (year < 1 || year > 10) {
+                return { valid: false, error: '年份必须在 1-10 之间' };
+            }
+            
+            if (day < 1 || day > 28) {
+                return { valid: false, error: '日期必须在 1-28 之间' };
+            }
+            
+            return { valid: true };
+        }
+
+        function hasFairyDuplicate(newCondition, excludeIndex) {
+            const validConditions = fairyConditions.filter((c, i) => c && i !== excludeIndex);
+            
+            for (let condition of validConditions) {
+                if (condition.year === newCondition.year && 
+                    condition.season === newCondition.season && 
+                    condition.day === newCondition.day) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         // 最大输出种子数量
         function updateOutputLimitMax() {
             const searchRangeInput = document.getElementById('searchRange');
@@ -988,6 +1135,7 @@
         }
 
         document.addEventListener('DOMContentLoaded', function() {
+            // 天气条件初始化
             const firstRow = document.querySelector('.condition-row');
             if (firstRow) {
                 // 为第一行添加删除事件
@@ -1003,6 +1151,9 @@
                 
                 syncConditions();
             }
+
+            // 仙子条件初始化
+            updateFairyCondition(0);
         });
 
         // 监听起始种子修改,重置循环
@@ -1187,6 +1338,34 @@
                 }
             }
 
+            // 仙子条件验证
+            const fairyEnabled = elements.fairyEnabled.checked;
+
+            if (fairyEnabled) {
+                const validFairyConditions = fairyConditions.filter(c => c);
+                
+                if (validFairyConditions.length === 0) {
+                    alert('请至少添加一个仙子条件！');
+                    return;
+                }
+                
+                for (let i = 0; i < fairyConditions.length; i++) {
+                    const condition = fairyConditions[i];
+                    if (!condition) continue;
+                    
+                    const validation = validateFairyCondition(condition);
+                    if (!validation.valid) {
+                        alert(`仙子条件 ${i + 1}: ${validation.error}`);
+                        return;
+                    }
+                    
+                    if (hasFairyDuplicate(condition, i)) {
+                        alert(`仙子条件 ${i + 1}: 与其他条件重复`);
+                        return;
+                    }
+                }
+            }            
+
             // 显示进度区域
             elements.progressSection.style.display = 'block';
             elements.resultsSection.style.display = 'block';
@@ -1214,6 +1393,12 @@
                     minRainDays: c.minRain
                 })) : [];
 
+                const fairyConditionsData = fairyEnabled ? fairyConditions.filter(c => c).map(c => ({
+                    year: c.year,
+                    season: c.season,
+                    day: c.day
+                })) : [];
+
                 const response = await fetch('http://localhost:5000/api/search', {
                     method: 'POST',
                     headers: {
@@ -1224,6 +1409,7 @@
                         endSeed,
                         useLegacyRandom: useLegacy,
                         weatherConditions,
+                        fairyConditions: fairyConditionsData,
                         outputLimit // 将输出数量添加到请求中
                     })
                 });

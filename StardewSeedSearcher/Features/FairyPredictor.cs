@@ -1,13 +1,56 @@
 using System;
 using StardewSeedSearcher.Core;
+using System.Collections.Generic;
 
 namespace StardewSeedSearcher.Features
 {
     /// <summary>
     /// 仙子预测器
     /// </summary>
-    public class FairyPredictor
+    public class FairyPredictor : ISearchFeature
     {
+        public bool IsEnabled { get; set; }
+        public List<FairyCondition> Conditions { get; set; } = new();
+
+        public string Name => "仙子预测";
+
+        public string GetConfigDescription()
+        {
+            return $"{Conditions.Count} 个条件";
+        }
+
+        public bool Check(int seed, bool useLegacyRandom)
+        {
+            if (!IsEnabled || Conditions.Count == 0)
+                return true;
+
+            // 所有条件都必须满足（AND）
+            foreach (var condition in Conditions)
+            {
+                int absoluteDay = CalculateAbsoluteDay(condition.Year, condition.Season, condition.Day);
+                
+                if (!HasFairy(seed, absoluteDay, useLegacyRandom))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private int CalculateAbsoluteDay(int year, Season season, int day)
+        {
+            int seasonOffset = season switch
+            {
+                Season.Spring => 0,
+                Season.Summer => 28,
+                Season.Fall => 56,
+                _ => 0
+            };
+
+            return (year - 1) * 112 + seasonOffset + day;
+        }
+
         /// <summary>
         /// 查找第一次出现仙子的日期
         /// </summary>
@@ -58,5 +101,12 @@ namespace StardewSeedSearcher.Features
             // 判断概率
             return rng.NextDouble() < 0.01;
         }
+    }
+
+    public class FairyCondition
+    {
+        public int Year { get; set; }
+        public Season Season { get; set; }
+        public int Day { get; set; }
     }
 }

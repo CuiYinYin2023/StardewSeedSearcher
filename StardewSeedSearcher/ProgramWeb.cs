@@ -80,7 +80,7 @@ namespace StardewSeedSearcher
                 int checkedCount = 0;
                 int lastProgressUpdate = 0;
 
-                // 配置功能
+                // 配置天气功能
                 var features = new List<ISearchFeature>();
                 if (request.WeatherConditions != null && request.WeatherConditions.Count > 0)
                 {
@@ -100,7 +100,26 @@ namespace StardewSeedSearcher
                     
                     features.Add(predictor);
                 }
-
+                
+                // 配置仙子预测
+                if (request.FairyConditions != null && request.FairyConditions.Count > 0)
+                {
+                    var fairyPredictor = new FairyPredictor { IsEnabled = true };
+                    
+                    foreach (var conditionDto in request.FairyConditions)
+                    {
+                        var condition = new FairyCondition
+                        {
+                            Year = conditionDto.Year,
+                            Season = conditionDto.Season,
+                            Day = conditionDto.Day
+                        };
+                        fairyPredictor.Conditions.Add(condition);
+                    }
+                    
+                    features.Add(fairyPredictor);
+                }
+                
                 // 发送开始消息
                 await BroadcastMessage(new { type = "start", total = totalSeeds });
 
@@ -300,6 +319,9 @@ namespace StardewSeedSearcher
 
         [JsonPropertyName("weatherConditions")]
         public List<WeatherConditionDto> WeatherConditions { get; set; } = new();
+        
+        [JsonPropertyName("fairyConditions")]
+        public List<FairyConditionDto> FairyConditions { get; set; } = new();
 
         [JsonPropertyName("outputLimit")]
         public int OutputLimit { get; set; }
@@ -321,5 +343,17 @@ namespace StardewSeedSearcher
 
         [JsonPropertyName("minRainDays")]
         public int MinRainDays { get; set; }
+    }
+
+    public class FairyConditionDto
+    {
+        [JsonPropertyName("year")]
+        public int Year { get; set; }
+
+        [JsonPropertyName("season")]
+        public Season Season { get; set; }
+
+        [JsonPropertyName("day")]
+        public int Day { get; set; }
     }
 }
