@@ -81,7 +81,7 @@ namespace StardewSeedSearcher.Features
             // 搜索范围内没有仙子
             return null;
         }
-        
+
         /// <summary>
         /// 判断指定天是否出现仙子
         /// </summary>
@@ -100,6 +100,31 @@ namespace StardewSeedSearcher.Features
             
             // 判断概率
             return rng.NextDouble() < 0.01;
+        }
+
+        /// <summary>
+        /// 记录条件里的天数，用于种子简介
+        /// </summary>
+        public List<object> GetFairyDays(int seed, bool useLegacyRandom)
+        {
+            var fairyDays = new List<object>();
+            
+            foreach (var condition in Conditions)
+            {
+                int absoluteDay = CalculateAbsoluteDay(condition.Year, condition.Season, condition.Day);
+                
+                if (HasFairy(seed, absoluteDay, useLegacyRandom))
+                {
+                    fairyDays.Add(new
+                    {
+                        year = condition.Year,
+                        season = condition.Season.ToString(),
+                        day = condition.Day
+                    });
+                }
+            }
+            
+            return fairyDays;
         }
     }
 

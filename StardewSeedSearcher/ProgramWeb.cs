@@ -16,6 +16,44 @@ namespace StardewSeedSearcher
         // 存储活跃的 WebSocket 连接
         private static readonly ConcurrentDictionary<string, WebSocket> ActiveConnections = new();
 
+
+        // 辅助方法
+        private static object CollectAllDetails(int seed, bool useLegacy, List<ISearchFeature> features)
+        {
+            WeatherDetailResult weatherDetail = null;
+            List<object> fairyDays = null;
+            
+            foreach (var feature in features)
+            {
+                if (feature is WeatherPredictor predictor)
+                {
+                    var (weather, greenRainDay) = predictor.PredictWeatherWithDetail(seed, useLegacy);
+                    weatherDetail = WeatherPredictor.ExtractWeatherDetail(weather, greenRainDay);
+                }
+                else if (feature is FairyPredictor fairyPredictor)
+                {
+                    fairyDays = fairyPredictor.GetFairyDays(seed, useLegacy);
+                }
+                // 未来添加更多：
+                // else if (feature is PigCartPredictor pigCart) { ... }
+            }
+            
+            return new
+            {
+                weather = weatherDetail != null ? new
+                {
+                    springRain = weatherDetail.SpringRain,
+                    summerRain = weatherDetail.SummerRain,
+                    fallRain = weatherDetail.FallRain,
+                    greenRainDay = weatherDetail.GreenRainDay
+                } : null,
+                fairy = fairyDays != null ? new { days = fairyDays } : null
+                // 未来：
+                // pigCart = pigCartDetail,
+                // dwarf = dwarfDetail,
+            };
+        }
+
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
@@ -119,7 +157,7 @@ namespace StardewSeedSearcher
                     
                     features.Add(fairyPredictor);
                 }
-                
+
                 // 发送开始消息
                 await BroadcastMessage(new { type = "start", total = totalSeeds });
 
@@ -145,35 +183,24 @@ namespace StardewSeedSearcher
                         {
                             results.Add(seed);
                             
-                            // 计算并缓存详细天气数据
-                            WeatherDetailResult weatherDetail = null;
-                            if (features.Count > 0 && features[0] is WeatherPredictor predictor)
-                            {
-                                var (weather, greenRainDay) = predictor.PredictWeatherWithDetail(seed, request.UseLegacyRandom);
-                                weatherDetail = WeatherPredictor.ExtractWeatherDetail(weather, greenRainDay);
-                                weatherDetailsCache[seed] = weatherDetail;
-                            }
+                            // 收集所有功能的详情
+                            var allDetails = CollectAllDetails(seed, request.UseLegacyRandom, features);
                             
-                            // 推送找到的种子和详细数据
                             await BroadcastMessage(new
                             {
                                 type = "found",
                                 seed = seed,
-                                weatherDetail = weatherDetail != null ? new
+                                details = allDetails,
+                                enabledFeatures = new
                                 {
-                                    springRain = weatherDetail.SpringRain,
-                                    summerRain = weatherDetail.SummerRain,
-                                    fallRain = weatherDetail.FallRain,
-                                    greenRainDay = weatherDetail.GreenRainDay
-                                } : null
+                                    weather = request.WeatherConditions != null && request.WeatherConditions.Count > 0,
+                                    fairy = request.FairyConditions != null && request.FairyConditions.Count > 0
+                                }
                             });
                             
-                            if (results.Count >= request.OutputLimit)
-                            {
-                                break; // 达到上限，跳出 for 循环，提前结束搜索
-                            }
+                            if (results.Count >= request.OutputLimit) break;
                         }
-
+                        
                         // 每 100 个种子更新一次进度（避免过于频繁）
                         if (checkedCount - lastProgressUpdate >= 100)
                         {

@@ -347,7 +347,7 @@
 
         .bilibili-link, .bilibili-link-charge {
             position: fixed;
-            right: 20px;
+            left: 20px;
             color: white;
             padding: 12px 24px;
             border-radius: 25px;
@@ -736,10 +736,10 @@
                 </div>
 
                 <div class="checkbox-group">
-                    <input type="checkbox" id="weatherEnabled">
+                    <input type="checkbox" id="weatherEnabled" checked>
                     <label for="weatherEnabled">启用天气预测</label>
                 </div>
-                <div class="condition-config" id="weatherConfig" style="display: none;">
+                <div class="condition-config" id="weatherConfig">
                     <h4 style="margin-bottom: 15px;">天气筛选条件</h4>
                     <!-- 新的容器,用来放所有可编辑的条件行 -->
                     <div class="conditions-container" id="conditionsContainer">  
@@ -862,7 +862,7 @@
         <div class="card footer">
             <h3>🚀 脆音音的后续开发计划</h3>
             <ul>
-                <li><span class="placeholder-text">更多功能：猪车、仙子、混合宝箱、沙漠节商人、怪物层、春1菜品、垃圾桶、晶球、齐先生任务、矮人雕像矿+1buff等</span></li>
+                <li><span class="placeholder-text">更多功能：猪车、混合宝箱、沙漠节商人、怪物层、春1菜品、垃圾桶、晶球、齐先生任务、矮人雕像矿+1buff等</span></li>
             </ul>
         </div>
     </div>
@@ -873,15 +873,23 @@
         <button class="sidebar-close" onclick="closeSidebar()">✕</button>
         <div class="sidebar-title">种子简介</div>
         <div class="sidebar-seed">
-            种子号：<span id="sidebarSeedNumber"></span>
-            <button class="btn-copy-seed" onclick="copySeedFromSidebar()">📋</button>
+            <span id="sidebarMode"></span>种子号：<span id="sidebarSeedNumber"></span>
+            <!-- <button class="btn-copy-seed" id="btnCopySeed">📋</button> -->
         </div>
         <div class="sidebar-footer">
             星露谷搜种器 by<a href="https://space.bilibili.com/349111916" target="_blank">脆音音</a>
         </div>
-        <div class="sidebar-section">
+
+        <!-- 添加雨天部分 -->
+        <div class="sidebar-section" id="weatherSection">
             <h4>雨天</h4>
             <div id="sidebarWeatherContent"></div>
+        </div>
+
+        <!-- 添加仙子部分 -->
+        <div class="sidebar-section" id="fairySection">
+            <h4>仙子</h4>
+            <div id="sidebarFairyContent"></div>
         </div>
     </div>
 
@@ -906,6 +914,7 @@
         let ws = null;
         let foundSeeds = [];
         let conditions = [];
+        let currentSearchUseLegacy = false;
         let seedDetailsCache = {};
         let nextStartSeed = 0;
         let fairyConditions = [];
@@ -1229,11 +1238,14 @@
                     foundSeeds.push(data.seed);
                     elements.foundCount.textContent = foundSeeds.length;
                     
-                    // 缓存天气详情
-                    if (data.weatherDetail) {
-                        seedDetailsCache[data.seed] = data.weatherDetail;
+                    // 缓存种子信息用于展示简介
+                    if (data.details) {
+                        seedDetailsCache[data.seed] = {
+                            details: data.details,
+                            enabled: data.enabledFeatures || {}  // 如果后端没发送，用空对象
+                        };
                     }
-                    
+
                     if (foundSeeds.length <= 20) {
                         const seedItem = document.createElement('div');
                         seedItem.className = 'seed-item';
@@ -1283,6 +1295,7 @@
             const loopSearch = document.getElementById('loopSearch').checked;
             const searchRange = parseInt(document.getElementById('searchRange').value);
             const useLegacy = document.getElementById('useLegacy').checked;
+            currentSearchUseLegacy = useLegacy;  // 保存当前搜索模式
             const weatherEnabled = elements.weatherEnabled.checked;
             const outputLimit = parseInt(document.getElementById('outputLimit').value); // 读取输出数量
             
@@ -1427,40 +1440,68 @@
 
         // 显示种子详情
         function showSeedDetail(seed) {
-            const detail = seedDetailsCache[seed];
-            if (!detail) return;
+            const cached = seedDetailsCache[seed];
+            if (!cached) return;
             
+            const { details, enabled } = cached;
+            
+            document.getElementById('sidebarMode').textContent = currentSearchUseLegacy ? '旧随机' : '新随机';
             document.getElementById('sidebarSeedNumber').textContent = seed;
-            
-            // 渲染天气信息
-            const seasonNames = ['春季', '夏季', '秋季'];
-            const seasons = [
-                { name: seasonNames[0], days: detail.springRain, greenRainDay: null },
-                { name: seasonNames[1], days: detail.summerRain, greenRainDay: detail.greenRainDay },
-                { name: seasonNames[2], days: detail.fallRain, greenRainDay: null }
-            ];
-            
-            let weatherHtml = '';
-            seasons.forEach(season => {
-                const count = season.days.length;
-                let daysText = '';
+    
+            // 只有启用了天气功能才显示
+            if (enabled.weather && details.weather) {
+                const seasonNames = ['春季', '夏季', '秋季'];
+                const seasons = [
+                    { name: seasonNames[0], days: details.weather.springRain, greenRainDay: null },
+                    { name: seasonNames[1], days: details.weather.summerRain, greenRainDay: details.weather.greenRainDay },
+                    { name: seasonNames[2], days: details.weather.fallRain, greenRainDay: null }
+                ];
                 
-                if (count > 0) {
-                    daysText = season.days.map(day => {
-                        const isGreenRain = season.greenRainDay === day;
-                        return isGreenRain ? `<span class="green-rain">${day}（绿雨）</span>` : day;
-                    }).join(', ');
-                }
+                let weatherHtml = '';  // 定义变量
+                seasons.forEach(season => {
+                    const count = season.days.length;
+                    let daysText = '';
+                    
+                    if (count > 0) {
+                        daysText = season.days.map(day => {
+                            const isGreenRain = season.greenRainDay === day;
+                            return isGreenRain ? `<span class="green-rain">${day}（绿雨）</span>` : day;
+                        }).join(', ');
+                    }
+                    
+                    weatherHtml += `
+                        <div class="weather-season">
+                            <div class="weather-season-title">${season.name}（${count}个）：</div>
+                            <div class="weather-days">${count > 0 ? daysText : '无'}</div>
+                        </div>
+                    `;
+                });
                 
-                weatherHtml += `
+                document.getElementById('sidebarWeatherContent').innerHTML = weatherHtml;
+                document.getElementById('weatherSection').style.display = 'block';
+            } else {
+                document.getElementById('weatherSection').style.display = 'none';
+            }
+            
+            // 只有启用了仙子功能才显示
+            if (enabled.fairy && details.fairy && details.fairy.days) {
+                const seasonMap = { Spring: '春', Summer: '夏', Fall: '秋' };
+                const fairyText = details.fairy.days.map(f => {
+                    const prefix = f.year === 1 ? '' : `${f.year}年`;
+                    return `${prefix}${seasonMap[f.season]}${f.day}`;
+                }).join('、');
+                
+                const fairyHtml = `
                     <div class="weather-season">
-                        <div class="weather-season-title">${season.name}（${count}个）：</div>
-                        <div class="weather-days">${count > 0 ? daysText : '无'}</div>
+                        <div class="weather-season-title">仙子（${details.fairy.days.length}个）：</div>
+                        <div class="weather-days">${fairyText}</div>
                     </div>
                 `;
-            });
-            
-            document.getElementById('sidebarWeatherContent').innerHTML = weatherHtml;
+                document.getElementById('sidebarFairyContent').innerHTML = fairyHtml;
+                document.getElementById('fairySection').style.display = 'block';
+            } else {
+                document.getElementById('fairySection').style.display = 'none';
+            }
             
             // 显示侧边栏
             document.getElementById('sidebarPanel').classList.add('active');
@@ -1480,7 +1521,9 @@
 
         // 从侧边栏复制
         function copySeedFromSidebar() {
+            console.log('复制按钮被点击了');
             const seed = document.getElementById('sidebarSeedNumber').textContent;
+            console.log('种子号:', seed);
             navigator.clipboard.writeText(seed).then(() => {
                 showCopyToast();
             });
