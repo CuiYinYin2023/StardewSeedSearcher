@@ -21,7 +21,7 @@ namespace StardewSeedSearcher.Features
 
         public bool Check(int seed, bool useLegacyRandom)
         {
-            if (!IsEnabled || Conditions.Count == 0)
+            if (Conditions.Count == 0)
                 return true;
 
             // 所有条件都必须满足（AND）
@@ -49,37 +49,6 @@ namespace StardewSeedSearcher.Features
             };
 
             return (year - 1) * 112 + seasonOffset + day;
-        }
-
-        /// <summary>
-        /// 查找第一次出现仙子的日期
-        /// </summary>
-        /// <param name="gameID">游戏种子</param>
-        /// <param name="useLegacyRandom">是否使用旧随机模式</param>
-        /// <returns>绝对天数,如果搜索范围内没有则返回null</returns>
-        public int? FindFirstFairy(int gameID, bool useLegacyRandom, int maxDays = 1000)
-        {
-            // 持续搜索直到找到第一个仙子或达到最大天数
-            for (int day = 1; day <= maxDays; day++)
-            {
-                // 计算月份(季节): 0=春, 1=夏, 2=秋, 3=冬
-                int month = (day - 1) % 112 / 28;
-                
-                // 仙子只在春夏秋出现,冬天跳过
-                if (month >= 3)
-                {
-                    continue;
-                }
-                
-                // 判断当天是否出现仙子
-                if (HasFairy(gameID, day, useLegacyRandom))
-                {
-                    return day;
-                }
-            }
-            
-            // 搜索范围内没有仙子
-            return null;
         }
 
         /// <summary>
@@ -125,6 +94,37 @@ namespace StardewSeedSearcher.Features
             }
             
             return fairyDays;
+        }
+
+        /// <summary>
+        /// 查找第一次出现仙子的日期，仅用于测试
+        /// </summary>
+        /// <param name="gameID">游戏种子</param>
+        /// <param name="useLegacyRandom">是否使用旧随机模式</param>
+        /// <returns>绝对天数,如果搜索范围内没有则返回null</returns>
+        public int? FindFirstFairy(int gameID, bool useLegacyRandom, int maxDays = 1000)
+        {
+            // 持续搜索直到找到第一个仙子或达到最大天数
+            for (int day = 1; day <= maxDays; day++)
+            {
+                // 计算月份(季节): 0=春, 1=夏, 2=秋, 3=冬
+                int month = (day - 1) % 112 / 28;
+                
+                // 仙子只在春夏秋出现,冬天跳过
+                if (month >= 3)
+                {
+                    continue;
+                }
+                
+                // 判断当天是否出现仙子
+                if (HasFairy(gameID, day, useLegacyRandom))
+                {
+                    return day;
+                }
+            }
+            
+            // 搜索范围内没有仙子
+            return null;
         }
     }
 
