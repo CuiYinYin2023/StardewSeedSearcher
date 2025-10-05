@@ -164,13 +164,19 @@ namespace StardewSeedSearcher
                 // 在后台线程执行搜索
                 await Task.Run(async () =>
                 {
+                    // 动态成本计算
+                    var sortedFeatures = features
+                        .Where(f => f.IsEnabled) // 只看启用功能
+                        .OrderBy(f => f.EstimateCost(request.UseLegacyRandom))
+                        .ToList();
+
                     for (int seed = request.StartSeed; seed <= request.EndSeed; seed++)
                     {
                         checkedCount++;
 
                         // 检查是否符合所有启用的功能条件
                         bool allMatch = true;
-                        foreach (var feature in features.Where(f => f.IsEnabled))
+                        foreach (var feature in sortedFeatures)  // 使用排序后的列表
                         {
                             if (!feature.Check(seed, request.UseLegacyRandom))
                             {

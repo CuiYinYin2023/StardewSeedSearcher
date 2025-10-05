@@ -20,6 +20,9 @@ namespace StardewSeedSearcher.Features
         /// <returns>true 表示符合条件，false 表示不符合</returns>
         bool Check(int gameID, bool useLegacyRandom);
 
+        /// <summary>估算最坏情况的随机数调用次数，用于动态成本计算</summary>
+        int EstimateCost(bool useLegacyRandom);
+
         /// <summary>
         /// 获取功能的配置说明
         /// </summary>

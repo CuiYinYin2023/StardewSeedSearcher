@@ -166,6 +166,22 @@ namespace StardewSeedSearcher.Features
         }
 
         /// <summary>
+        /// 计算搜索成本
+        /// </summary>
+        public int EstimateCost(bool useLegacyRandom)
+        {
+            if (Conditions.Count == 0) return 0;
+            
+            int totalDays = 0;
+            foreach (var condition in Conditions)
+            {
+                totalDays += condition.AbsoluteEndDay - condition.AbsoluteStartDay + 1;
+            }
+            // 绿雨计算56次 + 每天1次天气判断
+            return 56 + totalDays;
+        }
+
+        /// <summary>
         /// 获取配置说明
         /// </summary>
         public string GetConfigDescription()

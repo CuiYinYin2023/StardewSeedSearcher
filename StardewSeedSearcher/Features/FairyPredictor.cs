@@ -70,6 +70,17 @@ namespace StardewSeedSearcher.Features
             // 判断概率
             return rng.NextDouble() < 0.01;
         }
+        
+        public int EstimateCost(bool useLegacyRandom)
+        {
+            if (Conditions.Count == 0) return 0;
+            
+            // 每个条件检查一天
+            // 旧随机:1次随机判断
+            // 新随机:10次跳过 + 1次判断 = 11次
+            int callsPerDay = useLegacyRandom ? 1 : 11;
+            return Conditions.Count * callsPerDay;
+        }
 
         /// <summary>
         /// 记录条件里的天数，用于种子简介
