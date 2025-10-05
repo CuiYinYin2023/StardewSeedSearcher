@@ -859,14 +859,14 @@
                         
                         <!-- 第一个条件行 -->
                         <div class="minechest-condition-row" data-index="0">
-                            <select class="minechest-floor" onchange="updateMineChestCondition(0)">
+                            <select class="minechest-floor" onchange="onFloorChange(0)">
                                 <option value="10">10层</option>
                                 <option value="20">20层</option>
                                 <option value="50">50层</option>
                                 <option value="60">60层</option>
                                 <option value="80">80层</option>
                                 <option value="90">90层</option>
-                                <option value="110">110层</option>
+                                <option value="110" selected>110层</option>
                             </select>
                             <select class="minechest-item" onchange="updateMineChestCondition(0)">
                                 <!-- 动态填充物品列表 -->
@@ -1244,22 +1244,18 @@
             const template = document.getElementById('mineChestConditionTemplate');
             const index = nextMineChestIndex++;
             
-            // 克隆模板
             const clone = template.content.cloneNode(true);
             const row = clone.querySelector('.minechest-condition-row');
             row.setAttribute('data-index', index);
             
-            // 填充物品下拉菜单（默认10层）
+            const floorSelect = row.querySelector('.minechest-floor');
             const itemSelect = row.querySelector('.minechest-item');
+            
+            // 默认填充第一个楼层的物品
             populateItemOptions(itemSelect, 10);
             
             // 绑定事件
-            const floorSelect = row.querySelector('.minechest-floor');
-            floorSelect.onchange = () => {
-                const floor = parseInt(floorSelect.value);
-                populateItemOptions(itemSelect, floor);
-                updateMineChestCondition(index);
-            };
+            floorSelect.onchange = () => onFloorChange(index);  // 使用新函数
             itemSelect.onchange = () => updateMineChestCondition(index);
             row.querySelector('.btn-remove').onclick = () => removeMineChestCondition(index);
             
@@ -1313,6 +1309,22 @@
             return false;
         }
 
+        // 处理楼层变化
+        function onFloorChange(index) {
+            const row = document.querySelector(`.minechest-condition-row[data-index="${index}"]`);
+            if (!row) return;
+            
+            const floorSelect = row.querySelector('.minechest-floor');
+            const itemSelect = row.querySelector('.minechest-item');
+            const floor = parseInt(floorSelect.value);
+            
+            // 更新物品列表
+            populateItemOptions(itemSelect, floor);
+            
+            // 更新条件
+            updateMineChestCondition(index);
+        }
+
         // 最大输出种子数量
         function updateOutputLimitMax() {
             const searchRangeInput = document.getElementById('searchRange');
@@ -1351,8 +1363,22 @@
             // 矿井宝箱条件初始化
             const firstMineChestRow = document.querySelector('.minechest-condition-row[data-index="0"]');
             if (firstMineChestRow) {
+                const floorSelect = firstMineChestRow.querySelector('.minechest-floor');
                 const itemSelect = firstMineChestRow.querySelector('.minechest-item');
-                populateItemOptions(itemSelect, 10); // 默认10层
+                
+                // 设置默认楼层为 110
+                floorSelect.value = '110';
+                
+                // 填充 110 层的物品列表
+                populateItemOptions(itemSelect, 110);
+                
+                // 设置默认物品为"巨锤"
+                itemSelect.value = '巨锤';
+                
+                // 绑定楼层变化事件
+                floorSelect.onchange = () => onFloorChange(0);
+                
+                // 初始化条件
                 updateMineChestCondition(0);
             }
         });
