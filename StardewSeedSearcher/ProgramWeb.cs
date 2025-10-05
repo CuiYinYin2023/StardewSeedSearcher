@@ -53,7 +53,7 @@ namespace StardewSeedSearcher
                     greenRainDay = weatherDetail.GreenRainDay
                 } : null,
                 fairy = fairyDays != null ? new { days = fairyDays } : null,
-                mineChest = mineChestDetails != null ? new { items = mineChestDetails } : null
+                mineChest = mineChestDetails
                 // 未来：
                 // pigCart = pigCartDetail,
                 // dwarf = dwarfDetail,
