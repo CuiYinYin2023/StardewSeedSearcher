@@ -22,6 +22,7 @@ namespace StardewSeedSearcher
         {
             WeatherDetailResult weatherDetail = null;
             List<object> fairyDays = null;
+            List<object> mineChestDetails = null;
             
             foreach (var feature in features)
             {
@@ -33,6 +34,10 @@ namespace StardewSeedSearcher
                 else if (feature is FairyPredictor fairyPredictor)
                 {
                     fairyDays = fairyPredictor.GetFairyDays(seed, useLegacy);
+                }
+                else if (feature is MineChestPredictor chest)
+                {
+                    mineChestDetails = chest.GetDetails(seed, useLegacy);
                 }
                 // 未来添加更多：
                 // else if (feature is PigCartPredictor pigCart) { ... }
@@ -47,7 +52,8 @@ namespace StardewSeedSearcher
                     fallRain = weatherDetail.FallRain,
                     greenRainDay = weatherDetail.GreenRainDay
                 } : null,
-                fairy = fairyDays != null ? new { days = fairyDays } : null
+                fairy = fairyDays != null ? new { days = fairyDays } : null,
+                mineChest = mineChestDetails != null ? new { items = mineChestDetails } : null
                 // 未来：
                 // pigCart = pigCartDetail,
                 // dwarf = dwarfDetail,
@@ -158,6 +164,24 @@ namespace StardewSeedSearcher
                     features.Add(fairyPredictor);
                 }
 
+                // 配置矿井宝箱功能
+                if (request.MineChestConditions != null && request.MineChestConditions.Count > 0)
+                {
+                    var mineChestPredictor = new MineChestPredictor { IsEnabled = true };
+                    
+                    foreach (var conditionDto in request.MineChestConditions)
+                    {
+                        var condition = new MineChestPredictor.MineChestCondition
+                        {
+                            Floor = conditionDto.Floor,
+                            ItemName = conditionDto.ItemName
+                        };
+                        mineChestPredictor.Conditions.Add(condition);
+                    }
+                    
+                    features.Add(mineChestPredictor);
+                }              
+
                 // 发送开始消息
                 await BroadcastMessage(new { type = "start", total = totalSeeds });
 
@@ -200,7 +224,9 @@ namespace StardewSeedSearcher
                                 enabledFeatures = new
                                 {
                                     weather = request.WeatherConditions != null && request.WeatherConditions.Count > 0,
-                                    fairy = request.FairyConditions != null && request.FairyConditions.Count > 0
+                                    fairy = request.FairyConditions != null && request.FairyConditions.Count > 0,
+                                    mineChest = request.MineChestConditions != null && request.MineChestConditions.Count > 0 
+    
                                 }
                             });
                             
@@ -356,6 +382,9 @@ namespace StardewSeedSearcher
         [JsonPropertyName("fairyConditions")]
         public List<FairyConditionDto> FairyConditions { get; set; } = new();
 
+        [JsonPropertyName("mineChestConditions")]
+        public List<MineChestConditionDto> MineChestConditions { get; set; } = new();
+
         [JsonPropertyName("outputLimit")]
         public int OutputLimit { get; set; }
     }
@@ -388,5 +417,14 @@ namespace StardewSeedSearcher
 
         [JsonPropertyName("day")]
         public int Day { get; set; }
+    }
+
+    public class MineChestConditionDto
+    {
+        [JsonPropertyName("floor")]
+        public int Floor { get; set; }
+
+        [JsonPropertyName("itemname")]
+        public string ItemName { get; set; }
     }
 }

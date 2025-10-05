@@ -694,7 +694,39 @@
 
         .fairy-condition-row select {
             width: 100px;
-        }        
+        }     
+
+        .minechest-condition-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 12px;
+            background-color: #f9f9f9;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .minechest-floor {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .minechest-item {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .minechest-item.matched {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .minechest-item.unmatched {
+            color: #dc3545;
+        }   
     </style>
 </head>
 <body>
@@ -815,6 +847,57 @@
                     <div class="error-message" id="fairyConditionError"></div>
                 </div>
 
+                <!-- 矿井宝箱部分 -->
+                <div class="checkbox-group">
+                    <input type="checkbox" id="mineChestEnabled" checked>
+                    <label for="mineChestEnabled">启用矿井宝箱预测</label>
+                </div>
+                <div class="condition-config" id="mineChestConfig">
+                    <h4 style="margin-bottom: 15px;">矿井宝箱筛选条件</h4>
+                    
+                    <div class="minechest-conditions-container" id="mineChestConditionsContainer">
+                        
+                        <!-- 第一个条件行 -->
+                        <div class="minechest-condition-row" data-index="0">
+                            <select class="minechest-floor" onchange="updateMineChestCondition(0)">
+                                <option value="10">10层</option>
+                                <option value="20">20层</option>
+                                <option value="50">50层</option>
+                                <option value="60">60层</option>
+                                <option value="80">80层</option>
+                                <option value="90">90层</option>
+                                <option value="110">110层</option>
+                            </select>
+                            <select class="minechest-item" onchange="updateMineChestCondition(0)">
+                                <!-- 动态填充物品列表 -->
+                            </select>
+                            <button type="button" class="btn-remove" onclick="removeMineChestCondition(0)">删除</button>
+                        </div>
+                    </div>
+                    
+                    <template id="mineChestConditionTemplate">
+                        <div class="minechest-condition-row">
+                            <select class="minechest-floor">
+                                <option value="10">10层</option>
+                                <option value="20">20层</option>
+                                <option value="50">50层</option>
+                                <option value="60">60层</option>
+                                <option value="80">80层</option>
+                                <option value="90">90层</option>
+                                <option value="110">110层</option>
+                            </select>
+                            <select class="minechest-item">
+                                <!-- 动态填充物品列表 -->
+                            </select>
+                            <button type="button" class="btn-remove">删除</button>
+                        </div>
+                    </template>
+                    
+                    <button type="button" class="btn-add-condition" onclick="addMineChestCondition()">添加条件</button>
+                    
+                    <div class="error-message" id="mineChestConditionError"></div>
+                </div>
+
                 <hr class="form-separator">
                 <div class="form-group form-group--inline">
                     <label for="outputLimit">最大种子数量 (达到数量后将提前停止搜索，不建议太高)</label>
@@ -892,6 +975,12 @@
             <h4>仙子</h4>
             <div id="sidebarFairyContent"></div>
         </div>
+
+        <!-- 添加矿井宝箱部分 -->
+        <div class="sidebar-section" id="mineChestSection">
+            <h4>矿井宝箱</h4>
+            <div id="sidebarMineChestContent"></div>
+        </div>
     </div>
 
     <!-- 复制提示 -->
@@ -920,6 +1009,8 @@
         let nextStartSeed = 0;
         let fairyConditions = [];
         let nextFairyIndex = 1;
+        let mineChestConditions = [];
+        let nextMineChestIndex = 1;
 
         const elements = {
             form: document.getElementById('searchForm'),
@@ -939,9 +1030,24 @@
             weatherConfig: document.getElementById('weatherConfig'),
             conditionsList: document.getElementById('conditionsList'),
             conditionError: document.getElementById('conditionError'),
+
             fairyEnabled: document.getElementById('fairyEnabled'),
             fairyConfig: document.getElementById('fairyConfig'),
-            fairyConditionError: document.getElementById('fairyConditionError')
+            fairyConditionError: document.getElementById('fairyConditionError'),
+
+            mineChestEnabled: document.getElementById('mineChestEnabled'),
+            mineChestConfig: document.getElementById('mineChestConfig'),
+            mineChestConditionError: document.getElementById('mineChestConditionError')
+        };
+
+        const MINE_CHEST_ITEMS = { 
+            10: ["皮靴", "工作靴", "木剑", "铁制短剑", "疾风利剑", "股骨"],
+            20: ["钢制轻剑", "木棒", "精灵之刃", "光辉戒指", "磁铁戒指"],
+            50: ["冻土靴", "热能靴", "战靴", "镀银军刀", "海盗剑"],
+            60: ["水晶匕首", "弯刀", "铁刃", "飞贼之胫", "木锤"],
+            80: ["蹈火者靴", "黑暗之靴", "双刃大剑", "圣堂之刃", "长柄锤", "暗影匕首"],
+            90: ["黑曜石之刃", "淬火阔剑", "蛇形邪剑", "骨剑", "骨化剑"],
+            110: ["太空之靴", "水晶鞋", "钢刀", "巨锤"]
         };
 
         // 天气
@@ -951,6 +1057,10 @@
         // 仙子
         elements.fairyEnabled.addEventListener('change', (e) => {
             elements.fairyConfig.style.display = e.target.checked ? 'block' : 'none';
+        });
+        // 混合矿井宝箱
+        elements.mineChestEnabled.addEventListener('change', (e) => {
+            elements.mineChestConfig.style.display = e.target.checked ? 'block' : 'none';
         });
 
         // 添加条件
@@ -1001,8 +1111,6 @@
                 };
             });
         }
-
-
 
         // 验证单个条件
         function validateCondition(condition) {
@@ -1130,6 +1238,96 @@
             return false;
         }
 
+        // 添加矿井宝箱条件
+        function addMineChestCondition() {
+            const container = document.getElementById('mineChestConditionsContainer');
+            const template = document.getElementById('mineChestConditionTemplate');
+            const index = nextMineChestIndex++;
+            
+            // 克隆模板
+            const clone = template.content.cloneNode(true);
+            const row = clone.querySelector('.minechest-condition-row');
+            row.setAttribute('data-index', index);
+            
+            // 填充物品下拉菜单（默认10层）
+            const itemSelect = row.querySelector('.minechest-item');
+            populateItemOptions(itemSelect, 10);
+            
+            // 绑定事件
+            const floorSelect = row.querySelector('.minechest-floor');
+            floorSelect.onchange = () => {
+                const floor = parseInt(floorSelect.value);
+                populateItemOptions(itemSelect, floor);
+                updateMineChestCondition(index);
+            };
+            itemSelect.onchange = () => updateMineChestCondition(index);
+            row.querySelector('.btn-remove').onclick = () => removeMineChestCondition(index);
+            
+            container.appendChild(clone);
+            updateMineChestCondition(index);
+        }
+
+        // 更新矿井宝箱条件
+        function updateMineChestCondition(index) {
+            const row = document.querySelector(`.minechest-condition-row[data-index="${index}"]`);
+            if (!row) return;
+            
+            const floor = parseInt(row.querySelector('.minechest-floor').value);
+            const item = row.querySelector('.minechest-item').value;
+            
+            mineChestConditions[index] = { floor, itemName: item };
+        }
+
+        // 删除矿井宝箱条件
+        function removeMineChestCondition(index) {
+            const row = document.querySelector(`.minechest-condition-row[data-index="${index}"]`);
+            if (row) {
+                row.remove();
+                delete mineChestConditions[index];
+            }
+        }
+
+        // 根据楼层填充物品选项
+        function populateItemOptions(selectElement, floor) {
+            selectElement.innerHTML = ''; // 清空现有选项
+            const items = MINE_CHEST_ITEMS[floor] || [];
+            
+            items.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item;
+                option.textContent = item;
+                selectElement.appendChild(option);
+            });
+        }
+
+        // 验证矿井宝箱条件
+        function validateMineChestCondition(condition) {
+            const { floor, itemName } = condition;
+            
+            if (![10, 20, 50, 60, 80, 90, 110].includes(floor)) {
+                return { valid: false, error: '无效的楼层' };
+            }
+            
+            if (!itemName || itemName.trim() === '') {
+                return { valid: false, error: '请选择物品' };
+            }
+            
+            return { valid: true };
+        }
+
+        // 检查重复条件
+        function hasMineChestDuplicate(newCondition, excludeIndex) {
+            const validConditions = mineChestConditions.filter((c, i) => c && i !== excludeIndex);
+            
+            for (let condition of validConditions) {
+                if (condition.floor === newCondition.floor && 
+                    condition.itemName === newCondition.itemName) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         // 最大输出种子数量
         function updateOutputLimitMax() {
             const searchRangeInput = document.getElementById('searchRange');
@@ -1164,6 +1362,14 @@
 
             // 仙子条件初始化
             updateFairyCondition(0);
+
+            // 矿井宝箱条件初始化
+            const firstMineChestRow = document.querySelector('.minechest-condition-row[data-index="0"]');
+            if (firstMineChestRow) {
+                const itemSelect = firstMineChestRow.querySelector('.minechest-item');
+                populateItemOptions(itemSelect, 10); // 默认10层
+                updateMineChestCondition(0);
+            }
         });
 
         // 监听起始种子修改,重置循环
@@ -1299,6 +1505,7 @@
             currentSearchUseLegacy = useLegacy;  // 保存当前搜索模式
             const weatherEnabled = elements.weatherEnabled.checked;
             const outputLimit = parseInt(document.getElementById('outputLimit').value); // 读取输出数量
+            const mineChestEnabled = elements.mineChestEnabled.checked;
             
             // 计算起始种子
             let startSeed = loopSearch && nextStartSeed > 0 
@@ -1378,7 +1585,33 @@
                         return;
                     }
                 }
-            }            
+            } 
+            
+            // 矿井宝箱验证
+            if (mineChestEnabled) {
+                const validMineChestConditions = mineChestConditions.filter(c => c);
+                
+                if (validMineChestConditions.length === 0) {
+                    alert('请至少添加一个矿井宝箱条件！');
+                    return;
+                }
+                
+                for (let i = 0; i < mineChestConditions.length; i++) {
+                    const condition = mineChestConditions[i];
+                    if (!condition) continue;
+                    
+                    const validation = validateMineChestCondition(condition);
+                    if (!validation.valid) {
+                        alert(`矿井宝箱条件 ${i + 1}: ${validation.error}`);
+                        return;
+                    }
+                    
+                    if (hasMineChestDuplicate(condition, i)) {
+                        alert(`矿井宝箱条件 ${i + 1}: 与其他条件重复`);
+                        return;
+                    }
+                }
+            }
 
             // 显示进度区域
             elements.progressSection.style.display = 'block';
@@ -1411,6 +1644,12 @@
                     year: c.year,
                     season: c.season,
                     day: c.day
+                })) : [];
+
+                // 在发送搜索请求时添加矿井宝箱数据
+                const mineChestConditionsData = mineChestEnabled ? mineChestConditions.filter(c => c).map(c => ({
+                    floor: c.floor,
+                    itemName: c.itemName
                 })) : [];
 
                 const response = await fetch('http://localhost:5000/api/search', {
@@ -1503,6 +1742,26 @@
             } else {
                 document.getElementById('fairySection').style.display = 'none';
             }
+
+        // 只有启用了矿井宝箱功能才显示
+        if (enabled.mineChest && details.mineChest) {
+            let chestHtml = '<div class="weather-season">';
+            
+            details.mineChest.forEach(item => {
+                const matchIcon = item.matched ? '✓' : '✗';
+                const matchClass = item.matched ? 'matched' : 'unmatched';
+                chestHtml += `
+                    <div class="minechest-item ${matchClass}">
+                        <span>${matchIcon} ${item.floor}层：${item.item}</span>
+                    </div>
+                `;
+            });
+            chestHtml += '</div>';
+            document.getElementById('sidebarMineChestContent').innerHTML = chestHtml;
+            document.getElementById('mineChestSection').style.display = 'block';
+        } else {
+            document.getElementById('mineChestSection').style.display = 'none';
+        }
             
             // 显示侧边栏
             document.getElementById('sidebarPanel').classList.add('active');
