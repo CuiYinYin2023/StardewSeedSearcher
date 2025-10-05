@@ -36,7 +36,7 @@ namespace StardewSeedSearcher.Features
         {
             if (!IsEnabled) return true;
             
-            foreach (var condition in Conditions)  // 改为大写 C
+            foreach (var condition in Conditions)
             {
                 string actualItem = PredictItem(gameID, condition.Floor, useLegacyRandom);
                 if (actualItem != condition.ItemName)

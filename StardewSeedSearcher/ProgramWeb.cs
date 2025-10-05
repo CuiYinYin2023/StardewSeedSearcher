@@ -180,7 +180,7 @@ namespace StardewSeedSearcher
                     }
                     
                     features.Add(mineChestPredictor);
-                }              
+                }
 
                 // 发送开始消息
                 await BroadcastMessage(new { type = "start", total = totalSeeds });

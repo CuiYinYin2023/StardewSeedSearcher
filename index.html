@@ -1275,7 +1275,7 @@
             const floor = parseInt(row.querySelector('.minechest-floor').value);
             const item = row.querySelector('.minechest-item').value;
             
-            mineChestConditions[index] = { floor, itemName: item };
+            mineChestConditions[index] = { Floor: floor, ItemName: item };
         }
 
         // 删除矿井宝箱条件
@@ -1300,28 +1300,13 @@
             });
         }
 
-        // 验证矿井宝箱条件
-        function validateMineChestCondition(condition) {
-            const { floor, itemName } = condition;
-            
-            if (![10, 20, 50, 60, 80, 90, 110].includes(floor)) {
-                return { valid: false, error: '无效的楼层' };
-            }
-            
-            if (!itemName || itemName.trim() === '') {
-                return { valid: false, error: '请选择物品' };
-            }
-            
-            return { valid: true };
-        }
-
         // 检查重复条件
         function hasMineChestDuplicate(newCondition, excludeIndex) {
             const validConditions = mineChestConditions.filter((c, i) => c && i !== excludeIndex);
             
             for (let condition of validConditions) {
                 if (condition.floor === newCondition.floor && 
-                    condition.itemName === newCondition.itemName) {
+                    condition.ItemName === newCondition.ItemName) {
                     return true;
                 }
             }
@@ -1506,7 +1491,7 @@
             const weatherEnabled = elements.weatherEnabled.checked;
             const outputLimit = parseInt(document.getElementById('outputLimit').value); // 读取输出数量
             const mineChestEnabled = elements.mineChestEnabled.checked;
-            
+
             // 计算起始种子
             let startSeed = loopSearch && nextStartSeed > 0 
                 ? nextStartSeed 
@@ -1600,12 +1585,6 @@
                     const condition = mineChestConditions[i];
                     if (!condition) continue;
                     
-                    const validation = validateMineChestCondition(condition);
-                    if (!validation.valid) {
-                        alert(`矿井宝箱条件 ${i + 1}: ${validation.error}`);
-                        return;
-                    }
-                    
                     if (hasMineChestDuplicate(condition, i)) {
                         alert(`矿井宝箱条件 ${i + 1}: 与其他条件重复`);
                         return;
@@ -1648,8 +1627,8 @@
 
                 // 在发送搜索请求时添加矿井宝箱数据
                 const mineChestConditionsData = mineChestEnabled ? mineChestConditions.filter(c => c).map(c => ({
-                    floor: c.floor,
-                    itemName: c.itemName
+                    Floor: c.Floor,
+                    ItemName: c.ItemName
                 })) : [];
 
                 const response = await fetch('http://localhost:5000/api/search', {
@@ -1663,6 +1642,7 @@
                         useLegacyRandom: useLegacy,
                         weatherConditions,
                         fairyConditions: fairyConditionsData,
+                        MineChestConditions: mineChestConditionsData, 
                         outputLimit // 将输出数量添加到请求中
                     })
                 });
