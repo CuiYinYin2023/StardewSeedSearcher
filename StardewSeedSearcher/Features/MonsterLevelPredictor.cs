@@ -128,7 +128,7 @@ namespace StardewSeedSearcher.Features
         {
             return Conditions.Select(c => new
             {
-                description = GetConditionDescription(c),
+                description = GetConfigDescription(),
                 satisfied = true  // 能到这里说明条件已满足
             }).ToList<object>();
         }

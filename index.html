@@ -768,11 +768,14 @@
                     <label for="useLegacy">使用旧随机模式</label>
                 </div>
 
+                <!-- 天气功能 -->
                 <div class="checkbox-group">
-                    <input type="checkbox" id="weatherEnabled" checked>
+                    <!-- <input type="checkbox" id="weatherEnabled" checked> -->
+                    <input type="checkbox" id="weatherEnabled">
                     <label for="weatherEnabled">启用天气预测</label>
                 </div>
-                <div class="condition-config" id="weatherConfig">
+                <!-- <div class="condition-config" id="weatherConfig"> -->
+                <div class="condition-config" id="weatherConfig" style="display: none;">
                     <h4 style="margin-bottom: 15px;">天气筛选条件</h4>
                     <!-- 新的容器,用来放所有可编辑的条件行 -->
                     <div class="conditions-container" id="conditionsContainer">  
@@ -803,11 +806,14 @@
                     <div class="error-message" id="conditionError"></div>
                 </div>
 
+                <!-- 仙子功能 -->
                 <div class="checkbox-group">
-                    <input type="checkbox" id="fairyEnabled" checked>
+                    <input type="checkbox" id="fairyEnabled">
+                    <!-- <input type="checkbox" id="fairyEnabled" checked> -->
                     <label for="fairyEnabled">启用仙子预测</label>
                 </div>
-                <div class="condition-config" id="fairyConfig">
+                <!-- <div class="condition-config" id="fairyConfig"> -->
+                <div class="condition-config" id="fairyConfig" style="display: none;">
                     <h4 style="margin-bottom: 15px;">仙子筛选条件</h4>
                     
                     <div class="fairy-conditions-container" id="fairyConditionsContainer">
@@ -847,12 +853,14 @@
                     <div class="error-message" id="fairyConditionError"></div>
                 </div>
 
-                <!-- 矿井宝箱部分 -->
+                <!-- 矿井宝箱 -->
                 <div class="checkbox-group">
-                    <input type="checkbox" id="mineChestEnabled" checked>
+                    <input type="checkbox" id="mineChestEnabled">
+                    <!-- <input type="checkbox" id="mineChestEnabled" checked> -->
                     <label for="mineChestEnabled">启用矿井宝箱预测</label>
                 </div>
-                <div class="condition-config" id="mineChestConfig">
+                <!-- <div class="condition-config" id="mineChestConfig"> -->
+                <div class="condition-config" id="mineChestConfig" style="display: none;">
                     <h4 style="margin-bottom: 15px;">矿井宝箱筛选条件</h4>
                     
                     <div class="minechest-conditions-container" id="mineChestConditionsContainer">
@@ -896,6 +904,73 @@
                     <button type="button" class="btn-add-condition" onclick="addMineChestCondition()">添加条件</button>
                     
                     <div class="error-message" id="mineChestConditionError"></div>
+                </div>
+
+                <!-- 怪物层部分 -->
+                <div class="checkbox-group">
+                    <input type="checkbox" id="monsterLevelEnabled" checked>
+                    <label for="monsterLevelEnabled">启用怪物层预测</label>
+                </div>
+                <div class="condition-config" id="monsterLevelConfig">
+                    <h4 style="margin-bottom: 15px;">怪物层筛选条件</h4>
+                    
+                    <div class="monsterlevel-conditions-container" id="monsterLevelConditionsContainer">
+                        
+                        <!-- 第一个条件行 -->
+                        <div class="monsterlevel-condition-row" data-index="0">
+                            <select class="monsterlevel-start-season" onchange="updateMonsterLevelCondition(0)">
+                                <option value="Spring">春</option>
+                                <option value="Summer">夏</option>
+                                <option value="Fall">秋</option>
+                                <option value="Winter">冬</option>
+                            </select>
+                            <input type="number" class="monsterlevel-start-day" min="1" max="28" value="5" onchange="updateMonsterLevelCondition(0)">
+                            <span>-</span>
+                            <select class="monsterlevel-end-season" onchange="updateMonsterLevelCondition(0)">
+                                <option value="Spring">春</option>
+                                <option value="Summer">夏</option>
+                                <option value="Fall">秋</option>
+                                <option value="Winter">冬</option>
+                            </select>
+                            <input type="number" class="monsterlevel-end-day" min="1" max="28" value="5" onchange="updateMonsterLevelCondition(0)">
+                            <span>,</span>
+                            <input type="number" class="monsterlevel-start-level" min="1" max="119" value="1" onchange="updateMonsterLevelCondition(0)">
+                            <span>层-</span>
+                            <input type="number" class="monsterlevel-end-level" min="1" max="119" value="80" onchange="updateMonsterLevelCondition(0)">
+                            <span>层</span>
+                            <button type="button" class="btn-remove" onclick="removeMonsterLevelCondition(0)">删除</button>
+                        </div>
+                    </div>
+                    
+                    <template id="monsterLevelConditionTemplate">
+                        <div class="monsterlevel-condition-row">
+                            <select class="monsterlevel-start-season">
+                                <option value="Spring">春</option>
+                                <option value="Summer">夏</option>
+                                <option value="Fall">秋</option>
+                                <option value="Winter">冬</option>
+                            </select>
+                            <input type="number" class="monsterlevel-start-day" min="1" max="28" value="1">
+                            <span>-</span>
+                            <select class="monsterlevel-end-season">
+                                <option value="Spring">春</option>
+                                <option value="Summer">夏</option>
+                                <option value="Fall">秋</option>
+                                <option value="Winter">冬</option>
+                            </select>
+                            <input type="number" class="monsterlevel-end-day" min="1" max="28" value="1">
+                            <span>,</span>
+                            <input type="number" class="monsterlevel-start-level" min="1" max="119" value="1">
+                            <span>层-</span>
+                            <input type="number" class="monsterlevel-end-level" min="1" max="119" value="80">
+                            <span>层</span>
+                            <button type="button" class="btn-remove">删除</button>
+                        </div>
+                    </template>
+                    
+                    <button type="button" class="btn-add-condition" onclick="addMonsterLevelCondition()">添加条件</button>
+                    
+                    <div class="error-message" id="monsterLevelConditionError"></div>
                 </div>
 
                 <hr class="form-separator">
@@ -981,6 +1056,12 @@
             <h4>矿井宝箱</h4>
             <div id="sidebarMineChestContent"></div>
         </div>
+
+        <!-- 添加怪物层部分 -->
+        <div class="sidebar-section" id="monsterLevelSection">
+            <h4>怪物层</h4>
+            <div id="sidebarMonsterLevelContent"></div>
+        </div>
     </div>
 
     <!-- 复制提示 -->
@@ -1011,6 +1092,8 @@
         let nextFairyIndex = 1;
         let mineChestConditions = [];
         let nextMineChestIndex = 1;
+        let monsterLevelConditions = [];
+        let nextMonsterLevelIndex = 1;
 
         const elements = {
             form: document.getElementById('searchForm'),
@@ -1037,7 +1120,11 @@
 
             mineChestEnabled: document.getElementById('mineChestEnabled'),
             mineChestConfig: document.getElementById('mineChestConfig'),
-            mineChestConditionError: document.getElementById('mineChestConditionError')
+            mineChestConditionError: document.getElementById('mineChestConditionError'),
+
+            monsterLevelEnabled: document.getElementById('monsterLevelEnabled'),
+            monsterLevelConfig: document.getElementById('monsterLevelConfig'),
+            monsterLevelConditionError: document.getElementById('monsterLevelConditionError')
         };
 
         const MINE_CHEST_ITEMS = { 
@@ -1061,6 +1148,10 @@
         // 混合矿井宝箱
         elements.mineChestEnabled.addEventListener('change', (e) => {
             elements.mineChestConfig.style.display = e.target.checked ? 'block' : 'none';
+        });
+        // 怪物层
+        elements.monsterLevelEnabled.addEventListener('change', (e) => {
+            elements.monsterLevelConfig.style.display = e.target.checked ? 'block' : 'none';
         });
 
         // 添加条件
@@ -1325,6 +1416,92 @@
             updateMineChestCondition(index);
         }
 
+        // 怪物层相关函数
+        function addMonsterLevelCondition() {
+            const container = document.getElementById('monsterLevelConditionsContainer');
+            const template = document.getElementById('monsterLevelConditionTemplate');
+            const index = nextMonsterLevelIndex++;
+            
+            // 克隆模板
+            const clone = template.content.cloneNode(true);
+            const row = clone.querySelector('.monsterlevel-condition-row');
+            row.setAttribute('data-index', index);
+            
+            // 绑定事件
+            row.querySelector('.monsterlevel-start-season').onchange = () => updateMonsterLevelCondition(index);
+            row.querySelector('.monsterlevel-start-day').onchange = () => updateMonsterLevelCondition(index);
+            row.querySelector('.monsterlevel-end-season').onchange = () => updateMonsterLevelCondition(index);
+            row.querySelector('.monsterlevel-end-day').onchange = () => updateMonsterLevelCondition(index);
+            row.querySelector('.monsterlevel-start-level').onchange = () => updateMonsterLevelCondition(index);
+            row.querySelector('.monsterlevel-end-level').onchange = () => updateMonsterLevelCondition(index);
+            row.querySelector('.btn-remove').onclick = () => removeMonsterLevelCondition(index);
+            
+            container.appendChild(clone);
+            updateMonsterLevelCondition(index);
+        }
+
+        function updateMonsterLevelCondition(index) {
+            const row = document.querySelector(`.monsterlevel-condition-row[data-index="${index}"]`);
+            if (!row) return;
+            
+            const startSeason = row.querySelector('.monsterlevel-start-season').value;
+            const startDay = parseInt(row.querySelector('.monsterlevel-start-day').value) || 5;
+            const endSeason = row.querySelector('.monsterlevel-end-season').value;
+            const endDay = parseInt(row.querySelector('.monsterlevel-end-day').value) || 5;
+            const startLevel = parseInt(row.querySelector('.monsterlevel-start-level').value) || 1;
+            const endLevel = parseInt(row.querySelector('.monsterlevel-end-level').value) || 80;
+            
+            // 转换为绝对天数
+            const seasonMap = { Spring: 0, Summer: 1, Fall: 2, Winter: 3 };
+            const startDayAbsolute = seasonMap[startSeason] * 28 + startDay;
+            const endDayAbsolute = seasonMap[endSeason] * 28 + endDay;
+            
+            monsterLevelConditions[index] = {
+                startDay: startDayAbsolute,
+                endDay: endDayAbsolute,
+                startLevel: startLevel,
+                endLevel: endLevel
+            };
+        }
+
+        function removeMonsterLevelCondition(index) {
+            const row = document.querySelector(`.monsterlevel-condition-row[data-index="${index}"]`);
+            if (row) {
+                row.remove();
+                delete monsterLevelConditions[index];
+            }
+        }
+
+        function validateMonsterLevelCondition(condition) {
+            const { startDay, endDay, startLevel, endLevel } = condition;
+            
+            if (startDay < 1 || startDay > 112) {
+                return { valid: false, error: '起始日期必须在第一年范围内' };
+            }
+            
+            if (endDay < 1 || endDay > 112) {
+                return { valid: false, error: '结束日期必须在第一年范围内' };
+            }
+            
+            if (startDay > endDay) {
+                return { valid: false, error: '起始日期不能晚于结束日期' };
+            }
+            
+            if (startLevel < 1 || startLevel > 119) {
+                return { valid: false, error: '起始层数必须在 1-119 之间' };
+            }
+            
+            if (endLevel < 1 || endLevel > 119) {
+                return { valid: false, error: '结束层数必须在 1-119 之间' };
+            }
+            
+            if (startLevel > endLevel) {
+                return { valid: false, error: '起始层数不能大于结束层数' };
+            }
+            
+            return { valid: true };
+        }
+
         // 最大输出种子数量
         function updateOutputLimitMax() {
             const searchRangeInput = document.getElementById('searchRange');
@@ -1381,6 +1558,9 @@
                 // 初始化条件
                 updateMineChestCondition(0);
             }
+
+            // 怪物层条件初始化
+            updateMonsterLevelCondition(0);
         });
 
         // 监听起始种子修改,重置循环
@@ -1618,6 +1798,29 @@
                 }
             }
 
+            // 怪物层条件验证
+            const monsterLevelEnabled = elements.monsterLevelEnabled.checked;
+
+            if (monsterLevelEnabled) {
+                const validMonsterLevelConditions = monsterLevelConditions.filter(c => c);
+                
+                if (validMonsterLevelConditions.length === 0) {
+                    alert('请至少添加一个怪物层条件！');
+                    return;
+                }
+                
+                for (let i = 0; i < monsterLevelConditions.length; i++) {
+                    const condition = monsterLevelConditions[i];
+                    if (!condition) continue;
+                    
+                    const validation = validateMonsterLevelCondition(condition);
+                    if (!validation.valid) {
+                        alert(`怪物层条件 ${i + 1}: ${validation.error}`);
+                        return;
+                    }
+                }
+            }
+
             // 显示进度区域
             elements.progressSection.style.display = 'block';
             elements.resultsSection.style.display = 'block';
@@ -1651,10 +1854,16 @@
                     day: c.day
                 })) : [];
 
-                // 在发送搜索请求时添加矿井宝箱数据
                 const mineChestConditionsData = mineChestEnabled ? mineChestConditions.filter(c => c).map(c => ({
                     Floor: c.Floor,
                     ItemName: c.ItemName
+                })) : [];
+
+                const monsterLevelConditionsData = monsterLevelEnabled ? monsterLevelConditions.filter(c => c).map(c => ({
+                    startDay: c.startDay,
+                    endDay: c.endDay,
+                    startLevel: c.startLevel,
+                    endLevel: c.endLevel
                 })) : [];
 
                 const response = await fetch('http://localhost:5000/api/search', {
@@ -1768,7 +1977,25 @@
         } else {
             document.getElementById('mineChestSection').style.display = 'none';
         }
+
+        // 只有启用了怪物层功能才显示
+        if (enabled.monsterLevel && details.monsterLevel) {
+            const seasonMap = { Spring: '春', Summer: '夏', Fall: '秋', Winter: '冬' };
+            const monsterLevelText = details.monsterLevel.map(m => {
+                return m.description;
+            }).join('、');
             
+            const monsterLevelHtml = `
+                <div class="weather-season">
+                    <div class="weather-days">${monsterLevelText}</div>
+                </div>
+            `;
+            document.getElementById('sidebarMonsterLevelContent').innerHTML = monsterLevelHtml;
+            document.getElementById('monsterLevelSection').style.display = 'block';
+        } else {
+            document.getElementById('monsterLevelSection').style.display = 'none';
+        }
+
             // 显示侧边栏
             document.getElementById('sidebarPanel').classList.add('active');
         }

@@ -23,6 +23,7 @@ namespace StardewSeedSearcher
             WeatherDetailResult weatherDetail = null;
             List<object> fairyDays = null;
             List<object> mineChestDetails = null;
+            List<object> monsterLevelDetails = null;
             
             foreach (var feature in features)
             {
@@ -39,6 +40,10 @@ namespace StardewSeedSearcher
                 {
                     mineChestDetails = chest.GetDetails(seed, useLegacy);
                 }
+                else if (feature is MonsterLevelPredictor monsterLevel)
+                {
+                    monsterLevelDetails = monsterLevel.GetDetails(seed, useLegacy);
+                }
                 // 未来添加更多：
                 // else if (feature is PigCartPredictor pigCart) { ... }
             }
@@ -53,7 +58,8 @@ namespace StardewSeedSearcher
                     greenRainDay = weatherDetail.GreenRainDay
                 } : null,
                 fairy = fairyDays != null ? new { days = fairyDays } : null,
-                mineChest = mineChestDetails
+                mineChest = mineChestDetails,
+                monsterLevel = monsterLevelDetails
                 // 未来：
                 // pigCart = pigCartDetail,
                 // dwarf = dwarfDetail,
@@ -182,6 +188,26 @@ namespace StardewSeedSearcher
                     features.Add(mineChestPredictor);
                 }
 
+                // 配置怪物层预测
+                if (request.MonsterLevelConditions != null && request.MonsterLevelConditions.Count > 0)
+                {
+                    var monsterLevelPredictor = new MonsterLevelPredictor { IsEnabled = true };
+                    
+                    foreach (var conditionDto in request.MonsterLevelConditions)
+                    {
+                        var condition = new MonsterLevelPredictor.MonsterLevelCondition
+                        {
+                            StartDay = conditionDto.StartDay,
+                            EndDay = conditionDto.EndDay,
+                            StartLevel = conditionDto.StartLevel,
+                            EndLevel = conditionDto.EndLevel
+                        };
+                        monsterLevelPredictor.Conditions.Add(condition);
+                    }
+                    
+                    features.Add(monsterLevelPredictor);
+                }
+
                 // 发送开始消息
                 await BroadcastMessage(new { type = "start", total = totalSeeds });
 
@@ -225,8 +251,8 @@ namespace StardewSeedSearcher
                                 {
                                     weather = request.WeatherConditions != null && request.WeatherConditions.Count > 0,
                                     fairy = request.FairyConditions != null && request.FairyConditions.Count > 0,
-                                    mineChest = request.MineChestConditions != null && request.MineChestConditions.Count > 0 
-    
+                                    mineChest = request.MineChestConditions != null && request.MineChestConditions.Count > 0,
+                                    monsterLevel = request.MonsterLevelConditions != null && request.MonsterLevelConditions.Count > 0
                                 }
                             });
                             
@@ -385,6 +411,9 @@ namespace StardewSeedSearcher
         [JsonPropertyName("mineChestConditions")]
         public List<MineChestConditionDto> MineChestConditions { get; set; } = new();
 
+        [JsonPropertyName("monsterLevelConditions")]
+        public List<MonsterLevelConditionDto> MonsterLevelConditions { get; set; } = new();
+
         [JsonPropertyName("outputLimit")]
         public int OutputLimit { get; set; }
     }
@@ -426,5 +455,20 @@ namespace StardewSeedSearcher
 
         [JsonPropertyName("itemname")]
         public string ItemName { get; set; }
+    }
+
+    public class MonsterLevelConditionDto
+    {
+        [JsonPropertyName("startDay")]
+        public int StartDay { get; set; }
+
+        [JsonPropertyName("endDay")]
+        public int EndDay { get; set; }
+
+        [JsonPropertyName("startLevel")]
+        public int StartLevel { get; set; }
+
+        [JsonPropertyName("endLevel")]
+        public int EndLevel { get; set; }
     }
 }
