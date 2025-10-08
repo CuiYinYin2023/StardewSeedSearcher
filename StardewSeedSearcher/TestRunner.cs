@@ -20,6 +20,7 @@ namespace StardewSeedSearcher
                 Console.WriteLine("1. 天气预测");
                 Console.WriteLine("2. 仙子预测");
                 Console.WriteLine("3. 混合宝箱预测");
+                Console.WriteLine("4. 怪物层预测");
                 Console.WriteLine("0. 退出\n");
                 Console.Write("请输入选项：");
 
@@ -38,6 +39,10 @@ namespace StardewSeedSearcher
                     case "3":
                         Console.Clear();
                         MineChestTests.Run();
+                        break;
+                    case "4":
+                        Console.Clear();
+                        MonsterLevelTests.Run();
                         break;
                     case "0":
                         Console.WriteLine("再见！");
