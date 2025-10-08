@@ -26,12 +26,12 @@ namespace StardewSeedSearcher.Features
             public int EndDay { get; set; }
 
             /// <summary>
-            /// 起始层数（1-119）
+            /// 起始层数（1-120）
             /// </summary>
             public int StartLevel { get; set; }
 
             /// <summary>
-            /// 结束层数（1-119）
+            /// 结束层数（1-120）
             /// </summary>
             public int EndLevel { get; set; }
         }
@@ -128,11 +128,11 @@ namespace StardewSeedSearcher.Features
         {
             return Conditions.Select(c => new
             {
-                description = GetConfigDescription(),
-                satisfied = true  // 能到这里说明条件已满足
+                description = FormatConditionDescription(c),
+                satisfied = true
             }).ToList<object>();
         }
-        
+
         /// <summary>
         /// 获取配置描述（用于显示当前设置）
         /// </summary>
@@ -143,22 +143,26 @@ namespace StardewSeedSearcher.Features
                 return "未启用";
             }
             
-            string[] seasonNames = { "春", "夏", "秋", "冬" };
-            var descriptions = Conditions.Select(c =>
-            {
-                int startSeason = (c.StartDay - 1) / 28;
-                int startDayOfMonth = ((c.StartDay - 1) % 28) + 1;
-                int endSeason = (c.EndDay - 1) / 28;
-                int endDayOfMonth = ((c.EndDay - 1) % 28) + 1;
-                
-                string dateRange = c.StartDay == c.EndDay
-                    ? $"{seasonNames[startSeason]}{startDayOfMonth}"
-                    : $"{seasonNames[startSeason]}{startDayOfMonth}-{seasonNames[endSeason]}{endDayOfMonth}";
-                
-                return $"{dateRange} {c.StartLevel}-{c.EndLevel}层无怪物层";
-            });
-            
+            var descriptions = Conditions.Select(c => FormatConditionDescription(c));
             return string.Join(", ", descriptions);
+        }
+
+        /// <summary>
+        /// 格式化单个条件的描述
+        /// </summary>
+        private string FormatConditionDescription(MonsterLevelCondition c)
+        {
+            string[] seasonNames = { "春", "夏", "秋", "冬" };
+            int startSeason = (c.StartDay - 1) / 28;
+            int startDayOfMonth = ((c.StartDay - 1) % 28) + 1;
+            int endSeason = (c.EndDay - 1) / 28;
+            int endDayOfMonth = ((c.EndDay - 1) % 28) + 1;
+            
+            string dateRange = c.StartDay == c.EndDay
+                ? $"{seasonNames[startSeason]}{startDayOfMonth}"
+                : $"{seasonNames[startSeason]}{startDayOfMonth}-{seasonNames[endSeason]}{endDayOfMonth}";
+            
+            return $"{dateRange} {c.StartLevel}-{c.EndLevel}层无怪物层";
         }
     }
 }

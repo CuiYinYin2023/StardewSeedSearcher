@@ -727,6 +727,40 @@
         .minechest-item.unmatched {
             color: #dc3545;
         }   
+
+        .monsterlevel-condition-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 12px;
+            background-color: #f9f9f9;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .monsterlevel-condition-row select,
+        .monsterlevel-condition-row input {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .monsterlevel-condition-row input[type="number"] {
+            width: 80px;
+        }
+
+        .monsterlevel-condition-row select {
+            width: 100px;
+        }
+
+        .monsterlevel-condition-row span {
+            color: #666;
+            font-size: 14px;
+        }
+
+
     </style>
 </head>
 <body>
@@ -790,9 +824,9 @@
                         <!-- 第一个编辑框(初始存在) -->
                         <div class="condition-row">                          
                             <select>
-                                <option value="Spring">春季</option>
-                                <option value="Summer">夏季</option>
-                                <option value="Fall">秋季</option>
+                                <option value="Spring">春</option>
+                                <option value="Summer">夏</option>
+                                <option value="Fall">秋</option>
                             </select>
                             <input type="number" placeholder="起始 (1-28)" min="1" max="28" value="1">
                             <input type="number" placeholder="结束 (1-28)" min="1" max="28" value="28">
@@ -918,6 +952,7 @@
                         
                         <!-- 第一个条件行 -->
                         <div class="monsterlevel-condition-row" data-index="0">
+                            <span>起始日期</span>
                             <select class="monsterlevel-start-season" onchange="updateMonsterLevelCondition(0)">
                                 <option value="Spring">春</option>
                                 <option value="Summer">夏</option>
@@ -925,7 +960,7 @@
                                 <option value="Winter">冬</option>
                             </select>
                             <input type="number" class="monsterlevel-start-day" min="1" max="28" value="5" onchange="updateMonsterLevelCondition(0)">
-                            <span>-</span>
+                            <span>结束日期</span>
                             <select class="monsterlevel-end-season" onchange="updateMonsterLevelCondition(0)">
                                 <option value="Spring">春</option>
                                 <option value="Summer">夏</option>
@@ -933,17 +968,17 @@
                                 <option value="Winter">冬</option>
                             </select>
                             <input type="number" class="monsterlevel-end-day" min="1" max="28" value="5" onchange="updateMonsterLevelCondition(0)">
-                            <span>,</span>
-                            <input type="number" class="monsterlevel-start-level" min="1" max="119" value="1" onchange="updateMonsterLevelCondition(0)">
-                            <span>层-</span>
-                            <input type="number" class="monsterlevel-end-level" min="1" max="119" value="80" onchange="updateMonsterLevelCondition(0)">
-                            <span>层</span>
+                            <span>起始层数</span>
+                            <input type="number" class="monsterlevel-start-level" min="1" max="120" value="1" onchange="updateMonsterLevelCondition(0)">
+                            <span>结束层数</span>
+                            <input type="number" class="monsterlevel-end-level" min="1" max="120" value="80" onchange="updateMonsterLevelCondition(0)">
                             <button type="button" class="btn-remove" onclick="removeMonsterLevelCondition(0)">删除</button>
                         </div>
                     </div>
                     
                     <template id="monsterLevelConditionTemplate">
                         <div class="monsterlevel-condition-row">
+                            <span>起始日期</span>
                             <select class="monsterlevel-start-season">
                                 <option value="Spring">春</option>
                                 <option value="Summer">夏</option>
@@ -951,7 +986,7 @@
                                 <option value="Winter">冬</option>
                             </select>
                             <input type="number" class="monsterlevel-start-day" min="1" max="28" value="1">
-                            <span>-</span>
+                            <span>结束日期</span>
                             <select class="monsterlevel-end-season">
                                 <option value="Spring">春</option>
                                 <option value="Summer">夏</option>
@@ -959,11 +994,10 @@
                                 <option value="Winter">冬</option>
                             </select>
                             <input type="number" class="monsterlevel-end-day" min="1" max="28" value="1">
-                            <span>,</span>
-                            <input type="number" class="monsterlevel-start-level" min="1" max="119" value="1">
-                            <span>层-</span>
-                            <input type="number" class="monsterlevel-end-level" min="1" max="119" value="80">
-                            <span>层</span>
+                            <span>起始层数</span>
+                            <input type="number" class="monsterlevel-start-level" min="1" max="120" value="1">
+                            <span>结束层数</span>
+                            <input type="number" class="monsterlevel-end-level" min="1" max="120" value="10">
                             <button type="button" class="btn-remove">删除</button>
                         </div>
                     </template>
@@ -1021,7 +1055,7 @@
         <div class="card footer">
             <h3>🚀 脆音音的后续开发计划</h3>
             <ul>
-                <li><span class="placeholder-text">更多功能：猪车、沙漠节商人、怪物层、春1菜品、垃圾桶、晶球、齐先生任务、矮人雕像矿+1buff、混合献祭包等</span></li>
+                <li><span class="placeholder-text">更多功能：猪车、沙漠节商人、春1菜品、垃圾桶、晶球、齐先生任务、矮人雕像矿+1buff、混合献祭包等</span></li>
             </ul>
         </div>
     </div>
@@ -1487,12 +1521,12 @@
                 return { valid: false, error: '起始日期不能晚于结束日期' };
             }
             
-            if (startLevel < 1 || startLevel > 119) {
-                return { valid: false, error: '起始层数必须在 1-119 之间' };
+            if (startLevel < 1 || startLevel > 120) {
+                return { valid: false, error: '起始层数必须在 1-120 之间' };
             }
             
-            if (endLevel < 1 || endLevel > 119) {
-                return { valid: false, error: '结束层数必须在 1-119 之间' };
+            if (endLevel < 1 || endLevel > 120) {
+                return { valid: false, error: '结束层数必须在 1-120 之间' };
             }
             
             if (startLevel > endLevel) {
@@ -1865,6 +1899,8 @@
                     startLevel: c.startLevel,
                     endLevel: c.endLevel
                 })) : [];
+                
+                console.log('怪物层条件:', monsterLevelConditionsData);
 
                 const response = await fetch('http://localhost:5000/api/search', {
                     method: 'POST',
@@ -1878,6 +1914,7 @@
                         weatherConditions,
                         fairyConditions: fairyConditionsData,
                         MineChestConditions: mineChestConditionsData, 
+                        monsterLevelConditions: monsterLevelConditionsData, 
                         outputLimit // 将输出数量添加到请求中
                     })
                 });
@@ -1983,7 +2020,7 @@
             const seasonMap = { Spring: '春', Summer: '夏', Fall: '秋', Winter: '冬' };
             const monsterLevelText = details.monsterLevel.map(m => {
                 return m.description;
-            }).join('、');
+            }).join('<br>');
             
             const monsterLevelHtml = `
                 <div class="weather-season">
