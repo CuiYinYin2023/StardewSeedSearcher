@@ -1,91 +1,164 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using StardewSeedSearcher.Core;
 
 namespace StardewSeedSearcher.Features
 {
-    /// <summary>
-    /// 怪物层信息
-    /// </summary>
-    public class MonsterLevelInfo
+    public class MonsterLevelPredictor : ISearchFeature
     {
-        public List<int> MonsterLevels { get; set; } = new List<int>();
-        public List<int> SlimeLevels { get; set; } = new List<int>();
-    }
-
-    /// <summary>
-    /// 矿井怪物层预测器
-    /// </summary>
-    public class MonsterLevelPredictor
-    {
-        /// <summary>
-        /// 预测指定天数范围内的怪物层
-        /// </summary>
-        /// <param name="gameID">游戏种子</param>
-        /// <param name="useLegacyRandom">是否使用旧随机模式</param>
-        /// <param name="startDay">起始天数（默认1）</param>
-        /// <param name="endDay">结束天数（默认5）</param>
-        /// <returns>每天的怪物层信息</returns>
-        public Dictionary<int, MonsterLevelInfo> PredictMonsterLevels(
-            int gameID, 
-            bool useLegacyRandom, 
-            int startDay = 1, 
-            int endDay = 5)
+        public List<MonsterLevelCondition> Conditions { get; set; } = new();
+        
+        public string Name => "怪物层";
+        
+        public bool IsEnabled { get; set; }
+        
+        public class MonsterLevelCondition
         {
-            var results = new Dictionary<int, MonsterLevelInfo>();
+            /// <summary>
+            /// 起始日期（1-112，第一年）
+            /// </summary>
+            public int StartDay { get; set; }
 
-            for (int day = startDay; day <= endDay; day++)
+            /// <summary>
+            /// 结束日期（1-112，第一年）
+            /// </summary>
+            public int EndDay { get; set; }
+
+            /// <summary>
+            /// 起始层数（1-119）
+            /// </summary>
+            public int StartLevel { get; set; }
+
+            /// <summary>
+            /// 结束层数（1-119）
+            /// </summary>
+            public int EndLevel { get; set; }
+        }
+        
+        /// <summary>
+        /// 设置条件（从前端请求传入）
+        /// </summary>
+        public void SetConditions(List<MonsterLevelCondition> conditions)
+        {
+            this.Conditions = conditions ?? new();
+            IsEnabled = this.Conditions.Count > 0;
+        }
+        
+        /// <summary>
+        /// 检查种子是否匹配所有条件（AND关系）
+        /// </summary>
+        public bool Check(int gameID, bool useLegacyRandom)
+        {
+            if (!IsEnabled) return true;
+
+            // 遍历每个条件
+            foreach (var condition in Conditions)
             {
-                var info = new MonsterLevelInfo();
-
-                // 遍历矿井 1-119 层
-                for (int mineLevel = 1; mineLevel < 120; mineLevel++)
+                // 检查指定日期和层数范围内是否有感染层
+                for (int day = condition.StartDay; day <= condition.EndDay; day++)
                 {
-                    // 跳过电梯层（5的倍数）
-                    if (mineLevel % 5 == 0)
+                    for (int mineLevel = condition.StartLevel; mineLevel <= condition.EndLevel; mineLevel++)
                     {
-                        continue;
-                    }
-
-                    // 创建随机数生成器
-                    Random rng;
-                    if (useLegacyRandom)
-                    {
-                        // 旧随机模式
-                        int seed = day + mineLevel * 100 + gameID / 2;
-                        rng = new Random(seed);
-                    }
-                    else
-                    {
-                        // 新随机模式
-                        int seed = HashHelper.GetRandomSeed(day, gameID / 2, mineLevel * 100, 0, 0, false);
-                        rng = new Random(seed);
-                    }
-
-                    // 检查 4.4% 概率成为感染层
-                    if (rng.NextDouble() < 0.044)
-                    {
-                        // 检查层数限制
-                        int mod40 = mineLevel % 40;
-                        if (mod40 > 5 && mod40 < 30 && mod40 != 19)
+                        // 跳过电梯层（5的倍数）
+                        if (mineLevel % 5 == 0)
                         {
-                            // 50% 概率决定是怪物层还是史莱姆层
-                            if (rng.NextDouble() < 0.5)
+                            continue;
+                        }
+
+                        // 创建随机数生成器
+                        Random rng;
+                        if (useLegacyRandom)
+                        {
+                            // 旧随机模式
+                            int seed = day + mineLevel * 100 + gameID / 2;
+                            rng = new Random(seed);
+                        }
+                        else
+                        {
+                            // 新随机模式
+                            int seed = HashHelper.GetRandomSeed(day, gameID / 2, mineLevel * 100, 0, 0, false);
+                            rng = new Random(seed);
+                        }
+
+                        // 检查 4.4% 概率成为感染层
+                        if (rng.NextDouble() < 0.044)
+                        {
+                            // 检查层数限制
+                            int mod40 = mineLevel % 40;
+                            if (mod40 > 5 && mod40 < 30 && mod40 != 19)
                             {
-                                info.MonsterLevels.Add(mineLevel);
-                            }
-                            else
-                            {
-                                info.SlimeLevels.Add(mineLevel);
+                                // 发现感染层，不满足条件
+                                return false;
                             }
                         }
                     }
                 }
-
-                results[day] = info;
             }
 
-            return results;
+            // 所有条件都满足
+            return true;
+        }
+        
+        /// <summary>
+        /// 估算搜索成本
+        /// </summary>
+        public int EstimateCost(bool useLegacyRandom)
+        {
+            int totalCost = 0;
+            foreach (var condition in Conditions)
+            {
+                int days = condition.EndDay - condition.StartDay + 1;
+                int levels = condition.EndLevel - condition.StartLevel + 1;
+                // 减去电梯层数量
+                int elevatorCount = 0;
+                for (int level = condition.StartLevel; level <= condition.EndLevel; level++)
+                {
+                    if (level % 5 == 0) elevatorCount++;
+                }
+                totalCost += days * (levels - elevatorCount);
+            }
+            return totalCost;
+        }
+        
+        /// <summary>
+        /// 获取详细信息（用于结果展示）
+        /// </summary>
+        public List<object> GetDetails(int gameID, bool useLegacyRandom)
+        {
+            return Conditions.Select(c => new
+            {
+                description = GetConditionDescription(c),
+                satisfied = true  // 能到这里说明条件已满足
+            }).ToList<object>();
+        }
+        
+        /// <summary>
+        /// 获取配置描述（用于显示当前设置）
+        /// </summary>
+        public string GetConfigDescription()
+        {
+            if (!IsEnabled || Conditions.Count == 0)
+            {
+                return "未启用";
+            }
+            
+            string[] seasonNames = { "春", "夏", "秋", "冬" };
+            var descriptions = Conditions.Select(c =>
+            {
+                int startSeason = (c.StartDay - 1) / 28;
+                int startDayOfMonth = ((c.StartDay - 1) % 28) + 1;
+                int endSeason = (c.EndDay - 1) / 28;
+                int endDayOfMonth = ((c.EndDay - 1) % 28) + 1;
+                
+                string dateRange = c.StartDay == c.EndDay
+                    ? $"{seasonNames[startSeason]}{startDayOfMonth}"
+                    : $"{seasonNames[startSeason]}{startDayOfMonth}-{seasonNames[endSeason]}{endDayOfMonth}";
+                
+                return $"{dateRange} {c.StartLevel}-{c.EndLevel}层无怪物层";
+            });
+            
+            return string.Join(", ", descriptions);
         }
     }
 }

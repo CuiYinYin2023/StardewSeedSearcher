@@ -3,7 +3,7 @@ using System.Collections.Generic;
 namespace StardewSeedSearcher.Data
 {
     /// <summary>
-    /// 矿井宝箱相关数据
+    /// 矿井宝箱相关数据，目前仅用于测试
     /// 来源：StardewValley.Locations.MineShaft.GetReplacementChestItem()
     /// </summary>
     public static class MineChestData
