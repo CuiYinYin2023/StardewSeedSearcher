@@ -60,7 +60,9 @@ namespace StardewSeedSearcher.Features
             }
             else
             {
-                seed = HashHelper.GetRandomSeed(gameID * 512, floor, 0, 0, 0, false);
+                long temp = (long)gameID * 512;
+                int safeValue = (int)(temp % 2147483647);
+                seed = HashHelper.GetRandomSeed(safeValue, floor, 0, 0, 0, false); // 先取模防止整数溢出
             }
             
             Random rng = new Random(seed);

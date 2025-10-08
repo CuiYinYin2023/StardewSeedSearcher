@@ -53,7 +53,9 @@ namespace StardewSeedSearcher.Tests
             foreach (int floor in MineChestData.ChestFloors)
             {
                 // 新随机：HashHelper.GetRandomSeed(gameID * 512, floor, 0, 0, 0)
-                int seed = HashHelper.GetRandomSeed(gameID * 512, floor, 0, 0, 0, useLegacyRandom: false);
+                long temp = gameID * 512L;
+                int safeValue = (int)(temp % 2147483647);
+                int seed = HashHelper.GetRandomSeed(safeValue, floor, 0, 0, 0, useLegacyRandom: false);
                 
                 Random rng = new Random(seed);
                 string[] items = MineChestData.ItemsCN[floor];
