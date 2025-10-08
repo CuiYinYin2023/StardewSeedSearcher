@@ -471,9 +471,69 @@
         .guide-list li {
             margin-bottom: 8px;
         }
+
         .guide-list li:last-child {
             margin-bottom: 0;
         }
+
+        .features-details {
+            border: 2px solid rgb(202, 202, 255);
+            border-radius: 8px;
+            margin-bottom: 25px;
+            padding: 12px 20px;
+            background-color: rgb(230, 230, 255);
+            transition: background-color 0.3s;
+        }
+
+        .features-details[open] {
+            background-color: rgb(230, 230, 255);
+        }
+
+        .features-summary {
+            font-weight: 600;
+            color: #000000;
+            cursor: pointer;
+            outline: none; /* 移除点击时的焦点框 */
+        }
+        
+        .features-summary::-webkit-details-marker {
+            display: none; /* 隐藏 Chrome/Safari 的默认箭头 */
+        }
+
+        .features-summary {
+            list-style: none; /* 隐藏 Firefox 的默认箭头 */
+        }
+
+        .features-summary::before {
+            content: '▶';
+            display: inline-block;
+            font-size: 0.8em;
+            margin-right: 8px;
+            transition: transform 0.2s;
+            vertical-align: middle;
+        }
+
+        .features-details[open] > .guide-summary::before {
+            transform: rotate(90deg);
+        }
+
+        .features-list {
+            margin-top: 15px;
+            padding-left: 25px;
+            color: #000000;
+            font-size: 0.95em;
+            border-top: 1px solid #ececec;
+            padding-top: 15px;
+        }
+
+        .features-list li {
+            margin-bottom: 8px;
+        }
+
+        .features-list li:last-child {
+            margin-bottom: 0;
+        }
+
         .form-separator {
             border: none;
             height: 1px;
@@ -779,9 +839,59 @@
                     <ul class="guide-list">
                         <li>如果搜索无响应或出现 Bug，请<strong>完全关闭黑色的程序窗口</strong>和此页面，然后再重新运行start.bat。仅刷新此页面可能无法解决问题。</li>
                         <li>目前没有停止搜索功能，可以关掉黑色程序窗口强行停止。</li>
+                        <li>遇到影响使用的BUG或预测错误，请点击左下角联系作者反馈。</li>
+                        <li>如果找到了合适的种子，欢迎点击左下角支持作者。</li>
                         <!-- 未来可以填写更多说明 -->
                     </ul>
                 </details>
+
+                <details class="features-details">
+                    <summary class="features-summary">功能说明</summary>
+                    <ul class="features-list">
+                        仅支持1.6版本。
+                        <br>
+                        <br>
+
+                        <h4 style="margin-bottom: 15px;">循环搜索</h4>
+                        <li>勾选后，搜索完成后再次搜索，自动按相同搜索范围，从上次的结束点开始搜索。</li>
+                        <li>例，起始种子0，搜索范围1000，第一次搜索0-999。完成后再次点击搜索，自动搜1000-1999。</li>
+                        <br>
+
+                        <h4 style="margin-bottom: 15px;">使用旧随机模式</h4>
+                        <li>必须在创建存档时勾选“使用传统随机”，随机模式会改变。</li>
+                        <li>脆音音有话说：除非一定要粘土做花盆，不然还是打新随机吧，时代变了！<s>旧随机是和魔鬼的交易</s></li>
+                        <br>
+
+                        <h4 style="margin-bottom: 15px;">天气筛选</h4>
+                        <li>筛选出起始日期到结束日期范围内至少X个雨天的种子。</li>
+                        <li>雨天也包括雷雨、绿雨。</li>
+                        <li>可多条件筛选，日期范围不可重叠。例：春1-28至少10天雨，夏1-28至少12天雨。</li>
+                        <br>
+
+                        <h4 style="margin-bottom: 15px;">仙子筛选</h4>
+                        <li>筛选特定天数有仙子出现的种子。</li>
+                        <li>可多条件筛选，日期范围不可重叠。</li>
+                        <li>仙子事件可能会被其他事件覆盖，或因没有合适地块而不发生。</li>
+                        <br>
+
+                        <h4 style="margin-bottom: 15px;">矿井混合宝箱筛选</h4>
+                        <li>筛选符合特定混合宝箱物品的种子。</li>
+                        <li>可多条件筛选，层数不可重叠。多条件视为必须同时满足。</li>
+                        <li>必须在创建存档时勾选混合矿井，否则为默认物品。</li>
+                        <br>
+
+                        <h4 style="margin-bottom: 15px;">矿井怪物层筛选</h4>
+                        <li>筛选特定日期和层数区间没有怪物层的种子，方便冲层。</li>
+                        <li>可多条件筛选，层数不可重叠。</li>
+                        <li>包含史莱姆层和怪物层，不包括采石场感染头骨层。仅预测鹈鹕镇矿井，不包含沙漠矿井怪物层。</li>
+                        <br>
+
+                        <h4 style="margin-bottom: 15px;">更多功能开发中...</h4>
+
+                        <!-- 未来可以填写更多说明 -->
+                    </ul>
+                </details>
+
                 <div class="form-row">
                     <div class="form-group">
                         <label for="startSeed">起始种子</label>
@@ -795,18 +905,19 @@
                         <input type="checkbox" id="loopSearch" checked>
                         <label for="loopSearch">循环搜索</label>
                     </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="useLegacy">
+                        <label for="useLegacy">使用旧随机模式</label>
+                    </div>
                 </div>
+                <br>
 
-                <div class="checkbox-group">
-                    <input type="checkbox" id="useLegacy">
-                    <label for="useLegacy">使用旧随机模式</label>
-                </div>
 
                 <!-- 天气功能 -->
                 <div class="checkbox-group">
                     <!-- <input type="checkbox" id="weatherEnabled" checked> -->
                     <input type="checkbox" id="weatherEnabled">
-                    <label for="weatherEnabled">启用天气预测</label>
+                    <label for="weatherEnabled">启用天气筛选</label>
                 </div>
                 <!-- <div class="condition-config" id="weatherConfig"> -->
                 <div class="condition-config" id="weatherConfig" style="display: none;">
@@ -839,12 +950,13 @@
                     
                     <div class="error-message" id="conditionError"></div>
                 </div>
+                <br>
 
                 <!-- 仙子功能 -->
                 <div class="checkbox-group">
                     <input type="checkbox" id="fairyEnabled">
                     <!-- <input type="checkbox" id="fairyEnabled" checked> -->
-                    <label for="fairyEnabled">启用仙子预测</label>
+                    <label for="fairyEnabled">启用仙子筛选</label>
                 </div>
                 <!-- <div class="condition-config" id="fairyConfig"> -->
                 <div class="condition-config" id="fairyConfig" style="display: none;">
@@ -886,16 +998,17 @@
                     
                     <div class="error-message" id="fairyConditionError"></div>
                 </div>
+                <br>
 
                 <!-- 矿井宝箱 -->
                 <div class="checkbox-group">
                     <input type="checkbox" id="mineChestEnabled">
                     <!-- <input type="checkbox" id="mineChestEnabled" checked> -->
-                    <label for="mineChestEnabled">启用矿井宝箱预测</label>
+                    <label for="mineChestEnabled">启用矿井混合宝箱筛选</label>
                 </div>
                 <!-- <div class="condition-config" id="mineChestConfig"> -->
                 <div class="condition-config" id="mineChestConfig" style="display: none;">
-                    <h4 style="margin-bottom: 15px;">矿井宝箱筛选条件</h4>
+                    <h4 style="margin-bottom: 15px;">矿井混合宝箱筛选条件</h4>
                     
                     <div class="minechest-conditions-container" id="mineChestConditionsContainer">
                         
@@ -939,11 +1052,12 @@
                     
                     <div class="error-message" id="mineChestConditionError"></div>
                 </div>
+                <br>
 
                 <!-- 怪物层部分 -->
                 <div class="checkbox-group">
                     <input type="checkbox" id="monsterLevelEnabled" checked>
-                    <label for="monsterLevelEnabled">启用怪物层预测</label>
+                    <label for="monsterLevelEnabled">启用怪物层筛选</label>
                 </div>
                 <div class="condition-config" id="monsterLevelConfig">
                     <h4 style="margin-bottom: 15px;">怪物层筛选条件</h4>
@@ -1006,6 +1120,7 @@
                     
                     <div class="error-message" id="monsterLevelConditionError"></div>
                 </div>
+                <br>
 
                 <hr class="form-separator">
                 <div class="form-group form-group--inline">
@@ -1942,7 +2057,7 @@
     
             // 只有启用了天气功能才显示
             if (enabled.weather && details.weather) {
-                const seasonNames = ['春季', '夏季', '秋季'];
+                const seasonNames = ['春', '夏', '秋'];
                 const seasons = [
                     { name: seasonNames[0], days: details.weather.springRain, greenRainDay: null },
                     { name: seasonNames[1], days: details.weather.summerRain, greenRainDay: details.weather.greenRainDay },
