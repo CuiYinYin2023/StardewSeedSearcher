@@ -1056,10 +1056,12 @@
 
                 <!-- 怪物层部分 -->
                 <div class="checkbox-group">
-                    <input type="checkbox" id="monsterLevelEnabled" checked>
+                    <input type="checkbox" id="monsterLevelEnabled">
+                    <!-- <input type="checkbox" id="monsterLevelEnabled" checked> -->
                     <label for="monsterLevelEnabled">启用怪物层筛选</label>
                 </div>
-                <div class="condition-config" id="monsterLevelConfig">
+                <!-- <div class="condition-config" id="monsterLevelConfig"> -->
+                <div class="condition-config" id="monsterLevelConfig" style="display: none;">
                     <h4 style="margin-bottom: 15px;">怪物层筛选条件</h4>
                     
                     <div class="monsterlevel-conditions-container" id="monsterLevelConditionsContainer">
@@ -1119,6 +1121,32 @@
                     <button type="button" class="btn-add-condition" onclick="addMonsterLevelCondition()">添加条件</button>
                     
                     <div class="error-message" id="monsterLevelConditionError"></div>
+                </div>
+                <br>
+
+                <!-- 沙漠节部分 -->
+                <div class="checkbox-group">
+                    <input type="checkbox" id="desertFestivalEnabled" checked>
+                    <!-- <input type="checkbox" id="desertFestivalEnabled"> -->
+                    <label for="desertFestivalEnabled">启用沙漠节预测</label>
+                </div>
+                <div class="condition-config" id="desertFestivalConfig">
+                <!-- <div class="condition-config" id="desertFestivalConfig" style="display: none;"> -->
+                    <h4 style="margin-bottom: 15px;">沙漠节商人筛选</h4>
+                    
+                    <div class="checkbox-group" style="margin-left: 20px;">
+                        <input type="checkbox" id="requireJas">
+                        <label for="requireJas">贾斯</label>
+                    </div>
+                    
+                    <div class="checkbox-group" style="margin-left: 20px;">
+                        <input type="checkbox" id="requireLeah">
+                        <label for="requireLeah">莉亚</label>
+                    </div>
+                    
+                    <div class="info-text" style="margin-top: 10px; color: #666; font-size: 0.9em;">
+                        勾选后将筛选出第一年沙漠节（春15-17）该村民出现的种子
+                    </div>
                 </div>
                 <br>
 
@@ -1211,6 +1239,12 @@
             <h4>怪物层</h4>
             <div id="sidebarMonsterLevelContent"></div>
         </div>
+        
+        <!-- 在仙子部分之后添加 -->
+        <div class="sidebar-section" id="desertFestivalSection" style="display: none;">
+            <h4>沙漠节商人</h4>
+            <div id="sidebarDesertFestivalContent"></div>
+        </div>
     </div>
 
     <!-- 复制提示 -->
@@ -1273,7 +1307,12 @@
 
             monsterLevelEnabled: document.getElementById('monsterLevelEnabled'),
             monsterLevelConfig: document.getElementById('monsterLevelConfig'),
-            monsterLevelConditionError: document.getElementById('monsterLevelConditionError')
+            monsterLevelConditionError: document.getElementById('monsterLevelConditionError'),
+
+            desertFestivalEnabled: document.getElementById('desertFestivalEnabled'),
+            desertFestivalConfig: document.getElementById('desertFestivalConfig'),
+            requireJas: document.getElementById('requireJas'),
+            requireLeah: document.getElementById('requireLeah')
         };
 
         const MINE_CHEST_ITEMS = { 
@@ -1301,6 +1340,10 @@
         // 怪物层
         elements.monsterLevelEnabled.addEventListener('change', (e) => {
             elements.monsterLevelConfig.style.display = e.target.checked ? 'block' : 'none';
+        });
+        // 沙漠节
+        elements.desertFestivalEnabled.addEventListener('change', (e) => {
+            elements.desertFestivalConfig.style.display = e.target.checked ? 'block' : 'none';
         });
 
         // 添加条件
@@ -1846,6 +1889,11 @@
             const weatherEnabled = elements.weatherEnabled.checked;
             const outputLimit = parseInt(document.getElementById('outputLimit').value); // 读取输出数量
             const mineChestEnabled = elements.mineChestEnabled.checked;
+            const desertFestivalEnabled = elements.desertFestivalEnabled.checked;
+            const desertFestivalCondition = desertFestivalEnabled ? {
+                requireJas: elements.requireJas.checked,
+                requireLeah: elements.requireLeah.checked
+            } : null;
 
             // 计算起始种子
             let startSeed = loopSearch && nextStartSeed > 0 
@@ -2030,6 +2078,7 @@
                         fairyConditions: fairyConditionsData,
                         MineChestConditions: mineChestConditionsData, 
                         monsterLevelConditions: monsterLevelConditionsData, 
+                        desertFestivalCondition: desertFestivalCondition,
                         outputLimit // 将输出数量添加到请求中
                     })
                 });
@@ -2148,6 +2197,45 @@
             document.getElementById('monsterLevelSection').style.display = 'none';
         }
 
+            // 只有启用了沙漠节功能才显示
+            if (enabled.desertFestival && details.desertFestival) {
+                const vendorNameMap = {
+                    'Abigail': '阿比盖尔', 'Caroline': '卡洛琳', 'Clint': '克林特', 
+                    'Demetrius': '德米特里厄斯', 'Elliott': '艾利欧特', 'Emily': '艾米丽',
+                    'Evelyn': '艾芙琳', 'George': '乔治', 'Gus': '格斯',
+                    'Haley': '海莉', 'Harvey': '哈维', 'Jas': '贾斯',
+                    'Jodi': '乔迪', 'Alex': '亚历克斯', 'Kent': '肯特',
+                    'Leah': '莉亚', 'Marnie': '玛妮', 'Maru': '玛鲁',
+                    'Pam': '潘姆', 'Penny': '潘妮', 'Pierre': '皮埃尔',
+                    'Robin': '罗宾', 'Sam': '山姆', 'Sebastian': '塞巴斯蒂安',
+                    'Shane': '谢恩', 'Vincent': '文森特', 'Leo': '雷欧'
+                };
+                
+                const day15Vendors = details.desertFestival.day15.map(v => vendorNameMap[v] || v).join('、');
+                const day16Vendors = details.desertFestival.day16.map(v => vendorNameMap[v] || v).join('、');
+                const day17Vendors = details.desertFestival.day17.map(v => vendorNameMap[v] || v).join('、');
+                
+                const desertFestivalHtml = `
+                    <div class="weather-season">
+                        <div class="weather-season-title">春15：</div>
+                        <div class="weather-days">${day15Vendors}</div>
+                    </div>
+                    <div class="weather-season">
+                        <div class="weather-season-title">春16：</div>
+                        <div class="weather-days">${day16Vendors}</div>
+                    </div>
+                    <div class="weather-season">
+                        <div class="weather-season-title">春17：</div>
+                        <div class="weather-days">${day17Vendors}</div>
+                    </div>
+                `;
+                
+                document.getElementById('sidebarDesertFestivalContent').innerHTML = desertFestivalHtml;
+                document.getElementById('desertFestivalSection').style.display = 'block';
+            } else {
+                document.getElementById('desertFestivalSection').style.display = 'none';
+            }
+            
             // 显示侧边栏
             document.getElementById('sidebarPanel').classList.add('active');
         }

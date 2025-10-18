@@ -24,6 +24,7 @@ namespace StardewSeedSearcher
             List<object> fairyDays = null;
             List<object> mineChestDetails = null;
             List<object> monsterLevelDetails = null;
+            object desertFestivalDetails = null; 
             
             foreach (var feature in features)
             {
@@ -44,6 +45,10 @@ namespace StardewSeedSearcher
                 {
                     monsterLevelDetails = monsterLevel.GetDetails(seed, useLegacy);
                 }
+                else if (feature is DesertFestivalPredictor desertFestival)
+                {
+                    desertFestivalDetails = desertFestival.GetDetails(seed, useLegacy);
+                }
                 // 未来添加更多：
                 // else if (feature is PigCartPredictor pigCart) { ... }
             }
@@ -59,7 +64,8 @@ namespace StardewSeedSearcher
                 } : null,
                 fairy = fairyDays != null ? new { days = fairyDays } : null,
                 mineChest = mineChestDetails,
-                monsterLevel = monsterLevelDetails
+                monsterLevel = monsterLevelDetails,
+                desertFestival = desertFestivalDetails
                 // 未来：
                 // pigCart = pigCartDetail,
                 // dwarf = dwarfDetail,
@@ -208,6 +214,20 @@ namespace StardewSeedSearcher
                     features.Add(monsterLevelPredictor);
                 }
 
+                // 配置沙漠节预测
+                if (request.DesertFestivalCondition != null && 
+                    (request.DesertFestivalCondition.RequireJas || request.DesertFestivalCondition.RequireLeah))
+                {
+                    var desertFestivalPredictor = new DesertFestivalPredictor 
+                    { 
+                        IsEnabled = true,
+                        RequireJas = request.DesertFestivalCondition.RequireJas,
+                        RequireLeah = request.DesertFestivalCondition.RequireLeah
+                    };
+                    
+                    features.Add(desertFestivalPredictor);
+                }
+
                 // 发送开始消息
                 await BroadcastMessage(new { type = "start", total = totalSeeds });
 
@@ -252,7 +272,10 @@ namespace StardewSeedSearcher
                                     weather = request.WeatherConditions != null && request.WeatherConditions.Count > 0,
                                     fairy = request.FairyConditions != null && request.FairyConditions.Count > 0,
                                     mineChest = request.MineChestConditions != null && request.MineChestConditions.Count > 0,
-                                    monsterLevel = request.MonsterLevelConditions != null && request.MonsterLevelConditions.Count > 0
+                                    monsterLevel = request.MonsterLevelConditions != null && request.MonsterLevelConditions.Count > 0,
+                                    desertFestival = request.DesertFestivalCondition != null && 
+                                                    (request.DesertFestivalCondition.RequireJas || request.DesertFestivalCondition.RequireLeah)
+    
                                 }
                             });
                             
@@ -414,6 +437,9 @@ namespace StardewSeedSearcher
         [JsonPropertyName("monsterLevelConditions")]
         public List<MonsterLevelConditionDto> MonsterLevelConditions { get; set; } = new();
 
+        [JsonPropertyName("desertFestivalCondition")]
+        public DesertFestivalConditionDto DesertFestivalCondition { get; set; }
+
         [JsonPropertyName("outputLimit")]
         public int OutputLimit { get; set; }
     }
@@ -470,5 +496,14 @@ namespace StardewSeedSearcher
 
         [JsonPropertyName("endLevel")]
         public int EndLevel { get; set; }
+    }
+
+    public class DesertFestivalConditionDto
+    {
+        [JsonPropertyName("requireJas")]
+        public bool RequireJas { get; set; }
+        
+        [JsonPropertyName("requireLeah")]
+        public bool RequireLeah { get; set; }
     }
 }

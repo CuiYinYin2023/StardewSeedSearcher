@@ -8,8 +8,15 @@ namespace StardewSeedSearcher.Features
     /// 沙漠节商人预测器
     /// 预测春季15-17日（沙漠节）每天的2个摊贩村民
     /// </summary>
-    public class DesertFestivalPredictor
+    public class DesertFestivalPredictor : ISearchFeature
     {
+        public string Name => "沙漠节";
+        public bool IsEnabled { get; set; }
+        
+        // 筛选条件
+        public bool RequireJas { get; set; }
+        public bool RequireLeah { get; set; }
+
         // 27个有资格成为沙漠节商人的村民
         private static readonly HashSet<string> POSSIBLE_VENDORS = new HashSet<string>
         {
@@ -34,6 +41,50 @@ namespace StardewSeedSearcher.Features
             "Harvey", "Elliott", "Demetrius", "Maru", "Robin", "Sebastian", "Linus",
             "Wizard", "Jas", "Marnie", "Shane", "Leah", "Dwarf", "Sandy", "Willy"
         };
+        
+        /// <summary>
+        /// 检查种子是否满足筛选条件（ISearchFeature接口实现）
+        /// </summary>
+        public bool Check(int gameID, bool useLegacyRandom)
+        {
+            if (!IsEnabled)
+                return true;
+
+            return MeetsVendorRequirement(gameID, useLegacyRandom, RequireJas, RequireLeah);
+        }
+
+        /// <summary>
+        /// 估算最坏情况的随机数调用次数
+        /// 沙漠节需要预测3天，每天最多调用随机数的次数：
+        /// 第0天: 2次（选2个商人）
+        /// 第1天: 2次预移除 + 2次选择 = 4次
+        /// 第2天: 4次预移除 + 2次选择 = 6次
+        /// 总计: 2 + 4 + 6 = 12次
+        /// </summary>
+        public int EstimateCost(bool useLegacyRandom)
+        {
+            return 12;
+        }
+
+        /// <summary>
+        /// 获取配置说明
+        /// </summary>
+        public string GetConfigDescription()
+        {
+            if (!IsEnabled)
+                return "未启用";
+
+            var requirements = new List<string>();
+            if (RequireJas)
+                requirements.Add("贾斯");
+            if (RequireLeah)
+                requirements.Add("莉亚");
+
+            if (requirements.Count == 0)
+                return "无筛选条件";
+
+            return $"第一年沙漠节需要: {string.Join("、", requirements)}";
+        }
 
         /// <summary>
         /// 预测第一年沙漠节三天的商人
@@ -84,6 +135,60 @@ namespace StardewSeedSearcher.Features
             }
 
             return vendors;
+        }
+
+        /// <summary>
+        /// 检查种子是否满足沙漠节商人筛选条件
+        /// </summary>
+        /// <param name="gameID">游戏种子</param>
+        /// <param name="useLegacyRandom">是否使用旧随机模式</param>
+        /// <param name="requireJas">是否要求贾斯(Jas)出现</param>
+        /// <param name="requireLeah">是否要求莉亚(Leah)出现</param>
+        /// <returns>是否满足条件</returns>
+        public bool MeetsVendorRequirement(int gameID, bool useLegacyRandom, 
+                                           bool requireJas, bool requireLeah)
+        {
+            // 如果两个都不勾选，直接返回 true（不筛选）
+            if (!requireJas && !requireLeah)
+                return true;
+            
+            // 预测三天商人
+            var vendors = PredictVendors(gameID, useLegacyRandom);
+            
+            // 检查是否满足条件
+            bool hasJas = false;
+            bool hasLeah = false;
+            
+            foreach (var dayVendors in vendors.Values)
+            {
+                if (dayVendors.Contains("Jas"))
+                    hasJas = true;
+                if (dayVendors.Contains("Leah"))
+                    hasLeah = true;
+            }
+            
+            // 根据勾选情况判断
+            if (requireJas && !hasJas)
+                return false;
+            if (requireLeah && !hasLeah)
+                return false;
+            
+            return true;
+        }
+
+        /// <summary>
+        /// 获取详细信息（用于前端展示）
+        /// </summary>
+        public object GetDetails(int seed, bool useLegacy)
+        {
+            var vendors = PredictVendors(seed, useLegacy);
+            
+            return new
+            {
+                day15 = vendors[0].ToArray(),
+                day16 = vendors[1].ToArray(),
+                day17 = vendors[2].ToArray()
+            };
         }
 
         /// <summary>
