@@ -886,6 +886,12 @@
                         <li>包含史莱姆层和怪物层，不包括采石场感染头骨层。仅预测鹈鹕镇矿井，不包含沙漠矿井怪物层。</li>
                         <br>
 
+                        <h4 style="margin-bottom: 15px;">沙漠节商人筛选</h4>
+                        <li>筛选第一年沙漠节摆摊出现贾斯（出售魔法糖冰棍）或莉亚（出售100硬木用于开姜岛）的种子。</li>
+                        <li>如同时勾选，则两人必须都出现。</li>
+                        <li>注意，沙漠节商人会根据玩家晚上睡觉时间而改变，因为存档会扫描入睡时村民的位置。如果不是在凌晨2点入睡，则商人列表有概率改变。</li>
+                        <br>
+
                         <h4 style="margin-bottom: 15px;">更多功能开发中...</h4>
 
                         <!-- 未来可以填写更多说明 -->
@@ -1126,12 +1132,12 @@
 
                 <!-- 沙漠节部分 -->
                 <div class="checkbox-group">
-                    <input type="checkbox" id="desertFestivalEnabled" checked>
-                    <!-- <input type="checkbox" id="desertFestivalEnabled"> -->
+                    <!-- <input type="checkbox" id="desertFestivalEnabled" checked> -->
+                    <input type="checkbox" id="desertFestivalEnabled">
                     <label for="desertFestivalEnabled">启用沙漠节预测</label>
                 </div>
-                <div class="condition-config" id="desertFestivalConfig">
-                <!-- <div class="condition-config" id="desertFestivalConfig" style="display: none;"> -->
+                <!-- <div class="condition-config" id="desertFestivalConfig"> -->
+                <div class="condition-config" id="desertFestivalConfig" style="display: none;">
                     <h4 style="margin-bottom: 15px;">沙漠节商人筛选</h4>
                     
                     <div class="checkbox-group" style="margin-left: 20px;">
@@ -1198,7 +1204,7 @@
         <div class="card footer">
             <h3>🚀 脆音音的后续开发计划</h3>
             <ul>
-                <li><span class="placeholder-text">更多功能：猪车、沙漠节商人、春1菜品、垃圾桶、晶球、齐先生任务、矮人雕像矿+1buff、混合献祭包等</span></li>
+                <li><span class="placeholder-text">更多功能：猪车、春1菜品、垃圾桶、齐先生任务、矮人雕像矿+1buff、混合献祭包等</span></li>
             </ul>
         </div>
     </div>
