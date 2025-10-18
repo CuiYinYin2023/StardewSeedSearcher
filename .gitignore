@@ -2,6 +2,7 @@ DevNotes.md
 **/bin/
 **/obj/
 **/publish/
+/published/
 start.bat
 用户使用说明.txt
 StardewSeedSearcher.exe
