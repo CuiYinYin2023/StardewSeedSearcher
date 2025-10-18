@@ -2211,9 +2211,19 @@
                     'Shane': '谢恩', 'Vincent': '文森特', 'Leo': '雷欧'
                 };
                 
-                const day15Vendors = details.desertFestival.day15.map(v => vendorNameMap[v] || v).join('、');
-                const day16Vendors = details.desertFestival.day16.map(v => vendorNameMap[v] || v).join('、');
-                const day17Vendors = details.desertFestival.day17.map(v => vendorNameMap[v] || v).join('、');
+                // 在 map 转换中文名之后，再处理高亮
+                const highlightVendor = (name) => {
+                    if (name === '贾斯') return `<span style="color: #9b59b6; font-weight: bold;">${name}</span>`;
+                    if (name === '莉亚') return `<span style="color: #ff8c00; font-weight: bold;">${name}</span>`;
+                    return name;
+                };
+
+                const day15Vendors = details.desertFestival.day15
+                    .map(v => highlightVendor(vendorNameMap[v] || v)).join('、');
+                const day16Vendors = details.desertFestival.day16
+                    .map(v => highlightVendor(vendorNameMap[v] || v)).join('、');
+                const day17Vendors = details.desertFestival.day17
+                    .map(v => highlightVendor(vendorNameMap[v] || v)).join('、');
                 
                 const desertFestivalHtml = `
                     <div class="weather-season">
