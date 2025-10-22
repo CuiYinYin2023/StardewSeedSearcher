@@ -22,6 +22,7 @@ namespace StardewSeedSearcher
                 Console.WriteLine("3. 混合宝箱预测");
                 Console.WriteLine("4. 怪物层预测");
                 Console.WriteLine("5. 沙漠节商人预测");
+                Console.WriteLine("6. 猪车预测");
                 Console.WriteLine("0. 退出\n");
                 Console.Write("请输入选项：");
 
@@ -48,6 +49,10 @@ namespace StardewSeedSearcher
                     case "5":
                         Console.Clear();
                         DesertFestivalTests.Run();
+                        break;
+                    case "6":
+                        Console.Clear();
+                        TravelingCartTests.Run();
                         break;
                     case "0":
                         Console.WriteLine("再见！");
