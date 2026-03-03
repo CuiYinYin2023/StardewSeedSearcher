@@ -1228,10 +1228,10 @@
                         <input type="number" class="cart-start-year" min="1" max="99" value="1" style="width: 45px;">
                         <span>年</span>
                         <select class="cart-start-season">
-                            <option value="0">春</option>
-                            <option value="1">夏</option>
-                            <option value="2">秋</option>
-                            <option value="3">冬</option>
+                            <option>春</option>
+                            <option>夏</option>
+                            <option>秋</option>
+                            <option>冬</option>
                         </select>
                         <input type="number" class="cart-start-day" min="1" max="28" value="1" style="width: 60px;">
                         
@@ -1239,10 +1239,10 @@
                         <input type="number" class="cart-end-year" min="1" max="99" value="1" style="width: 45px;">
                         <span>年</span>
                         <select class="cart-end-season">
-                            <option value="0">春</option>
-                            <option value="1">夏</option>
-                            <option value="2">秋</option>
-                            <option value="3">冬</option>
+                            <option>春</option>
+                            <option>夏</option>
+                            <option>秋</option>
+                            <option>冬</option>
                         </select>
                         <input type="number" class="cart-end-day" min="1" max="28" value="28" style="width: 60px;">
                         <span>日</span>
@@ -2369,10 +2369,10 @@
 
                 const cartConditionsData = cartEnabled ? validCartConditions.map(c => ({
                     startYear: c.startYear,
-                    startSeason: { 'Spring': 0, 'Summer': 1, 'Fall': 2, 'Winter': 3 }[c.startSeason], // 转换为 0-3
+                    startSeason: { '春': 0, '夏': 1, '秋': 2, '冬': 3 }[c.startSeason], // 转换为 0-3
                     startDay: c.startDay,
                     endYear: c.endYear,
-                    endSeason: { 'Spring': 0, 'Summer': 1, 'Fall': 2, 'Winter': 3 }[c.endSeason],     // 转换为 0-3
+                    endSeason: { '春': 0, '夏': 1, '秋': 2, '冬': 3 }[c.endSeason],     // 转换为 0-3
                     endDay: c.endDay,
                     itemName: c.itemName,
                     requireQty5: c.requireQty5
