@@ -820,7 +820,47 @@
             font-size: 14px;
         }
 
+        .cart-condition-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 12px;
+            background-color: #f9f9f9;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+            flex-wrap: wrap;
+        }
 
+        .cart-condition-row select,
+        .cart-condition-row input {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .cart-condition-row select {
+            width: 80px;
+        }
+
+        .cart-condition-row input[type="number"] {
+            width: 70px;
+        }
+
+        .cart-condition-row .item-search-container {
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .cart-condition-row .btn-remove {
+            padding: 6px 12px;
+            background-color: #ff4444;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -852,7 +892,7 @@
                         <br>
                         <br>
 
-                        <h4 style="margin-bottom: 15px;">循环搜索</h4>
+                        <h4 style="margin-bottom: 15px;">搜索后自动更新起始值</h4>
                         <li>勾选后，搜索完成后再次搜索，自动按相同搜索范围，从上次的结束点开始搜索。</li>
                         <li>例，起始种子0，搜索范围1000，第一次搜索0-999。完成后再次点击搜索，自动搜1000-1999。</li>
                         <br>
@@ -871,7 +911,7 @@
                         <h4 style="margin-bottom: 15px;">仙子筛选</h4>
                         <li>筛选特定天数有仙子出现的种子。</li>
                         <li>可多条件筛选，日期范围不可重叠。</li>
-                        <li>仙子事件可能会被其他事件覆盖，或因没有合适地块而不发生。</li>
+                        <li>游戏中，仙子事件可能会被其他事件覆盖，或因没有合适地块而不发生。</li>
                         <br>
 
                         <h4 style="margin-bottom: 15px;">矿井混合宝箱筛选</h4>
@@ -892,6 +932,13 @@
                         <li>注意，沙漠节商人会根据玩家晚上睡觉时间而改变，因为存档会扫描入睡时村民的位置。如果不是在凌晨2点入睡，则商人列表有概率改变。</li>
                         <br>
 
+                        <h4 style="margin-bottom: 15px;">猪车筛选</h4>
+                        <li>筛选特定日期范围内，猪车出售特定物品的种子</li>
+                        <li>只包含10个基础物品和技能书，不包含家具、稀有种子、咖啡豆、红色菲斯帽、家具目录、茶具。</li>
+                        <li>可多条件筛选，日期可以重叠。</li>
+                        <li>可输入物品部分名称，在下拉菜单中选择完整名称。</li>
+                        <br>
+
                         <h4 style="margin-bottom: 15px;">更多功能开发中...</h4>
 
                         <!-- 未来可以填写更多说明 -->
@@ -909,7 +956,7 @@
                     </div>                    
                     <div class="checkbox-group">
                         <input type="checkbox" id="loopSearch" checked>
-                        <label for="loopSearch">循环搜索</label>
+                        <label for="loopSearch">搜索后自动更新起始值</label>
                     </div>
                     <div class="checkbox-group">
                         <input type="checkbox" id="useLegacy">
@@ -970,16 +1017,16 @@
                     
                     <div class="fairy-conditions-container" id="fairyConditionsContainer">
                         <div class="fairy-condition-row" data-index="0">
-                            <label>年</label>
+                            <label>第</label>
                             <input type="number" min="1" max="10" value="1" class="fairy-year" onchange="updateFairyCondition(0)">
-                            <label>季</label>
+                            <label>年</label>
                             <select class="fairy-season" onchange="updateFairyCondition(0)">
                                 <option value="Spring">春</option>
                                 <option value="Summer">夏</option>
                                 <option value="Fall">秋</option>
                             </select>
-                            <label>日</label>
                             <input type="number" min="1" max="28" value="1" class="fairy-day" onchange="updateFairyCondition(0)">
+                            <label>日</label>
                             <button type="button" class="btn-remove" onclick="removeFairyCondition(0)">删除</button>
                         </div>
                     </div>
@@ -1068,7 +1115,7 @@
                 </div>
                 <!-- <div class="condition-config" id="monsterLevelConfig"> -->
                 <div class="condition-config" id="monsterLevelConfig" style="display: none;">
-                    <h4 style="margin-bottom: 15px;">怪物层筛选条件</h4>
+                    <h4 style="margin-bottom: 15px;">怪物层筛选条件（第一年）</h4>
                     
                     <div class="monsterlevel-conditions-container" id="monsterLevelConditionsContainer">
                         
@@ -1134,7 +1181,7 @@
                 <div class="checkbox-group">
                     <!-- <input type="checkbox" id="desertFestivalEnabled" checked> -->
                     <input type="checkbox" id="desertFestivalEnabled">
-                    <label for="desertFestivalEnabled">启用沙漠节预测</label>
+                    <label for="desertFestivalEnabled">启用沙漠节筛选</label>
                 </div>
                 <!-- <div class="condition-config" id="desertFestivalConfig"> -->
                 <div class="condition-config" id="desertFestivalConfig" style="display: none;">
@@ -1155,6 +1202,65 @@
                     </div>
                 </div>
                 <br>
+
+                <!-- 猪车物品列表 -->
+                <datalist id="cartItemNamesList"></datalist>
+
+                <!-- 猪车部分 -->
+                <div class="checkbox-group">
+                    <input type="checkbox" id="cartEnabled" checked>
+                    <label for="cartEnabled">启用猪车预测</label>
+                </div>
+                <div class="condition-config" id="cartConfig">
+                    <h4 style="margin-bottom: 15px;">猪车筛选条件</h4>
+                    
+                    <div class="cart-conditions-container" id="cartConditionsContainer">
+                        </div>
+                    
+                    <button type="button" class="btn-add-condition" onclick="addCartCondition()">添加条件</button>
+                    
+                    <div class="error-message" id="cartConditionError"></div>
+                </div>
+
+                <template id="cartConditionTemplate">
+                    <div class="cart-condition-row">
+                        <span>第</span>
+                        <input type="number" class="cart-start-year" min="1" max="99" value="1" style="width: 45px;">
+                        <span>年</span>
+                        <select class="cart-start-season">
+                            <option value="0">春</option>
+                            <option value="1">夏</option>
+                            <option value="2">秋</option>
+                            <option value="3">冬</option>
+                        </select>
+                        <input type="number" class="cart-start-day" min="1" max="28" value="1" style="width: 60px;">
+                        
+                        <span>日 - 第</span>
+                        <input type="number" class="cart-end-year" min="1" max="99" value="1" style="width: 45px;">
+                        <span>年</span>
+                        <select class="cart-end-season">
+                            <option value="0">春</option>
+                            <option value="1">夏</option>
+                            <option value="2">秋</option>
+                            <option value="3">冬</option>
+                        </select>
+                        <input type="number" class="cart-end-day" min="1" max="28" value="28" style="width: 60px;">
+                        <span>日</span>
+
+                        <div class="item-search-container" style="display: inline-flex; gap: 5px;">
+                            <input type="text" class="cart-item-filter-input" placeholder="搜索物品..." style="width: 80px;">
+                            <select class="cart-item-select" style="width: 120px;">
+                                <option value="">--请选择--</option>
+                            </select>
+                        </div>
+                        
+                        <label>
+                            <input type="checkbox" class="cart-require-qty5"> 数量5
+                        </label>
+                        
+                        <button type="button" class="btn-remove">删除</button>
+                    </div>
+                </template>
 
                 <hr class="form-separator">
                 <div class="form-group form-group--inline">
@@ -1204,7 +1310,7 @@
         <div class="card footer">
             <h3>🚀 脆音音的后续开发计划</h3>
             <ul>
-                <li><span class="placeholder-text">更多功能：猪车、春1菜品、垃圾桶、齐先生任务、矮人雕像矿+1buff、混合献祭包等</span></li>
+                <li><span class="placeholder-text">更多功能：春1菜品、垃圾桶、齐先生任务、矮人雕像矿+1buff、混合献祭包等</span></li>
             </ul>
         </div>
     </div>
@@ -1246,10 +1352,16 @@
             <div id="sidebarMonsterLevelContent"></div>
         </div>
         
-        <!-- 在仙子部分之后添加 -->
+        <!-- 添加沙漠节部分 -->
         <div class="sidebar-section" id="desertFestivalSection" style="display: none;">
             <h4>沙漠节商人</h4>
             <div id="sidebarDesertFestivalContent"></div>
+        </div>
+
+        <!-- 添加猪车部分 -->
+        <div class="sidebar-section" id="cartSection" style="display: none;">
+            <h4>猪车</h4>
+            <div id="sidebarCartContent"></div>
         </div>
     </div>
 
@@ -1283,6 +1395,9 @@
         let nextMineChestIndex = 1;
         let monsterLevelConditions = [];
         let nextMonsterLevelIndex = 1;
+        let ALL_CART_ITEM_NAMES = [];
+        let cartConditions = [];
+        let nextCartIndex = 1;
 
         const elements = {
             form: document.getElementById('searchForm'),
@@ -1318,7 +1433,14 @@
             desertFestivalEnabled: document.getElementById('desertFestivalEnabled'),
             desertFestivalConfig: document.getElementById('desertFestivalConfig'),
             requireJas: document.getElementById('requireJas'),
-            requireLeah: document.getElementById('requireLeah')
+            requireLeah: document.getElementById('requireLeah'),
+
+            cartSection: document.getElementById('cartSection'),
+            sidebarCartContent: document.getElementById('sidebarCartContent'),
+            cartEnabled: document.getElementById('cartEnabled'),
+            cartConfig: document.getElementById('cartConfig'),
+            cartConditionsContainer: document.getElementById('cartConditionsContainer'),
+            cartConditionError: document.getElementById('cartConditionError')
         };
 
         const MINE_CHEST_ITEMS = { 
@@ -1350,6 +1472,11 @@
         // 沙漠节
         elements.desertFestivalEnabled.addEventListener('change', (e) => {
             elements.desertFestivalConfig.style.display = e.target.checked ? 'block' : 'none';
+        });
+
+        // 猪车
+        elements.cartEnabled.addEventListener('change', (e) => {
+            elements.cartConfig.style.display = e.target.checked ? 'block' : 'none';
         });
 
         // 添加条件
@@ -1700,6 +1827,151 @@
             return { valid: true };
         }
 
+        // 加载所有猪车物品列表
+        async function loadCartItems() {
+            try {
+                const response = await fetch('http://localhost:5000/api/cart-items');
+                ALL_CART_ITEM_NAMES = await response.json();
+                initializeCartItemList(); // 更新datalist
+            } catch (error) {
+                console.error('加载物品列表失败:', error);
+            }
+        }
+
+        // 添加新的猪车条件行
+        function addCartCondition() {
+            const container = elements.cartConditionsContainer;
+            const template = document.getElementById('cartConditionTemplate');
+            const index = nextCartIndex++;
+            
+            const clone = template.content.cloneNode(true);
+            const row = clone.querySelector('.cart-condition-row');
+            row.setAttribute('data-index', index);
+            
+            const filterInput = row.querySelector('.cart-item-filter-input');
+            const itemSelect = row.querySelector('.cart-item-select');
+            
+            filterInput.addEventListener('input', (e) => {
+                const keyword = e.target.value.trim().toLowerCase();
+                // 过滤全局物品列表
+                const filtered = ALL_CART_ITEM_NAMES.filter(name => 
+                    name.toLowerCase().includes(keyword)
+                );
+                
+                // 更新下拉框内容
+                itemSelect.innerHTML = '<option value="">--请选择--</option>';
+                filtered.forEach(name => {
+                    const opt = document.createElement('option');
+                    opt.value = name;
+                    opt.textContent = name;
+                    itemSelect.appendChild(opt);
+                });
+                
+                // 如果过滤结果只有一个，自动选中它
+                if (filtered.length === 1) {
+                    itemSelect.value = filtered[0];
+                }
+                updateCartCondition(index); // 触发数据更新
+            });
+            
+            // 为当前行内所有的 input (year, day, itemName, checkbox) 和 select (season) 绑定监听
+            row.querySelectorAll('select, input').forEach(input => {
+                input.addEventListener('input', () => updateCartCondition(index));
+            });
+
+            // 移除按钮
+            row.querySelector('.btn-remove').onclick = () => removeCartCondition(index);
+            
+            container.appendChild(clone);
+            updateCartCondition(index); // 初始化当前行数据
+        }
+
+        // 更新指定索引的猪车条件数据
+        function updateCartCondition(index) {
+            const row = document.querySelector(`.cart-condition-row[data-index="${index}"]`);
+            if (!row) return;
+            
+            const startYear = row.querySelector('.cart-start-year').value;
+            const startSeason = row.querySelector('.cart-start-season').value;
+            const startDay = parseInt(row.querySelector('.cart-start-day').value);
+            const endYear = row.querySelector('.cart-end-year').value;
+            const endSeason = row.querySelector('.cart-end-season').value;
+            const endDay = parseInt(row.querySelector('.cart-end-day').value);
+            const itemName = row.querySelector('.cart-item-select').value;
+            const requireQty5 = row.querySelector('.cart-require-qty5').checked;
+            
+            cartConditions[index] = { 
+                startYear,
+                startSeason, 
+                startDay, 
+                endYear,
+                endSeason, 
+                endDay,
+                itemName,
+                requireQty5
+            };
+            
+            // 清除错误消息
+            elements.cartConditionError.textContent = '';
+        }
+
+        // 移除指定索引的猪车条件行
+        function removeCartCondition(index) {
+            const row = document.querySelector(`.cart-condition-row[data-index="${index}"]`);
+            if (row) {
+                row.remove();
+                delete cartConditions[index];
+            }
+        }
+
+
+        // 验证猪车条件
+        function validateCartCondition(condition) {
+            const { startYear, startSeason, startDay, endYear, endSeason, endDay, itemName } = condition;
+            
+            // 1. 年份验证
+            if (startYear < 1 || endYear < 1) {
+                return { valid: false, error: '年份不能小于 1' };
+            }
+
+            // 2. 日期验证
+            if (startDay < 1 || startDay > 28 || endDay < 1 || endDay > 28) {
+                return { valid: false, error: '日期必须在 1-28 之间' };
+            }
+            
+            // 3. 物品名验证（只需要检查是否选了值）
+            if (!itemName || itemName === "") {
+                return { valid: false, error: '请在下拉菜单中选择一个具体的物品' };
+            }
+            
+            // 4. 跨年绝对日期验证 (一年 112 天)
+            const seasonOrder = { 'Spring': 0, 'Summer': 1, 'Fall': 2, 'Winter': 3 };
+            const startAbs = ((startYear - 1) * 112) + (seasonOrder[startSeason] * 28) + startDay;
+            const endAbs = ((endYear - 1) * 112) + (seasonOrder[endSeason] * 28) + endDay;
+
+            if (startAbs > endAbs) {
+                return { valid: false, error: '起始日期不能晚于结束日期' };
+            }
+
+            return { valid: true };
+        }
+
+        // 初始化猪车列表
+        function initializeCartItemList() {
+            const datalist = document.getElementById('cartItemNamesList');
+            if (!datalist) return;
+            
+            // 清空旧选项，防止重复堆积
+            datalist.innerHTML = '';
+
+            // 填充新选项
+            ALL_CART_ITEM_NAMES.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item;
+                datalist.appendChild(option);
+            });
+        }
+
         // 最大输出种子数量
         function updateOutputLimitMax() {
             const searchRangeInput = document.getElementById('searchRange');
@@ -1759,6 +2031,11 @@
 
             // 怪物层条件初始化
             updateMonsterLevelCondition(0);
+            
+            // 猪车条件初始化
+            loadCartItems();
+            initializeCartItemList(); // 初始化物品 datalist
+            addCartCondition(); // 添加第一个条件行
         });
 
         // 监听起始种子修改,重置循环
@@ -1900,6 +2177,8 @@
                 requireJas: elements.requireJas.checked,
                 requireLeah: elements.requireLeah.checked
             } : null;
+            const cartEnabled = elements.cartEnabled.checked;
+            const validCartConditions = cartConditions.filter(c => c);
 
             // 计算起始种子
             let startSeed = loopSearch && nextStartSeed > 0 
@@ -2024,6 +2303,25 @@
                 }
             }
 
+            // 猪车条件验证
+            if (cartEnabled) {
+                if (validCartConditions.length === 0) {
+                    alert('请至少添加一个猪车条件！');
+                    return;
+                }
+                
+                for (let i = 0; i < cartConditions.length; i++) {
+                    const condition = cartConditions[i];
+                    if (!condition) continue;
+                    
+                    const validation = validateCartCondition(condition);
+                    if (!validation.valid) {
+                        alert(`猪车条件 ${i + 1}: ${validation.error}`);
+                        return;
+                    }
+                    // 假设您有 hasCartDuplicate 检查重复的逻辑
+                }
+            }
             // 显示进度区域
             elements.progressSection.style.display = 'block';
             elements.resultsSection.style.display = 'block';
@@ -2068,6 +2366,17 @@
                     startLevel: c.startLevel,
                     endLevel: c.endLevel
                 })) : [];
+
+                const cartConditionsData = cartEnabled ? validCartConditions.map(c => ({
+                    startYear: c.startYear,
+                    startSeason: { 'Spring': 0, 'Summer': 1, 'Fall': 2, 'Winter': 3 }[c.startSeason], // 转换为 0-3
+                    startDay: c.startDay,
+                    endYear: c.endYear,
+                    endSeason: { 'Spring': 0, 'Summer': 1, 'Fall': 2, 'Winter': 3 }[c.endSeason],     // 转换为 0-3
+                    endDay: c.endDay,
+                    itemName: c.itemName,
+                    requireQty5: c.requireQty5
+                })) : [];
                 
                 console.log('怪物层条件:', monsterLevelConditionsData);
 
@@ -2085,6 +2394,7 @@
                         MineChestConditions: mineChestConditionsData, 
                         monsterLevelConditions: monsterLevelConditionsData, 
                         desertFestivalCondition: desertFestivalCondition,
+                        cartConditions: cartConditionsData,
                         outputLimit // 将输出数量添加到请求中
                     })
                 });
@@ -2100,12 +2410,33 @@
             }
         });
 
+        /**
+         * 将绝对天数转换为 [季节][天数] 格式
+         */
+        function convertAbsoluteDay(day) {
+            const seasonNames = ['春', '夏', '秋', '冬'];
+            const daysPerSeason = 28;
+
+            // 绝对天数从 1 开始
+            const adjustedDay = day - 1; 
+            
+            const seasonIndex = Math.floor(adjustedDay / daysPerSeason);
+            const dayOfMonth = (adjustedDay % daysPerSeason) + 1;
+            
+            // 确保季节在范围内
+            if (seasonIndex >= 0 && seasonIndex < seasonNames.length) {
+                return `${seasonNames[seasonIndex]}${dayOfMonth}`;
+            }
+            return `第${day}天`; 
+        }
+
         // 显示种子详情
         function showSeedDetail(seed) {
             const cached = seedDetailsCache[seed];
             if (!cached) return;
             
             const { details, enabled } = cached;
+            const seasonNames = ["春", "夏", "秋", "冬"];
             
             document.getElementById('sidebarMode').textContent = currentSearchUseLegacy ? '旧随机' : '新随机';
             document.getElementById('sidebarSeedNumber').textContent = seed;
@@ -2165,43 +2496,43 @@
                 document.getElementById('fairySection').style.display = 'none';
             }
 
-        // 只有启用了矿井宝箱功能才显示
-        if (enabled.mineChest && details.mineChest) {
-            let chestHtml = '<div class="weather-season">';
+            // 只有启用了矿井宝箱功能才显示
+            if (enabled.mineChest && details.mineChest) {
+                let chestHtml = '<div class="weather-season">';
 
-            details.mineChest.forEach(item => {
-                const matchIcon = item.matched ? '✓' : '✗';
-                const matchClass = item.matched ? 'matched' : 'unmatched';
-                chestHtml += `
-                    <div class="minechest-item ${matchClass}">
-                        <span>${matchIcon} ${item.floor}层：${item.item}</span>
+                details.mineChest.forEach(item => {
+                    const matchIcon = item.matched ? '✓' : '✗';
+                    const matchClass = item.matched ? 'matched' : 'unmatched';
+                    chestHtml += `
+                        <div class="minechest-item ${matchClass}">
+                            <span>${matchIcon} ${item.floor}层：${item.item}</span>
+                        </div>
+                    `;
+                });
+                chestHtml += '</div>';
+                document.getElementById('sidebarMineChestContent').innerHTML = chestHtml;
+                document.getElementById('mineChestSection').style.display = 'block';
+            } else {
+                document.getElementById('mineChestSection').style.display = 'none';
+            }
+
+            // 只有启用了怪物层功能才显示
+            if (enabled.monsterLevel && details.monsterLevel) {
+                const seasonMap = { Spring: '春', Summer: '夏', Fall: '秋', Winter: '冬' };
+                const monsterLevelText = details.monsterLevel.map(m => {
+                    return m.description;
+                }).join('<br>');
+                
+                const monsterLevelHtml = `
+                    <div class="weather-season">
+                        <div class="weather-days">${monsterLevelText}</div>
                     </div>
                 `;
-            });
-            chestHtml += '</div>';
-            document.getElementById('sidebarMineChestContent').innerHTML = chestHtml;
-            document.getElementById('mineChestSection').style.display = 'block';
-        } else {
-            document.getElementById('mineChestSection').style.display = 'none';
-        }
-
-        // 只有启用了怪物层功能才显示
-        if (enabled.monsterLevel && details.monsterLevel) {
-            const seasonMap = { Spring: '春', Summer: '夏', Fall: '秋', Winter: '冬' };
-            const monsterLevelText = details.monsterLevel.map(m => {
-                return m.description;
-            }).join('<br>');
-            
-            const monsterLevelHtml = `
-                <div class="weather-season">
-                    <div class="weather-days">${monsterLevelText}</div>
-                </div>
-            `;
-            document.getElementById('sidebarMonsterLevelContent').innerHTML = monsterLevelHtml;
-            document.getElementById('monsterLevelSection').style.display = 'block';
-        } else {
-            document.getElementById('monsterLevelSection').style.display = 'none';
-        }
+                document.getElementById('sidebarMonsterLevelContent').innerHTML = monsterLevelHtml;
+                document.getElementById('monsterLevelSection').style.display = 'block';
+            } else {
+                document.getElementById('monsterLevelSection').style.display = 'none';
+            }
 
             // 只有启用了沙漠节功能才显示
             if (enabled.desertFestival && details.desertFestival) {
@@ -2250,6 +2581,43 @@
                 document.getElementById('desertFestivalSection').style.display = 'block';
             } else {
                 document.getElementById('desertFestivalSection').style.display = 'none';
+            }
+
+            // 只有启用了猪车功能才显示
+            if (enabled.cart && details.cart && details.cart.matches && details.cart.matches.length > 0) {
+
+                // 1. 按AbsoluteDay升序排序，确保展示顺序正确
+                const sortedMatches = [...details.cart.matches].sort((a, b) => a.AbsoluteDay - b.AbsoluteDay);
+
+                // 2. 格式化每一行数据
+                const cartRowsHtml = sortedMatches.map(match => {
+                    // 获取季节名
+                    const seasonName = seasonNames[match.Season] || "未知";
+
+                    // 如果数量为 -1（技能书），显示为空；否则显示数字
+                    const qtyDisplay = (match.Quantity === -1) ? "" : match.Quantity;
+
+                    // 拼接单行：第1年春7，电池组5，2000g
+                    console.log("details:", details); 
+                    return `<div class="cart-result-line">
+                       第${match.Year}年${seasonName}${match.Day}，${match.ItemName}${qtyDisplay}，${match.Price}g
+            </div>`;
+                }).join('');
+
+                // 3. 构建整体 HTML 结构
+                const cartHtml = `
+                    <div class="weather-season">
+                        <div class="weather-season-title">猪车匹配结果：</div>
+                        <div class="cart-results-list" style="margin-top: 8px; font-size: 16px; line-height: 1.6;">
+                            ${cartRowsHtml}
+                        </div>
+                    </div>
+                `;
+
+                elements.sidebarCartContent.innerHTML = cartHtml;
+                elements.cartSection.style.display = 'block';
+            } else {
+                elements.cartSection.style.display = 'none';
             }
             
             // 显示侧边栏

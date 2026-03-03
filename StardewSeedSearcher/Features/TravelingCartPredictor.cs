@@ -45,12 +45,14 @@ namespace StardewSeedSearcher.Features
             foreach (var condition in Conditions)
             {
                 // 转换为绝对天数
-                int startDay = CalculateAbsoluteDay(condition.Year, condition.Season, condition.StartDay);
-                int endDay = CalculateAbsoluteDay(condition.Year, condition.Season, condition.EndDay);
+                int startDay = TimeHelper.DateToAbsoluteDay(condition.StartYear, condition.StartSeason, condition.StartDay);
+                int endDay = TimeHelper.DateToAbsoluteDay(condition.EndYear, condition.EndSeason, condition.EndDay);
 
+                string searchTerm = condition.ItemName;
+                
                 // 查找第一个匹配的日期
                 var match = FindFirstMatch(seed, startDay, endDay, 
-                    condition.ItemName, condition.RequireQty5, useLegacyRandom);
+                    searchTerm, condition.RequireQty5, useLegacyRandom);
 
                 // 如果没找到匹配，淘汰这个种子
                 if (match == null)
@@ -62,20 +64,17 @@ namespace StardewSeedSearcher.Features
             return true;
         }
 
-        private int CalculateAbsoluteDay(int year, int season, int day)
+        private int MapSeasonToInteger(string seasonName)
         {
-            int seasonOffset = season switch
+            return seasonName.ToLower() switch
             {
-                0 => 0,   // Spring
-                1 => 28,  // Summer
-                2 => 56,  // Fall
-                3 => 84,  // Winter
+                "spring" => 0,
+                "summer" => 1,
+                "fall" => 2,
+                "winter" => 3,
                 _ => 0
             };
-
-            return (year - 1) * 112 + seasonOffset + day;
         }
-
         public int EstimateCost(bool useLegacyRandom)
         {
             if (Conditions.Count == 0) return 0;
@@ -95,8 +94,8 @@ namespace StardewSeedSearcher.Features
 
             foreach (var condition in Conditions)
             {
-                int startDay = CalculateAbsoluteDay(condition.Year, condition.Season, condition.StartDay);
-                int endDay = CalculateAbsoluteDay(condition.Year, condition.Season, condition.EndDay);
+                int startDay = TimeHelper.DateToAbsoluteDay(condition.StartYear, condition.StartSeason, condition.StartDay);
+                int endDay = TimeHelper.DateToAbsoluteDay(condition.EndYear, condition.EndSeason, condition.EndDay);
 
                 // 计算范围内有多少个猪车日期
                 int cartDayCount = 0;
@@ -144,22 +143,15 @@ namespace StardewSeedSearcher.Features
 
             foreach (var condition in Conditions)
             {
-                int startDay = CalculateAbsoluteDay(condition.Year, condition.Season, condition.StartDay);
-                int endDay = CalculateAbsoluteDay(condition.Year, condition.Season, condition.EndDay);
+                int startDay = TimeHelper.DateToAbsoluteDay(condition.StartYear, condition.StartSeason, condition.StartDay);
+                int endDay = TimeHelper.DateToAbsoluteDay(condition.EndYear, condition.EndSeason, condition.EndDay);
 
                 var match = FindFirstMatch(seed, startDay, endDay,
                     condition.ItemName, condition.RequireQty5, useLegacyRandom);
 
                 if (match != null)
                 {
-                    cartMatches.Add(new
-                    {
-                        year = condition.Year,
-                        season = condition.Season,
-                        day = match.Day,
-                        itemName = match.ItemName,
-                        quantity = match.Quantity
-                    });
+                    cartMatches.Add(match);
                 }
             }
 
@@ -193,19 +185,24 @@ namespace StardewSeedSearcher.Features
                     // 跳过非物品项（如"还需X次访问"）
                     if (item.Quantity == 0) continue;
                     
-                    // 检查物品名称
-                    if (item.Name != itemName) continue;
-                    
                     // 检查数量要求
                     // 技能书的数量是-1，不能要求数量为5
                     if (requireQty5 && item.Quantity != 5) continue;
                     
+                    // 检查物品名称
+                    if (item.Name != itemName) continue;
+                    
                     // 找到匹配！
+                    var dateInfo = TimeHelper.AbsoluteDaytoDate(day);
                     return new CartDayMatch
                     {
-                        Day = day,
+                        Year = dateInfo.year,
+                        Season = dateInfo.season,
+                        Day = dateInfo.day,
+                        AbsoluteDay = day, // 用于前端排序
                         ItemName = item.Name,
-                        Quantity = item.Quantity
+                        Quantity = item.Quantity,
+                        Price = item.Price 
                     };
                 }
             }
@@ -396,9 +393,11 @@ namespace StardewSeedSearcher.Features
     /// </summary>
     public class CartCondition
     {
-        public int Year { get; set; }
-        public int Season { get; set; }  // 0-3
+        public int StartYear { get; set; }
+        public int StartSeason { get; set; }  // 0-3
         public int StartDay { get; set; }
+        public int EndYear { get; set; }
+        public int EndSeason { get; set; }  // 0-3
         public int EndDay { get; set; }
         public string ItemName { get; set; }
         public bool RequireQty5 { get; set; }
@@ -407,10 +406,14 @@ namespace StardewSeedSearcher.Features
     /// <summary>
     /// 猪车匹配结果（内部使用）
     /// </summary>
-    internal class CartDayMatch
+    public class CartDayMatch
     {
-        public int Day { get; set; }
+        public int Year { get; set; }
+        public int Season { get; set; } // 整数 0-3
+        public int Day { get; set; }    // 1-28
+        public int AbsoluteDay { get; set; } // 用于种子简介排序
         public string ItemName { get; set; }
         public int Quantity { get; set; }
+        public int Price { get; set; }
     }
 }

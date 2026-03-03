@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using StardewSeedSearcher.Features;
+using StardewSeedSearcher.Data;
 
 namespace StardewSeedSearcher
 {
@@ -25,6 +26,7 @@ namespace StardewSeedSearcher
             List<object> mineChestDetails = null;
             List<object> monsterLevelDetails = null;
             object desertFestivalDetails = null; 
+            List<object> cartMatches = null;
             
             foreach (var feature in features)
             {
@@ -49,8 +51,11 @@ namespace StardewSeedSearcher
                 {
                     desertFestivalDetails = desertFestival.GetDetails(seed, useLegacy);
                 }
-                // 未来添加更多：
-                // else if (feature is PigCartPredictor pigCart) { ... }
+                else if (feature is TravelingCartPredictor cartPredictor)
+                {
+                    cartMatches = cartPredictor.GetCartMatches(seed, useLegacy);
+                }
+                // 未来添加更多
             }
             
             return new
@@ -65,9 +70,9 @@ namespace StardewSeedSearcher
                 fairy = fairyDays != null ? new { days = fairyDays } : null,
                 mineChest = mineChestDetails,
                 monsterLevel = monsterLevelDetails,
-                desertFestival = desertFestivalDetails
+                desertFestival = desertFestivalDetails,
+                cart = cartMatches != null ? new { matches = cartMatches } : null
                 // 未来：
-                // pigCart = pigCartDetail,
                 // dwarf = dwarfDetail,
             };
         }
@@ -124,6 +129,31 @@ namespace StardewSeedSearcher
                         ActiveConnections.TryRemove(connectionId, out _);
                     }
                 }
+            });
+
+            // 猪车物品列表
+            app.MapGet("/api/cart-items", () =>
+            {
+                var items = TravelingCartData.Objects.Values
+                    .Where(item => !item.OffLimits && item.Price > 0)
+                    .Select(item => item.Name)
+                    .Concat(TravelingCartData.SkillBooks)
+                    .Distinct()
+                    .ToList();
+                
+                return Results.Ok(items);
+            });
+
+            app.MapGet("/api/seasons", () =>
+            {
+                // 利用 TimeHelper 循环生成季节 ID 和名称的列表
+                var seasons = Enumerable.Range(0, 4).Select(id => new 
+                { 
+                    id = id, 
+                    name = TimeHelper.GetSeasonName(id) 
+                }).ToList();
+                
+                return Results.Ok(seasons);
             });
 
             // 搜索 API
@@ -228,6 +258,30 @@ namespace StardewSeedSearcher
                     features.Add(desertFestivalPredictor);
                 }
 
+                // 配置猪车预测
+                if (request.CartConditions != null && request.CartConditions.Count > 0)
+                {
+                    var cartPredictor = new TravelingCartPredictor { IsEnabled = true };
+                    
+                    foreach (var conditionDto in request.CartConditions)
+                    {
+                        var condition = new CartCondition
+                        {
+                            StartYear = conditionDto.StartYear,
+                            StartSeason = conditionDto.StartSeason,
+                            StartDay = conditionDto.StartDay,
+                            EndYear = conditionDto.EndYear,
+                            EndSeason = conditionDto.EndSeason,
+                            EndDay = conditionDto.EndDay,
+                            ItemName = conditionDto.ItemName,
+                            RequireQty5 = conditionDto.RequireQty5
+                        };
+                        cartPredictor.Conditions.Add(condition);
+                    }
+                    
+                    features.Add(cartPredictor);
+                }
+
                 // 发送开始消息
                 await BroadcastMessage(new { type = "start", total = totalSeeds });
 
@@ -274,8 +328,8 @@ namespace StardewSeedSearcher
                                     mineChest = request.MineChestConditions != null && request.MineChestConditions.Count > 0,
                                     monsterLevel = request.MonsterLevelConditions != null && request.MonsterLevelConditions.Count > 0,
                                     desertFestival = request.DesertFestivalCondition != null && 
-                                                    (request.DesertFestivalCondition.RequireJas || request.DesertFestivalCondition.RequireLeah)
-    
+                                                    (request.DesertFestivalCondition.RequireJas || request.DesertFestivalCondition.RequireLeah),
+                                    cart = request.CartConditions != null && request.CartConditions.Count > 0
                                 }
                             });
                             
@@ -439,6 +493,9 @@ namespace StardewSeedSearcher
 
         [JsonPropertyName("desertFestivalCondition")]
         public DesertFestivalConditionDto DesertFestivalCondition { get; set; }
+        
+        [JsonPropertyName("cartConditions")]
+        public List<CartConditionDto> CartConditions { get; set; } = new();
 
         [JsonPropertyName("outputLimit")]
         public int OutputLimit { get; set; }
@@ -505,5 +562,33 @@ namespace StardewSeedSearcher
         
         [JsonPropertyName("requireLeah")]
         public bool RequireLeah { get; set; }
+    }
+    
+    public class CartConditionDto
+    {
+
+        [JsonPropertyName("startYear")]
+        public int StartYear { get; set; }
+        
+        [JsonPropertyName("startSeason")]
+        public int StartSeason { get; set; }
+        
+        [JsonPropertyName("startDay")]
+        public int StartDay { get; set; }
+        
+        [JsonPropertyName("endYear")]
+        public int EndYear { get; set; }
+        
+        [JsonPropertyName("endSeason")]
+        public int EndSeason { get; set; }
+        
+        [JsonPropertyName("endDay")]
+        public int EndDay { get; set; }
+
+        [JsonPropertyName("itemName")]
+        public string ItemName { get; set; }
+
+        [JsonPropertyName("requireQty5")]
+        public bool RequireQty5 { get; set; }
     }
 }
