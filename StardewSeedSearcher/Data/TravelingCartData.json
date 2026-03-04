@@ -1,0 +1,6458 @@
+﻿{
+    "_0": {
+        "Id": "0",
+        "Name": "杂草",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_2": {
+        "Id": "2",
+        "Name": "石头",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_4": {
+        "Id": "4",
+        "Name": "石头",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_6": {
+        "Id": "6",
+        "Name": "石头",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_8": {
+        "Id": "8",
+        "Name": "石头",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_10": {
+        "Id": "10",
+        "Name": "石头",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_12": {
+        "Id": "12",
+        "Name": "石头",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_14": {
+        "Id": "14",
+        "Name": "石头",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_16": {
+        "Id": "16",
+        "Name": "野山葵",
+        "Type": "Basic",
+        "Category": -81,
+        "Price": 50,
+        "OffLimits": false
+    },
+    "_18": {
+        "Id": "18",
+        "Name": "黄水仙",
+        "Type": "Basic",
+        "Category": -81,
+        "Price": 30,
+        "OffLimits": false
+    },
+    "_20": {
+        "Id": "20",
+        "Name": "韭葱",
+        "Type": "Basic",
+        "Category": -81,
+        "Price": 60,
+        "OffLimits": false
+    },
+    "_22": {
+        "Id": "22",
+        "Name": "蒲公英",
+        "Type": "Basic",
+        "Category": -81,
+        "Price": 40,
+        "OffLimits": false
+    },
+    "_24": {
+        "Id": "24",
+        "Name": "防风草",
+        "Type": "Basic",
+        "Category": -75,
+        "Price": 35,
+        "OffLimits": false
+    },
+    "_30": {
+        "Id": "30",
+        "Name": "木材",
+        "Type": "Basic",
+        "Category": 0,
+        "Price": 2,
+        "OffLimits": false
+    },
+    "_32": {
+        "Id": "32",
+        "Name": "石头",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_34": {
+        "Id": "34",
+        "Name": "石头",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_36": {
+        "Id": "36",
+        "Name": "石头",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_38": {
+        "Id": "38",
+        "Name": "石头",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_40": {
+        "Id": "40",
+        "Name": "石头",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_42": {
+        "Id": "42",
+        "Name": "石头",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_44": {
+        "Id": "44",
+        "Name": "石头",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_46": {
+        "Id": "46",
+        "Name": "石头",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_48": {
+        "Id": "48",
+        "Name": "石头",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_50": {
+        "Id": "50",
+        "Name": "石头",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_52": {
+        "Id": "52",
+        "Name": "石头",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_54": {
+        "Id": "54",
+        "Name": "石头",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_56": {
+        "Id": "56",
+        "Name": "石头",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_58": {
+        "Id": "58",
+        "Name": "石头",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_60": {
+        "Id": "60",
+        "Name": "绿宝石",
+        "Type": "Minerals",
+        "Category": -2,
+        "Price": 250,
+        "OffLimits": false
+    },
+    "_62": {
+        "Id": "62",
+        "Name": "海蓝宝石",
+        "Type": "Minerals",
+        "Category": -2,
+        "Price": 180,
+        "OffLimits": false
+    },
+    "_64": {
+        "Id": "64",
+        "Name": "红宝石",
+        "Type": "Minerals",
+        "Category": -2,
+        "Price": 250,
+        "OffLimits": false
+    },
+    "_66": {
+        "Id": "66",
+        "Name": "紫水晶",
+        "Type": "Minerals",
+        "Category": -2,
+        "Price": 100,
+        "OffLimits": false
+    },
+    "_68": {
+        "Id": "68",
+        "Name": "黄水晶",
+        "Type": "Minerals",
+        "Category": -2,
+        "Price": 80,
+        "OffLimits": false
+    },
+    "_70": {
+        "Id": "70",
+        "Name": "翡翠",
+        "Type": "Minerals",
+        "Category": -2,
+        "Price": 200,
+        "OffLimits": false
+    },
+    "_71": {
+        "Id": "71",
+        "Name": "镶边幸运紫色短裤",
+        "Type": "Quest",
+        "Category": 0,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_72": {
+        "Id": "72",
+        "Name": "钻石",
+        "Type": "Minerals",
+        "Category": -2,
+        "Price": 750,
+        "OffLimits": false
+    },
+    "_74": {
+        "Id": "74",
+        "Name": "五彩碎片",
+        "Type": "Minerals",
+        "Category": -2,
+        "Price": 2000,
+        "OffLimits": false
+    },
+    "_75": {
+        "Id": "75",
+        "Name": "石头",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_76": {
+        "Id": "76",
+        "Name": "石头",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_77": {
+        "Id": "77",
+        "Name": "石头",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_78": {
+        "Id": "78",
+        "Name": "山洞萝卜",
+        "Type": "Basic",
+        "Category": -81,
+        "Price": 25,
+        "OffLimits": false
+    },
+    "_79": {
+        "Id": "79",
+        "Name": "Secret Note",
+        "Type": "asdf",
+        "Category": 0,
+        "Price": 1,
+        "OffLimits": true
+    },
+    "_80": {
+        "Id": "80",
+        "Name": "石英",
+        "Type": "Minerals",
+        "Category": -2,
+        "Price": 25,
+        "OffLimits": false
+    },
+    "_82": {
+        "Id": "82",
+        "Name": "火水晶",
+        "Type": "Minerals",
+        "Category": -2,
+        "Price": 100,
+        "OffLimits": false
+    },
+    "_84": {
+        "Id": "84",
+        "Name": "泪晶",
+        "Type": "Minerals",
+        "Category": -2,
+        "Price": 75,
+        "OffLimits": false
+    },
+    "_86": {
+        "Id": "86",
+        "Name": "地晶",
+        "Type": "Minerals",
+        "Category": -2,
+        "Price": 50,
+        "OffLimits": false
+    },
+    "_88": {
+        "Id": "88",
+        "Name": "椰子",
+        "Type": "Basic",
+        "Category": -79,
+        "Price": 100,
+        "OffLimits": false
+    },
+    "_90": {
+        "Id": "90",
+        "Name": "仙人掌果子",
+        "Type": "Basic",
+        "Category": -79,
+        "Price": 75,
+        "OffLimits": false
+    },
+    "_92": {
+        "Id": "92",
+        "Name": "树液",
+        "Type": "Basic",
+        "Category": -81,
+        "Price": 2,
+        "OffLimits": false
+    },
+    "_93": {
+        "Id": "93",
+        "Name": "火把",
+        "Type": "Crafting",
+        "Category": 0,
+        "Price": 5,
+        "OffLimits": false
+    },
+    "_94": {
+        "Id": "94",
+        "Name": "精灵火把",
+        "Type": "Crafting",
+        "Category": 0,
+        "Price": 5,
+        "OffLimits": false
+    },
+    "_95": {
+        "Id": "95",
+        "Name": "石头",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_96": {
+        "Id": "96",
+        "Name": "矮人卷轴I",
+        "Type": "Arch",
+        "Category": 0,
+        "Price": 1,
+        "OffLimits": false
+    },
+    "_97": {
+        "Id": "97",
+        "Name": "矮人卷轴II",
+        "Type": "Arch",
+        "Category": 0,
+        "Price": 1,
+        "OffLimits": false
+    },
+    "_98": {
+        "Id": "98",
+        "Name": "矮人卷轴III",
+        "Type": "Arch",
+        "Category": 0,
+        "Price": 1,
+        "OffLimits": false
+    },
+    "_99": {
+        "Id": "99",
+        "Name": "矮人卷轴IV",
+        "Type": "Arch",
+        "Category": 0,
+        "Price": 1,
+        "OffLimits": false
+    },
+    "_100": {
+        "Id": "100",
+        "Name": "有缺口的土罐",
+        "Type": "Arch",
+        "Category": 0,
+        "Price": 40,
+        "OffLimits": false
+    },
+    "_101": {
+        "Id": "101",
+        "Name": "箭头",
+        "Type": "Arch",
+        "Category": 0,
+        "Price": 40,
+        "OffLimits": false
+    },
+    "_102": {
+        "Id": "102",
+        "Name": "遗失之书",
+        "Type": "asdf",
+        "Category": 0,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_103": {
+        "Id": "103",
+        "Name": "古代玩偶",
+        "Type": "Arch",
+        "Category": 0,
+        "Price": 60,
+        "OffLimits": false
+    },
+    "_104": {
+        "Id": "104",
+        "Name": "精灵珠宝",
+        "Type": "Arch",
+        "Category": 0,
+        "Price": 200,
+        "OffLimits": false
+    },
+    "_105": {
+        "Id": "105",
+        "Name": "咀嚼洁齿棒",
+        "Type": "Arch",
+        "Category": 0,
+        "Price": 50,
+        "OffLimits": false
+    },
+    "_106": {
+        "Id": "106",
+        "Name": "装饰用扇子",
+        "Type": "Arch",
+        "Category": 0,
+        "Price": 300,
+        "OffLimits": false
+    },
+    "_107": {
+        "Id": "107",
+        "Name": "恐龙蛋",
+        "Type": "Arch",
+        "Category": 0,
+        "Price": 350,
+        "OffLimits": false
+    },
+    "_108": {
+        "Id": "108",
+        "Name": "稀有圆盘",
+        "Type": "Arch",
+        "Category": 0,
+        "Price": 300,
+        "OffLimits": false
+    },
+    "_109": {
+        "Id": "109",
+        "Name": "古剑",
+        "Type": "Arch",
+        "Category": 0,
+        "Price": 100,
+        "OffLimits": false
+    },
+    "_110": {
+        "Id": "110",
+        "Name": "生锈的汤匙",
+        "Type": "Arch",
+        "Category": 0,
+        "Price": 25,
+        "OffLimits": false
+    },
+    "_111": {
+        "Id": "111",
+        "Name": "生锈的靴刺",
+        "Type": "Arch",
+        "Category": 0,
+        "Price": 25,
+        "OffLimits": false
+    },
+    "_112": {
+        "Id": "112",
+        "Name": "生锈的齿轮",
+        "Type": "Arch",
+        "Category": 0,
+        "Price": 25,
+        "OffLimits": false
+    },
+    "_113": {
+        "Id": "113",
+        "Name": "鸡雕像",
+        "Type": "Arch",
+        "Category": 0,
+        "Price": 50,
+        "OffLimits": false
+    },
+    "_114": {
+        "Id": "114",
+        "Name": "古代种子",
+        "Type": "Arch",
+        "Category": 0,
+        "Price": 5,
+        "OffLimits": false
+    },
+    "_115": {
+        "Id": "115",
+        "Name": "史前工具",
+        "Type": "Arch",
+        "Category": 0,
+        "Price": 50,
+        "OffLimits": false
+    },
+    "_116": {
+        "Id": "116",
+        "Name": "干海星",
+        "Type": "Arch",
+        "Category": 0,
+        "Price": 40,
+        "OffLimits": false
+    },
+    "_117": {
+        "Id": "117",
+        "Name": "锚",
+        "Type": "Arch",
+        "Category": 0,
+        "Price": 100,
+        "OffLimits": false
+    },
+    "_118": {
+        "Id": "118",
+        "Name": "玻璃碎片",
+        "Type": "Arch",
+        "Category": 0,
+        "Price": 20,
+        "OffLimits": false
+    },
+    "_119": {
+        "Id": "119",
+        "Name": "骨笛",
+        "Type": "Arch",
+        "Category": 0,
+        "Price": 100,
+        "OffLimits": false
+    },
+    "_120": {
+        "Id": "120",
+        "Name": "史前手斧",
+        "Type": "Arch",
+        "Category": 0,
+        "Price": 50,
+        "OffLimits": false
+    },
+    "_121": {
+        "Id": "121",
+        "Name": "矮人头盔",
+        "Type": "Arch",
+        "Category": 0,
+        "Price": 100,
+        "OffLimits": false
+    },
+    "_122": {
+        "Id": "122",
+        "Name": "矮人小工具",
+        "Type": "Arch",
+        "Category": 0,
+        "Price": 200,
+        "OffLimits": false
+    },
+    "_123": {
+        "Id": "123",
+        "Name": "古代鼓",
+        "Type": "Arch",
+        "Category": 0,
+        "Price": 100,
+        "OffLimits": false
+    },
+    "_124": {
+        "Id": "124",
+        "Name": "金色面具",
+        "Type": "Arch",
+        "Category": 0,
+        "Price": 500,
+        "OffLimits": false
+    },
+    "_125": {
+        "Id": "125",
+        "Name": "黄金遗物",
+        "Type": "Arch",
+        "Category": 0,
+        "Price": 250,
+        "OffLimits": false
+    },
+    "_126": {
+        "Id": "126",
+        "Name": "诡异玩偶",
+        "Type": "Arch",
+        "Category": 0,
+        "Price": 1000,
+        "OffLimits": false
+    },
+    "_127": {
+        "Id": "127",
+        "Name": "诡异玩偶",
+        "Type": "Arch",
+        "Category": 0,
+        "Price": 1000,
+        "OffLimits": false
+    },
+    "_128": {
+        "Id": "128",
+        "Name": "河豚",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 200,
+        "OffLimits": false
+    },
+    "_129": {
+        "Id": "129",
+        "Name": "鳀鱼",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 30,
+        "OffLimits": false
+    },
+    "_130": {
+        "Id": "130",
+        "Name": "金枪鱼",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 100,
+        "OffLimits": false
+    },
+    "_131": {
+        "Id": "131",
+        "Name": "沙丁鱼",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 40,
+        "OffLimits": false
+    },
+    "_132": {
+        "Id": "132",
+        "Name": "鲷鱼",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 45,
+        "OffLimits": false
+    },
+    "_136": {
+        "Id": "136",
+        "Name": "大嘴鲈鱼",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 100,
+        "OffLimits": false
+    },
+    "_137": {
+        "Id": "137",
+        "Name": "小嘴鲈鱼",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 50,
+        "OffLimits": false
+    },
+    "_138": {
+        "Id": "138",
+        "Name": "虹鳟鱼",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 65,
+        "OffLimits": false
+    },
+    "_139": {
+        "Id": "139",
+        "Name": "鲑鱼",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 75,
+        "OffLimits": false
+    },
+    "_140": {
+        "Id": "140",
+        "Name": "大眼鱼",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 105,
+        "OffLimits": false
+    },
+    "_141": {
+        "Id": "141",
+        "Name": "河鲈",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 55,
+        "OffLimits": false
+    },
+    "_142": {
+        "Id": "142",
+        "Name": "鲤鱼",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 30,
+        "OffLimits": false
+    },
+    "_143": {
+        "Id": "143",
+        "Name": "鲶鱼",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 200,
+        "OffLimits": false
+    },
+    "_144": {
+        "Id": "144",
+        "Name": "狗鱼",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 100,
+        "OffLimits": false
+    },
+    "_145": {
+        "Id": "145",
+        "Name": "太阳鱼",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 30,
+        "OffLimits": false
+    },
+    "_146": {
+        "Id": "146",
+        "Name": "红鲻鱼",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 75,
+        "OffLimits": false
+    },
+    "_147": {
+        "Id": "147",
+        "Name": "鲱鱼",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 30,
+        "OffLimits": false
+    },
+    "_148": {
+        "Id": "148",
+        "Name": "鳗鱼",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 85,
+        "OffLimits": false
+    },
+    "_149": {
+        "Id": "149",
+        "Name": "章鱼",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 150,
+        "OffLimits": false
+    },
+    "_150": {
+        "Id": "150",
+        "Name": "红鲷鱼",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 50,
+        "OffLimits": false
+    },
+    "_151": {
+        "Id": "151",
+        "Name": "鱿鱼",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 80,
+        "OffLimits": false
+    },
+    "_152": {
+        "Id": "152",
+        "Name": "海草",
+        "Type": "Fish",
+        "Category": 0,
+        "Price": 20,
+        "OffLimits": false
+    },
+    "_153": {
+        "Id": "153",
+        "Name": "绿藻",
+        "Type": "Fish",
+        "Category": 0,
+        "Price": 15,
+        "OffLimits": false
+    },
+    "_154": {
+        "Id": "154",
+        "Name": "海参",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 75,
+        "OffLimits": false
+    },
+    "_155": {
+        "Id": "155",
+        "Name": "大海参",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 250,
+        "OffLimits": false
+    },
+    "_156": {
+        "Id": "156",
+        "Name": "鬼鱼",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 45,
+        "OffLimits": false
+    },
+    "_157": {
+        "Id": "157",
+        "Name": "白藻",
+        "Type": "Fish",
+        "Category": 0,
+        "Price": 25,
+        "OffLimits": false
+    },
+    "_158": {
+        "Id": "158",
+        "Name": "石鱼",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 300,
+        "OffLimits": true
+    },
+    "_159": {
+        "Id": "159",
+        "Name": "绯红鱼",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 1500,
+        "OffLimits": true
+    },
+    "_160": {
+        "Id": "160",
+        "Name": "鮟鱇鱼",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 900,
+        "OffLimits": true
+    },
+    "_161": {
+        "Id": "161",
+        "Name": "冰柱鱼",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 500,
+        "OffLimits": true
+    },
+    "_162": {
+        "Id": "162",
+        "Name": "岩浆鳗鱼",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 700,
+        "OffLimits": true
+    },
+    "_163": {
+        "Id": "163",
+        "Name": "传说之鱼",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 5000,
+        "OffLimits": true
+    },
+    "_164": {
+        "Id": "164",
+        "Name": "沙鱼",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 75,
+        "OffLimits": false
+    },
+    "_165": {
+        "Id": "165",
+        "Name": "蝎鲤鱼",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 150,
+        "OffLimits": false
+    },
+    "_166": {
+        "Id": "166",
+        "Name": "财宝箱",
+        "Type": "Basic",
+        "Category": 0,
+        "Price": 5000,
+        "OffLimits": false
+    },
+    "_167": {
+        "Id": "167",
+        "Name": "Joja可乐",
+        "Type": "Fish",
+        "Category": -20,
+        "Price": 25,
+        "OffLimits": false
+    },
+    "_168": {
+        "Id": "168",
+        "Name": "垃圾",
+        "Type": "Fish",
+        "Category": -20,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_169": {
+        "Id": "169",
+        "Name": "浮木",
+        "Type": "Fish",
+        "Category": -20,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_170": {
+        "Id": "170",
+        "Name": "破损的眼镜",
+        "Type": "Fish",
+        "Category": -20,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_171": {
+        "Id": "171",
+        "Name": "破损的CD",
+        "Type": "Fish",
+        "Category": -20,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_172": {
+        "Id": "172",
+        "Name": "湿透的报纸",
+        "Type": "Fish",
+        "Category": -20,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_176": {
+        "Id": "176",
+        "Name": "蛋（白色）",
+        "Type": "Basic",
+        "Category": -5,
+        "Price": 50,
+        "OffLimits": false
+    },
+    "_174": {
+        "Id": "174",
+        "Name": "大鸡蛋（白色）",
+        "Type": "Basic",
+        "Category": -5,
+        "Price": 95,
+        "OffLimits": false
+    },
+    "_178": {
+        "Id": "178",
+        "Name": "干草",
+        "Type": "Basic",
+        "Category": 0,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_180": {
+        "Id": "180",
+        "Name": "蛋（棕色）",
+        "Type": "Basic",
+        "Category": -5,
+        "Price": 50,
+        "OffLimits": false
+    },
+    "_182": {
+        "Id": "182",
+        "Name": "大鸡蛋（棕色）",
+        "Type": "Basic",
+        "Category": -5,
+        "Price": 95,
+        "OffLimits": false
+    },
+    "_184": {
+        "Id": "184",
+        "Name": "牛奶",
+        "Type": "Basic",
+        "Category": -6,
+        "Price": 125,
+        "OffLimits": false
+    },
+    "_186": {
+        "Id": "186",
+        "Name": "大壶牛奶",
+        "Type": "Basic",
+        "Category": -6,
+        "Price": 190,
+        "OffLimits": false
+    },
+    "_188": {
+        "Id": "188",
+        "Name": "青豆",
+        "Type": "Basic",
+        "Category": -75,
+        "Price": 40,
+        "OffLimits": false
+    },
+    "_190": {
+        "Id": "190",
+        "Name": "花椰菜",
+        "Type": "Basic",
+        "Category": -75,
+        "Price": 175,
+        "OffLimits": false
+    },
+    "_191": {
+        "Id": "191",
+        "Name": "华丽的项链",
+        "Type": "Quest",
+        "Category": 0,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_192": {
+        "Id": "192",
+        "Name": "土豆",
+        "Type": "Basic",
+        "Category": -75,
+        "Price": 80,
+        "OffLimits": false
+    },
+    "_194": {
+        "Id": "194",
+        "Name": "煎鸡蛋",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 35,
+        "OffLimits": false
+    },
+    "_195": {
+        "Id": "195",
+        "Name": "煎蛋卷",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 125,
+        "OffLimits": false
+    },
+    "_196": {
+        "Id": "196",
+        "Name": "沙拉",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 110,
+        "OffLimits": false
+    },
+    "_197": {
+        "Id": "197",
+        "Name": "乳酪花椰菜",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 300,
+        "OffLimits": false
+    },
+    "_198": {
+        "Id": "198",
+        "Name": "烤鱼",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 100,
+        "OffLimits": false
+    },
+    "_199": {
+        "Id": "199",
+        "Name": "防风草汤",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 120,
+        "OffLimits": false
+    },
+    "_200": {
+        "Id": "200",
+        "Name": "蔬菜杂烩",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 120,
+        "OffLimits": false
+    },
+    "_201": {
+        "Id": "201",
+        "Name": "完美早餐",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 350,
+        "OffLimits": false
+    },
+    "_202": {
+        "Id": "202",
+        "Name": "炸鱿鱼",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 150,
+        "OffLimits": false
+    },
+    "_203": {
+        "Id": "203",
+        "Name": "奇怪的小面包",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 225,
+        "OffLimits": false
+    },
+    "_204": {
+        "Id": "204",
+        "Name": "幸运午餐",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 250,
+        "OffLimits": false
+    },
+    "_205": {
+        "Id": "205",
+        "Name": "炒蘑菇",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 200,
+        "OffLimits": false
+    },
+    "_206": {
+        "Id": "206",
+        "Name": "披萨",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 300,
+        "OffLimits": false
+    },
+    "_207": {
+        "Id": "207",
+        "Name": "豆类火锅",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 100,
+        "OffLimits": false
+    },
+    "_208": {
+        "Id": "208",
+        "Name": "琉璃山药",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 200,
+        "OffLimits": false
+    },
+    "_209": {
+        "Id": "209",
+        "Name": "惊喜鲤鱼",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 150,
+        "OffLimits": false
+    },
+    "_210": {
+        "Id": "210",
+        "Name": "薯饼",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 120,
+        "OffLimits": false
+    },
+    "_211": {
+        "Id": "211",
+        "Name": "薄煎饼",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 80,
+        "OffLimits": false
+    },
+    "_212": {
+        "Id": "212",
+        "Name": "鲑鱼晚餐",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 300,
+        "OffLimits": false
+    },
+    "_213": {
+        "Id": "213",
+        "Name": "鱼肉卷",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 500,
+        "OffLimits": false
+    },
+    "_214": {
+        "Id": "214",
+        "Name": "香酥鲈鱼",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 150,
+        "OffLimits": false
+    },
+    "_215": {
+        "Id": "215",
+        "Name": "爆炒青椒",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 200,
+        "OffLimits": false
+    },
+    "_216": {
+        "Id": "216",
+        "Name": "面包",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 60,
+        "OffLimits": false
+    },
+    "_218": {
+        "Id": "218",
+        "Name": "椰汁汤",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 250,
+        "OffLimits": false
+    },
+    "_219": {
+        "Id": "219",
+        "Name": "鳟鱼汤",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 100,
+        "OffLimits": false
+    },
+    "_220": {
+        "Id": "220",
+        "Name": "巧克力蛋糕",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 200,
+        "OffLimits": false
+    },
+    "_221": {
+        "Id": "221",
+        "Name": "粉红蛋糕",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 480,
+        "OffLimits": false
+    },
+    "_222": {
+        "Id": "222",
+        "Name": "大黄派",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 400,
+        "OffLimits": false
+    },
+    "_223": {
+        "Id": "223",
+        "Name": "饼干",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 140,
+        "OffLimits": false
+    },
+    "_224": {
+        "Id": "224",
+        "Name": "意大利面",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 120,
+        "OffLimits": false
+    },
+    "_225": {
+        "Id": "225",
+        "Name": "炒鳗鱼",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 120,
+        "OffLimits": false
+    },
+    "_226": {
+        "Id": "226",
+        "Name": "香辣鳗鱼",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 175,
+        "OffLimits": false
+    },
+    "_227": {
+        "Id": "227",
+        "Name": "生鱼片",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 75,
+        "OffLimits": false
+    },
+    "_228": {
+        "Id": "228",
+        "Name": "生鱼寿司",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 220,
+        "OffLimits": false
+    },
+    "_229": {
+        "Id": "229",
+        "Name": "墨西哥薄饼",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 50,
+        "OffLimits": false
+    },
+    "_230": {
+        "Id": "230",
+        "Name": "红之盛宴",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 400,
+        "OffLimits": false
+    },
+    "_231": {
+        "Id": "231",
+        "Name": "帕尔玛奶酪茄子",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 200,
+        "OffLimits": false
+    },
+    "_232": {
+        "Id": "232",
+        "Name": "大米布丁",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 260,
+        "OffLimits": false
+    },
+    "_233": {
+        "Id": "233",
+        "Name": "冰淇淋",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 120,
+        "OffLimits": false
+    },
+    "_234": {
+        "Id": "234",
+        "Name": "蓝莓千层酥",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 150,
+        "OffLimits": false
+    },
+    "_235": {
+        "Id": "235",
+        "Name": "秋日恩赐",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 350,
+        "OffLimits": false
+    },
+    "_236": {
+        "Id": "236",
+        "Name": "南瓜汤",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 300,
+        "OffLimits": false
+    },
+    "_237": {
+        "Id": "237",
+        "Name": "巨无霸餐",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 220,
+        "OffLimits": false
+    },
+    "_238": {
+        "Id": "238",
+        "Name": "红莓酱",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 120,
+        "OffLimits": false
+    },
+    "_239": {
+        "Id": "239",
+        "Name": "塞料面包",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 165,
+        "OffLimits": false
+    },
+    "_240": {
+        "Id": "240",
+        "Name": "农夫午餐",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 150,
+        "OffLimits": false
+    },
+    "_241": {
+        "Id": "241",
+        "Name": "救生汉堡",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 180,
+        "OffLimits": false
+    },
+    "_242": {
+        "Id": "242",
+        "Name": "海之菜肴",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 220,
+        "OffLimits": false
+    },
+    "_243": {
+        "Id": "243",
+        "Name": "矿工特供",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 200,
+        "OffLimits": false
+    },
+    "_244": {
+        "Id": "244",
+        "Name": "块茎拼盘",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 100,
+        "OffLimits": false
+    },
+    "_245": {
+        "Id": "245",
+        "Name": "糖",
+        "Type": "Basic",
+        "Category": 0,
+        "Price": 50,
+        "OffLimits": false
+    },
+    "_246": {
+        "Id": "246",
+        "Name": "大麦粉",
+        "Type": "Basic",
+        "Category": 0,
+        "Price": 50,
+        "OffLimits": false
+    },
+    "_247": {
+        "Id": "247",
+        "Name": "油",
+        "Type": "Basic",
+        "Category": 0,
+        "Price": 100,
+        "OffLimits": false
+    },
+    "_248": {
+        "Id": "248",
+        "Name": "蒜",
+        "Type": "Basic",
+        "Category": -75,
+        "Price": 60,
+        "OffLimits": false
+    },
+    "_250": {
+        "Id": "250",
+        "Name": "甘蓝菜",
+        "Type": "Basic",
+        "Category": -75,
+        "Price": 110,
+        "OffLimits": false
+    },
+    "_251": {
+        "Id": "251",
+        "Name": "茶苗",
+        "Type": "Basic",
+        "Category": -74,
+        "Price": 250,
+        "OffLimits": false
+    },
+    "_252": {
+        "Id": "252",
+        "Name": "大黄",
+        "Type": "Basic",
+        "Category": -79,
+        "Price": 220,
+        "OffLimits": false
+    },
+    "_253": {
+        "Id": "253",
+        "Name": "三倍浓缩咖啡",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 450,
+        "OffLimits": false
+    },
+    "_254": {
+        "Id": "254",
+        "Name": "甜瓜",
+        "Type": "Basic",
+        "Category": -79,
+        "Price": 250,
+        "OffLimits": false
+    },
+    "_256": {
+        "Id": "256",
+        "Name": "西红柿",
+        "Type": "Basic",
+        "Category": -75,
+        "Price": 60,
+        "OffLimits": false
+    },
+    "_257": {
+        "Id": "257",
+        "Name": "羊肚菌",
+        "Type": "Basic",
+        "Category": -81,
+        "Price": 150,
+        "OffLimits": false
+    },
+    "_258": {
+        "Id": "258",
+        "Name": "蓝莓",
+        "Type": "Basic",
+        "Category": -79,
+        "Price": 50,
+        "OffLimits": false
+    },
+    "_259": {
+        "Id": "259",
+        "Name": "蕨菜",
+        "Type": "Basic",
+        "Category": -75,
+        "Price": 90,
+        "OffLimits": false
+    },
+    "_260": {
+        "Id": "260",
+        "Name": "辣椒",
+        "Type": "Basic",
+        "Category": -79,
+        "Price": 40,
+        "OffLimits": false
+    },
+    "_261": {
+        "Id": "261",
+        "Name": "传送图腾：沙漠",
+        "Type": "Crafting",
+        "Category": 0,
+        "Price": 20,
+        "OffLimits": true
+    },
+    "_262": {
+        "Id": "262",
+        "Name": "小麦",
+        "Type": "Basic",
+        "Category": -75,
+        "Price": 25,
+        "OffLimits": false
+    },
+    "_264": {
+        "Id": "264",
+        "Name": "萝卜",
+        "Type": "Basic",
+        "Category": -75,
+        "Price": 90,
+        "OffLimits": false
+    },
+    "_266": {
+        "Id": "266",
+        "Name": "红叶卷心菜",
+        "Type": "Basic",
+        "Category": -75,
+        "Price": 260,
+        "OffLimits": false
+    },
+    "_268": {
+        "Id": "268",
+        "Name": "杨桃",
+        "Type": "Basic",
+        "Category": -79,
+        "Price": 750,
+        "OffLimits": false
+    },
+    "_270": {
+        "Id": "270",
+        "Name": "玉米",
+        "Type": "Basic",
+        "Category": -75,
+        "Price": 50,
+        "OffLimits": false
+    },
+    "_271": {
+        "Id": "271",
+        "Name": "未碾米",
+        "Type": "Basic",
+        "Category": -75,
+        "Price": 30,
+        "OffLimits": false
+    },
+    "_272": {
+        "Id": "272",
+        "Name": "茄子",
+        "Type": "Basic",
+        "Category": -75,
+        "Price": 60,
+        "OffLimits": false
+    },
+    "_273": {
+        "Id": "273",
+        "Name": "稻苗",
+        "Type": "Seeds",
+        "Category": -74,
+        "Price": 20,
+        "OffLimits": false
+    },
+    "_274": {
+        "Id": "274",
+        "Name": "洋蓟",
+        "Type": "Basic",
+        "Category": -75,
+        "Price": 160,
+        "OffLimits": false
+    },
+    "_275": {
+        "Id": "275",
+        "Name": "古物宝藏",
+        "Type": "Basic",
+        "Category": 0,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_276": {
+        "Id": "276",
+        "Name": "南瓜",
+        "Type": "Basic",
+        "Category": -75,
+        "Price": 320,
+        "OffLimits": false
+    },
+    "_277": {
+        "Id": "277",
+        "Name": "枯萎的花束",
+        "Type": "Basic",
+        "Category": 0,
+        "Price": 100,
+        "OffLimits": true
+    },
+    "_278": {
+        "Id": "278",
+        "Name": "小白菜",
+        "Type": "Basic",
+        "Category": -75,
+        "Price": 80,
+        "OffLimits": false
+    },
+    "_279": {
+        "Id": "279",
+        "Name": "魔法糖冰棍",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 5000,
+        "OffLimits": true
+    },
+    "_280": {
+        "Id": "280",
+        "Name": "山药",
+        "Type": "Basic",
+        "Category": -75,
+        "Price": 160,
+        "OffLimits": false
+    },
+    "_281": {
+        "Id": "281",
+        "Name": "鸡油菌",
+        "Type": "Basic",
+        "Category": -81,
+        "Price": 160,
+        "OffLimits": false
+    },
+    "_282": {
+        "Id": "282",
+        "Name": "蔓越莓",
+        "Type": "Basic",
+        "Category": -79,
+        "Price": 75,
+        "OffLimits": false
+    },
+    "_283": {
+        "Id": "283",
+        "Name": "冬青树",
+        "Type": "Basic",
+        "Category": -81,
+        "Price": 80,
+        "OffLimits": false
+    },
+    "_284": {
+        "Id": "284",
+        "Name": "甜菜",
+        "Type": "Basic",
+        "Category": -75,
+        "Price": 100,
+        "OffLimits": false
+    },
+    "_286": {
+        "Id": "286",
+        "Name": "樱桃炸弹",
+        "Type": "Crafting",
+        "Category": -8,
+        "Price": 50,
+        "OffLimits": false
+    },
+    "_287": {
+        "Id": "287",
+        "Name": "炸弹",
+        "Type": "Crafting",
+        "Category": -8,
+        "Price": 50,
+        "OffLimits": false
+    },
+    "_288": {
+        "Id": "288",
+        "Name": "超级炸弹",
+        "Type": "Crafting",
+        "Category": -8,
+        "Price": 50,
+        "OffLimits": false
+    },
+    "_290": {
+        "Id": "290",
+        "Name": "石头",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_293": {
+        "Id": "293",
+        "Name": "红砖地板",
+        "Type": "Crafting",
+        "Category": -24,
+        "Price": 1,
+        "OffLimits": false
+    },
+    "_294": {
+        "Id": "294",
+        "Name": "嫩枝",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_295": {
+        "Id": "295",
+        "Name": "嫩枝",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_296": {
+        "Id": "296",
+        "Name": "美洲大树莓",
+        "Type": "Basic",
+        "Category": -79,
+        "Price": 5,
+        "OffLimits": false
+    },
+    "_297": {
+        "Id": "297",
+        "Name": "草籽",
+        "Type": "Crafting",
+        "Category": 0,
+        "Price": 50,
+        "OffLimits": false
+    },
+    "_298": {
+        "Id": "298",
+        "Name": "硬木围栏",
+        "Type": "Crafting",
+        "Category": -8,
+        "Price": 10,
+        "OffLimits": false
+    },
+    "_299": {
+        "Id": "299",
+        "Name": "苋菜种子",
+        "Type": "Seeds",
+        "Category": -74,
+        "Price": 35,
+        "OffLimits": false
+    },
+    "_300": {
+        "Id": "300",
+        "Name": "苋菜",
+        "Type": "Basic",
+        "Category": -75,
+        "Price": 150,
+        "OffLimits": false
+    },
+    "_301": {
+        "Id": "301",
+        "Name": "葡萄种子",
+        "Type": "Seeds",
+        "Category": -74,
+        "Price": 30,
+        "OffLimits": false
+    },
+    "_302": {
+        "Id": "302",
+        "Name": "啤酒花种子",
+        "Type": "Seeds",
+        "Category": -74,
+        "Price": 30,
+        "OffLimits": false
+    },
+    "_303": {
+        "Id": "303",
+        "Name": "淡啤酒",
+        "Type": "Basic",
+        "Category": -26,
+        "Price": 300,
+        "OffLimits": false
+    },
+    "_304": {
+        "Id": "304",
+        "Name": "啤酒花",
+        "Type": "Basic",
+        "Category": -75,
+        "Price": 25,
+        "OffLimits": false
+    },
+    "_305": {
+        "Id": "305",
+        "Name": "虚空蛋",
+        "Type": "Basic",
+        "Category": -5,
+        "Price": 65,
+        "OffLimits": true
+    },
+    "_306": {
+        "Id": "306",
+        "Name": "蛋黄酱",
+        "Type": "Basic",
+        "Category": -26,
+        "Price": 190,
+        "OffLimits": false
+    },
+    "_307": {
+        "Id": "307",
+        "Name": "鸭蛋黄酱",
+        "Type": "Basic",
+        "Category": -26,
+        "Price": 375,
+        "OffLimits": false
+    },
+    "_308": {
+        "Id": "308",
+        "Name": "虚空蛋黄酱",
+        "Type": "Basic",
+        "Category": -26,
+        "Price": 275,
+        "OffLimits": true
+    },
+    "_309": {
+        "Id": "309",
+        "Name": "橡子",
+        "Type": "Crafting",
+        "Category": -74,
+        "Price": 20,
+        "OffLimits": false
+    },
+    "_310": {
+        "Id": "310",
+        "Name": "枫树种子",
+        "Type": "Crafting",
+        "Category": -74,
+        "Price": 5,
+        "OffLimits": false
+    },
+    "_311": {
+        "Id": "311",
+        "Name": "松果",
+        "Type": "Crafting",
+        "Category": -74,
+        "Price": 5,
+        "OffLimits": false
+    },
+    "_313": {
+        "Id": "313",
+        "Name": "杂草",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_314": {
+        "Id": "314",
+        "Name": "杂草",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_315": {
+        "Id": "315",
+        "Name": "杂草",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_316": {
+        "Id": "316",
+        "Name": "杂草",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_317": {
+        "Id": "317",
+        "Name": "杂草",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_318": {
+        "Id": "318",
+        "Name": "杂草",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_319": {
+        "Id": "319",
+        "Name": "杂草",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_320": {
+        "Id": "320",
+        "Name": "杂草",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_321": {
+        "Id": "321",
+        "Name": "杂草",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_322": {
+        "Id": "322",
+        "Name": "木围栏",
+        "Type": "Crafting",
+        "Category": -8,
+        "Price": 1,
+        "OffLimits": false
+    },
+    "_323": {
+        "Id": "323",
+        "Name": "石围栏",
+        "Type": "Crafting",
+        "Category": -8,
+        "Price": 2,
+        "OffLimits": false
+    },
+    "_324": {
+        "Id": "324",
+        "Name": "铁围栏",
+        "Type": "Crafting",
+        "Category": -8,
+        "Price": 6,
+        "OffLimits": false
+    },
+    "_325": {
+        "Id": "325",
+        "Name": "大门",
+        "Type": "Crafting",
+        "Category": -8,
+        "Price": 4,
+        "OffLimits": false
+    },
+    "_326": {
+        "Id": "326",
+        "Name": "矮人语教程",
+        "Type": "Crafting",
+        "Category": -8,
+        "Price": 50,
+        "OffLimits": true
+    },
+    "_328": {
+        "Id": "328",
+        "Name": "木地板",
+        "Type": "Crafting",
+        "Category": -24,
+        "Price": 1,
+        "OffLimits": false
+    },
+    "_329": {
+        "Id": "329",
+        "Name": "石头地板",
+        "Type": "Crafting",
+        "Category": -24,
+        "Price": 1,
+        "OffLimits": false
+    },
+    "_330": {
+        "Id": "330",
+        "Name": "粘土",
+        "Type": "Basic",
+        "Category": -16,
+        "Price": 20,
+        "OffLimits": false
+    },
+    "_331": {
+        "Id": "331",
+        "Name": "风化地板",
+        "Type": "Crafting",
+        "Category": -24,
+        "Price": 1,
+        "OffLimits": false
+    },
+    "_333": {
+        "Id": "333",
+        "Name": "水晶地板",
+        "Type": "Crafting",
+        "Category": -24,
+        "Price": 1,
+        "OffLimits": false
+    },
+    "_334": {
+        "Id": "334",
+        "Name": "铜锭",
+        "Type": "Basic",
+        "Category": -15,
+        "Price": 60,
+        "OffLimits": false
+    },
+    "_335": {
+        "Id": "335",
+        "Name": "铁锭",
+        "Type": "Basic",
+        "Category": -15,
+        "Price": 120,
+        "OffLimits": false
+    },
+    "_336": {
+        "Id": "336",
+        "Name": "金锭",
+        "Type": "Basic",
+        "Category": -15,
+        "Price": 250,
+        "OffLimits": false
+    },
+    "_337": {
+        "Id": "337",
+        "Name": "铱锭",
+        "Type": "Basic",
+        "Category": -15,
+        "Price": 1000,
+        "OffLimits": false
+    },
+    "_338": {
+        "Id": "338",
+        "Name": "精炼石英",
+        "Type": "Basic",
+        "Category": -15,
+        "Price": 50,
+        "OffLimits": false
+    },
+    "_340": {
+        "Id": "340",
+        "Name": "蜂蜜",
+        "Type": "Basic",
+        "Category": -26,
+        "Price": 100,
+        "OffLimits": false
+    },
+    "_341": {
+        "Id": "341",
+        "Name": "茶具",
+        "Type": "Basic",
+        "Category": -24,
+        "Price": 200,
+        "OffLimits": true
+    },
+    "_342": {
+        "Id": "342",
+        "Name": "腌菜",
+        "Type": "Basic",
+        "Category": -26,
+        "Price": 100,
+        "OffLimits": false
+    },
+    "_343": {
+        "Id": "343",
+        "Name": "石头",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_344": {
+        "Id": "344",
+        "Name": "果酱",
+        "Type": "Basic",
+        "Category": -26,
+        "Price": 160,
+        "OffLimits": false
+    },
+    "_346": {
+        "Id": "346",
+        "Name": "啤酒",
+        "Type": "Basic",
+        "Category": -26,
+        "Price": 200,
+        "OffLimits": false
+    },
+    "_347": {
+        "Id": "347",
+        "Name": "稀有种子",
+        "Type": "Seeds",
+        "Category": -74,
+        "Price": 200,
+        "OffLimits": false
+    },
+    "_348": {
+        "Id": "348",
+        "Name": "果酒",
+        "Type": "Basic",
+        "Category": -26,
+        "Price": 400,
+        "OffLimits": false
+    },
+    "_349": {
+        "Id": "349",
+        "Name": "能量滋补水",
+        "Type": "Crafting",
+        "Category": 0,
+        "Price": 500,
+        "OffLimits": false
+    },
+    "_350": {
+        "Id": "350",
+        "Name": "果汁",
+        "Type": "Basic",
+        "Category": -26,
+        "Price": 150,
+        "OffLimits": false
+    },
+    "_351": {
+        "Id": "351",
+        "Name": "肌肉回复药",
+        "Type": "Crafting",
+        "Category": 0,
+        "Price": 500,
+        "OffLimits": false
+    },
+    "_368": {
+        "Id": "368",
+        "Name": "初级肥料",
+        "Type": "Basic",
+        "Category": -19,
+        "Price": 2,
+        "OffLimits": false
+    },
+    "_369": {
+        "Id": "369",
+        "Name": "高级肥料",
+        "Type": "Basic",
+        "Category": -19,
+        "Price": 10,
+        "OffLimits": false
+    },
+    "_370": {
+        "Id": "370",
+        "Name": "初级保湿土壤",
+        "Type": "Basic",
+        "Category": -19,
+        "Price": 4,
+        "OffLimits": false
+    },
+    "_371": {
+        "Id": "371",
+        "Name": "高级保湿土壤",
+        "Type": "Basic",
+        "Category": -19,
+        "Price": 5,
+        "OffLimits": false
+    },
+    "_372": {
+        "Id": "372",
+        "Name": "蛤",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 50,
+        "OffLimits": false
+    },
+    "_373": {
+        "Id": "373",
+        "Name": "黄金南瓜",
+        "Type": "Basic",
+        "Category": 0,
+        "Price": 2500,
+        "OffLimits": false
+    },
+    "_378": {
+        "Id": "378",
+        "Name": "铜矿石",
+        "Type": "Basic",
+        "Category": -15,
+        "Price": 5,
+        "OffLimits": false
+    },
+    "_380": {
+        "Id": "380",
+        "Name": "铁矿石",
+        "Type": "Basic",
+        "Category": -15,
+        "Price": 10,
+        "OffLimits": false
+    },
+    "_382": {
+        "Id": "382",
+        "Name": "煤炭",
+        "Type": "Basic",
+        "Category": -15,
+        "Price": 15,
+        "OffLimits": false
+    },
+    "_384": {
+        "Id": "384",
+        "Name": "黄金矿石",
+        "Type": "Basic",
+        "Category": -15,
+        "Price": 25,
+        "OffLimits": false
+    },
+    "_386": {
+        "Id": "386",
+        "Name": "铱矿石",
+        "Type": "Basic",
+        "Category": -15,
+        "Price": 100,
+        "OffLimits": false
+    },
+    "_388": {
+        "Id": "388",
+        "Name": "木材",
+        "Type": "Basic",
+        "Category": -16,
+        "Price": 2,
+        "OffLimits": false
+    },
+    "_390": {
+        "Id": "390",
+        "Name": "石头",
+        "Type": "Basic",
+        "Category": -16,
+        "Price": 2,
+        "OffLimits": false
+    },
+    "_392": {
+        "Id": "392",
+        "Name": "鹦鹉螺",
+        "Type": "Basic",
+        "Category": -23,
+        "Price": 120,
+        "OffLimits": false
+    },
+    "_393": {
+        "Id": "393",
+        "Name": "珊瑚",
+        "Type": "Basic",
+        "Category": -23,
+        "Price": 80,
+        "OffLimits": false
+    },
+    "_394": {
+        "Id": "394",
+        "Name": "彩虹贝壳",
+        "Type": "Basic",
+        "Category": -23,
+        "Price": 300,
+        "OffLimits": false
+    },
+    "_395": {
+        "Id": "395",
+        "Name": "咖啡",
+        "Type": "Crafting",
+        "Category": 0,
+        "Price": 150,
+        "OffLimits": false
+    },
+    "_396": {
+        "Id": "396",
+        "Name": "香味浆果",
+        "Type": "Basic",
+        "Category": -79,
+        "Price": 80,
+        "OffLimits": false
+    },
+    "_397": {
+        "Id": "397",
+        "Name": "海胆",
+        "Type": "Basic",
+        "Category": -23,
+        "Price": 160,
+        "OffLimits": false
+    },
+    "_398": {
+        "Id": "398",
+        "Name": "葡萄",
+        "Type": "Basic",
+        "Category": -79,
+        "Price": 80,
+        "OffLimits": false
+    },
+    "_399": {
+        "Id": "399",
+        "Name": "大葱",
+        "Type": "Basic",
+        "Category": -81,
+        "Price": 8,
+        "OffLimits": false
+    },
+    "_400": {
+        "Id": "400",
+        "Name": "草莓",
+        "Type": "Basic",
+        "Category": -79,
+        "Price": 120,
+        "OffLimits": false
+    },
+    "_401": {
+        "Id": "401",
+        "Name": "稻草地板",
+        "Type": "Crafting",
+        "Category": -24,
+        "Price": 1,
+        "OffLimits": false
+    },
+    "_402": {
+        "Id": "402",
+        "Name": "甜豌豆",
+        "Type": "Basic",
+        "Category": -80,
+        "Price": 50,
+        "OffLimits": false
+    },
+    "_403": {
+        "Id": "403",
+        "Name": "工作小食",
+        "Type": "Crafting",
+        "Category": 0,
+        "Price": 20,
+        "OffLimits": false
+    },
+    "_404": {
+        "Id": "404",
+        "Name": "普通蘑菇",
+        "Type": "Basic",
+        "Category": -81,
+        "Price": 40,
+        "OffLimits": false
+    },
+    "_405": {
+        "Id": "405",
+        "Name": "木头小径",
+        "Type": "Crafting",
+        "Category": -24,
+        "Price": 1,
+        "OffLimits": false
+    },
+    "_406": {
+        "Id": "406",
+        "Name": "野梅",
+        "Type": "Basic",
+        "Category": -79,
+        "Price": 80,
+        "OffLimits": false
+    },
+    "_407": {
+        "Id": "407",
+        "Name": "砾石小径",
+        "Type": "Crafting",
+        "Category": -24,
+        "Price": 1,
+        "OffLimits": false
+    },
+    "_408": {
+        "Id": "408",
+        "Name": "榛子",
+        "Type": "Basic",
+        "Category": -81,
+        "Price": 90,
+        "OffLimits": false
+    },
+    "_409": {
+        "Id": "409",
+        "Name": "水晶小径",
+        "Type": "Crafting",
+        "Category": -24,
+        "Price": 1,
+        "OffLimits": false
+    },
+    "_410": {
+        "Id": "410",
+        "Name": "黑莓",
+        "Type": "Basic",
+        "Category": -79,
+        "Price": 20,
+        "OffLimits": false
+    },
+    "_411": {
+        "Id": "411",
+        "Name": "鹅卵石小径",
+        "Type": "Crafting",
+        "Category": -24,
+        "Price": 1,
+        "OffLimits": false
+    },
+    "_412": {
+        "Id": "412",
+        "Name": "冬根",
+        "Type": "Basic",
+        "Category": -81,
+        "Price": 70,
+        "OffLimits": false
+    },
+    "_413": {
+        "Id": "413",
+        "Name": "蓝色史莱姆蛋",
+        "Type": "Basic",
+        "Category": 0,
+        "Price": 1750,
+        "OffLimits": true
+    },
+    "_414": {
+        "Id": "414",
+        "Name": "水晶果",
+        "Type": "Basic",
+        "Category": -79,
+        "Price": 150,
+        "OffLimits": false
+    },
+    "_415": {
+        "Id": "415",
+        "Name": "垫脚石小径",
+        "Type": "Crafting",
+        "Category": -24,
+        "Price": 1,
+        "OffLimits": false
+    },
+    "_416": {
+        "Id": "416",
+        "Name": "雪山药",
+        "Type": "Basic",
+        "Category": -81,
+        "Price": 100,
+        "OffLimits": false
+    },
+    "_417": {
+        "Id": "417",
+        "Name": "宝石甜莓",
+        "Type": "Basic",
+        "Category": -17,
+        "Price": 3000,
+        "OffLimits": true
+    },
+    "_418": {
+        "Id": "418",
+        "Name": "番红花",
+        "Type": "Basic",
+        "Category": -80,
+        "Price": 60,
+        "OffLimits": false
+    },
+    "_419": {
+        "Id": "419",
+        "Name": "醋",
+        "Type": "Basic",
+        "Category": 0,
+        "Price": 100,
+        "OffLimits": false
+    },
+    "_420": {
+        "Id": "420",
+        "Name": "红蘑菇",
+        "Type": "Basic",
+        "Category": -81,
+        "Price": 75,
+        "OffLimits": false
+    },
+    "_421": {
+        "Id": "421",
+        "Name": "向日葵",
+        "Type": "Basic",
+        "Category": -80,
+        "Price": 80,
+        "OffLimits": false
+    },
+    "_422": {
+        "Id": "422",
+        "Name": "紫蘑菇",
+        "Type": "Basic",
+        "Category": -81,
+        "Price": 250,
+        "OffLimits": false
+    },
+    "_423": {
+        "Id": "423",
+        "Name": "大米",
+        "Type": "Basic",
+        "Category": 0,
+        "Price": 100,
+        "OffLimits": false
+    },
+    "_424": {
+        "Id": "424",
+        "Name": "奶酪",
+        "Type": "Basic",
+        "Category": -26,
+        "Price": 230,
+        "OffLimits": false
+    },
+    "_426": {
+        "Id": "426",
+        "Name": "山羊奶酪",
+        "Type": "Basic",
+        "Category": -26,
+        "Price": 400,
+        "OffLimits": false
+    },
+    "_428": {
+        "Id": "428",
+        "Name": "布料",
+        "Type": "Basic",
+        "Category": -26,
+        "Price": 470,
+        "OffLimits": false
+    },
+    "_430": {
+        "Id": "430",
+        "Name": "松露",
+        "Type": "Basic",
+        "Category": -17,
+        "Price": 625,
+        "OffLimits": false
+    },
+    "_432": {
+        "Id": "432",
+        "Name": "松露油",
+        "Type": "Basic",
+        "Category": -26,
+        "Price": 1065,
+        "OffLimits": false
+    },
+    "_433": {
+        "Id": "433",
+        "Name": "咖啡豆",
+        "Type": "Seeds",
+        "Category": -74,
+        "Price": 15,
+        "OffLimits": false
+    },
+    "_434": {
+        "Id": "434",
+        "Name": "《星之果实》",
+        "Type": "Crafting",
+        "Category": 0,
+        "Price": 7777,
+        "OffLimits": false
+    },
+    "_436": {
+        "Id": "436",
+        "Name": "羊奶",
+        "Type": "Basic",
+        "Category": -6,
+        "Price": 225,
+        "OffLimits": false
+    },
+    "_437": {
+        "Id": "437",
+        "Name": "红色史莱姆蛋",
+        "Type": "Basic",
+        "Category": 0,
+        "Price": 2500,
+        "OffLimits": true
+    },
+    "_438": {
+        "Id": "438",
+        "Name": "大瓶羊奶",
+        "Type": "Basic",
+        "Category": -6,
+        "Price": 345,
+        "OffLimits": false
+    },
+    "_439": {
+        "Id": "439",
+        "Name": "紫色史莱姆蛋",
+        "Type": "Basic",
+        "Category": 0,
+        "Price": 5000,
+        "OffLimits": true
+    },
+    "_440": {
+        "Id": "440",
+        "Name": "动物毛",
+        "Type": "Basic",
+        "Category": -18,
+        "Price": 340,
+        "OffLimits": false
+    },
+    "_441": {
+        "Id": "441",
+        "Name": "爆炸弹丸",
+        "Type": "Basic",
+        "Category": 0,
+        "Price": 20,
+        "OffLimits": false
+    },
+    "_442": {
+        "Id": "442",
+        "Name": "鸭蛋",
+        "Type": "Basic",
+        "Category": -5,
+        "Price": 95,
+        "OffLimits": false
+    },
+    "_444": {
+        "Id": "444",
+        "Name": "鸭毛",
+        "Type": "Basic",
+        "Category": -18,
+        "Price": 250,
+        "OffLimits": false
+    },
+    "_446": {
+        "Id": "446",
+        "Name": "兔子的脚",
+        "Type": "Basic",
+        "Category": -18,
+        "Price": 565,
+        "OffLimits": false
+    },
+    "_447": {
+        "Id": "447",
+        "Name": "腌鱼籽",
+        "Type": "Basic",
+        "Category": -26,
+        "Price": 100,
+        "OffLimits": true
+    },
+    "_449": {
+        "Id": "449",
+        "Name": "石基",
+        "Type": "asdf",
+        "Category": 0,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_450": {
+        "Id": "450",
+        "Name": "石头",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_452": {
+        "Id": "452",
+        "Name": "杂草",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_454": {
+        "Id": "454",
+        "Name": "上古水果",
+        "Type": "Basic",
+        "Category": -79,
+        "Price": 550,
+        "OffLimits": true
+    },
+    "_456": {
+        "Id": "456",
+        "Name": "海藻汤",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 100,
+        "OffLimits": false
+    },
+    "_457": {
+        "Id": "457",
+        "Name": "清汤",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 150,
+        "OffLimits": false
+    },
+    "_458": {
+        "Id": "458",
+        "Name": "花束",
+        "Type": "Basic",
+        "Category": 0,
+        "Price": 100,
+        "OffLimits": false
+    },
+    "_459": {
+        "Id": "459",
+        "Name": "蜜蜂酒",
+        "Type": "Basic",
+        "Category": -26,
+        "Price": 300,
+        "OffLimits": false
+    },
+    "_460": {
+        "Id": "460",
+        "Name": "美人鱼吊坠",
+        "Type": "Basic",
+        "Category": 0,
+        "Price": 2500,
+        "OffLimits": true
+    },
+    "_461": {
+        "Id": "461",
+        "Name": "装饰壶",
+        "Type": "Crafting",
+        "Category": 0,
+        "Price": 200,
+        "OffLimits": false
+    },
+    "_463": {
+        "Id": "463",
+        "Name": "鼓块",
+        "Type": "Crafting",
+        "Category": 0,
+        "Price": 100,
+        "OffLimits": false
+    },
+    "_464": {
+        "Id": "464",
+        "Name": "长笛块",
+        "Type": "Crafting",
+        "Category": 0,
+        "Price": 100,
+        "OffLimits": false
+    },
+    "_465": {
+        "Id": "465",
+        "Name": "生长激素",
+        "Type": "Basic",
+        "Category": -19,
+        "Price": 20,
+        "OffLimits": false
+    },
+    "_466": {
+        "Id": "466",
+        "Name": "高级生长激素",
+        "Type": "Basic",
+        "Category": -19,
+        "Price": 40,
+        "OffLimits": false
+    },
+    "_472": {
+        "Id": "472",
+        "Name": "防风草种子",
+        "Type": "Seeds",
+        "Category": -74,
+        "Price": 10,
+        "OffLimits": false
+    },
+    "_473": {
+        "Id": "473",
+        "Name": "青豆种子",
+        "Type": "Seeds",
+        "Category": -74,
+        "Price": 30,
+        "OffLimits": false
+    },
+    "_474": {
+        "Id": "474",
+        "Name": "花椰菜种子",
+        "Type": "Seeds",
+        "Category": -74,
+        "Price": 40,
+        "OffLimits": false
+    },
+    "_475": {
+        "Id": "475",
+        "Name": "土豆种子",
+        "Type": "Seeds",
+        "Category": -74,
+        "Price": 25,
+        "OffLimits": false
+    },
+    "_476": {
+        "Id": "476",
+        "Name": "大蒜种子",
+        "Type": "Seeds",
+        "Category": -74,
+        "Price": 20,
+        "OffLimits": false
+    },
+    "_477": {
+        "Id": "477",
+        "Name": "甘蓝种子",
+        "Type": "Seeds",
+        "Category": -74,
+        "Price": 35,
+        "OffLimits": false
+    },
+    "_478": {
+        "Id": "478",
+        "Name": "大黄种子",
+        "Type": "Seeds",
+        "Category": -74,
+        "Price": 50,
+        "OffLimits": false
+    },
+    "_479": {
+        "Id": "479",
+        "Name": "甜瓜种子",
+        "Type": "Seeds",
+        "Category": -74,
+        "Price": 40,
+        "OffLimits": false
+    },
+    "_480": {
+        "Id": "480",
+        "Name": "西红柿种子",
+        "Type": "Seeds",
+        "Category": -74,
+        "Price": 25,
+        "OffLimits": false
+    },
+    "_481": {
+        "Id": "481",
+        "Name": "蓝莓种子",
+        "Type": "Seeds",
+        "Category": -74,
+        "Price": 40,
+        "OffLimits": false
+    },
+    "_482": {
+        "Id": "482",
+        "Name": "辣椒种子",
+        "Type": "Seeds",
+        "Category": -74,
+        "Price": 20,
+        "OffLimits": false
+    },
+    "_483": {
+        "Id": "483",
+        "Name": "小麦种子",
+        "Type": "Seeds",
+        "Category": -74,
+        "Price": 5,
+        "OffLimits": false
+    },
+    "_484": {
+        "Id": "484",
+        "Name": "萝卜种子",
+        "Type": "Seeds",
+        "Category": -74,
+        "Price": 20,
+        "OffLimits": false
+    },
+    "_485": {
+        "Id": "485",
+        "Name": "红叶卷心菜种子",
+        "Type": "Seeds",
+        "Category": -74,
+        "Price": 50,
+        "OffLimits": false
+    },
+    "_486": {
+        "Id": "486",
+        "Name": "杨桃种子",
+        "Type": "Seeds",
+        "Category": -74,
+        "Price": 200,
+        "OffLimits": false
+    },
+    "_487": {
+        "Id": "487",
+        "Name": "玉米种子",
+        "Type": "Seeds",
+        "Category": -74,
+        "Price": 75,
+        "OffLimits": false
+    },
+    "_488": {
+        "Id": "488",
+        "Name": "茄子种子",
+        "Type": "Seeds",
+        "Category": -74,
+        "Price": 10,
+        "OffLimits": false
+    },
+    "_489": {
+        "Id": "489",
+        "Name": "洋蓟种子",
+        "Type": "Seeds",
+        "Category": -74,
+        "Price": 15,
+        "OffLimits": false
+    },
+    "_490": {
+        "Id": "490",
+        "Name": "南瓜种子",
+        "Type": "Seeds",
+        "Category": -74,
+        "Price": 50,
+        "OffLimits": false
+    },
+    "_491": {
+        "Id": "491",
+        "Name": "小白菜种子",
+        "Type": "Seeds",
+        "Category": -74,
+        "Price": 25,
+        "OffLimits": false
+    },
+    "_492": {
+        "Id": "492",
+        "Name": "山药种子",
+        "Type": "Seeds",
+        "Category": -74,
+        "Price": 30,
+        "OffLimits": false
+    },
+    "_493": {
+        "Id": "493",
+        "Name": "蔓越莓种子",
+        "Type": "Seeds",
+        "Category": -74,
+        "Price": 120,
+        "OffLimits": false
+    },
+    "_494": {
+        "Id": "494",
+        "Name": "甜菜种子",
+        "Type": "Seeds",
+        "Category": -74,
+        "Price": 10,
+        "OffLimits": false
+    },
+    "_495": {
+        "Id": "495",
+        "Name": "春季种子",
+        "Type": "Seeds",
+        "Category": -74,
+        "Price": 35,
+        "OffLimits": false
+    },
+    "_496": {
+        "Id": "496",
+        "Name": "夏季种子",
+        "Type": "Seeds",
+        "Category": -74,
+        "Price": 55,
+        "OffLimits": false
+    },
+    "_497": {
+        "Id": "497",
+        "Name": "秋季种子",
+        "Type": "Seeds",
+        "Category": -74,
+        "Price": 45,
+        "OffLimits": false
+    },
+    "_498": {
+        "Id": "498",
+        "Name": "冬季种子",
+        "Type": "Seeds",
+        "Category": -74,
+        "Price": 30,
+        "OffLimits": false
+    },
+    "_499": {
+        "Id": "499",
+        "Name": "上古种子",
+        "Type": "Seeds",
+        "Category": -74,
+        "Price": 30,
+        "OffLimits": true
+    },
+    "_427": {
+        "Id": "427",
+        "Name": "郁金香球茎",
+        "Type": "Seeds",
+        "Category": -74,
+        "Price": 10,
+        "OffLimits": false
+    },
+    "_429": {
+        "Id": "429",
+        "Name": "蓝爵士种子",
+        "Type": "Seeds",
+        "Category": -74,
+        "Price": 15,
+        "OffLimits": false
+    },
+    "_453": {
+        "Id": "453",
+        "Name": "虞美人种子",
+        "Type": "Seeds",
+        "Category": -74,
+        "Price": 50,
+        "OffLimits": false
+    },
+    "_455": {
+        "Id": "455",
+        "Name": "夏季亮片种子",
+        "Type": "Seeds",
+        "Category": -74,
+        "Price": 25,
+        "OffLimits": false
+    },
+    "_431": {
+        "Id": "431",
+        "Name": "向日葵种子",
+        "Type": "Seeds",
+        "Category": -74,
+        "Price": 20,
+        "OffLimits": false
+    },
+    "_425": {
+        "Id": "425",
+        "Name": "玫瑰仙子种子",
+        "Type": "Seeds",
+        "Category": -74,
+        "Price": 100,
+        "OffLimits": false
+    },
+    "_516": {
+        "Id": "516",
+        "Name": "小型光辉戒指",
+        "Type": "Ring",
+        "Category": 0,
+        "Price": 100,
+        "OffLimits": false
+    },
+    "_517": {
+        "Id": "517",
+        "Name": "光辉戒指",
+        "Type": "Ring",
+        "Category": 0,
+        "Price": 200,
+        "OffLimits": false
+    },
+    "_518": {
+        "Id": "518",
+        "Name": "小型磁铁戒指",
+        "Type": "Ring",
+        "Category": 0,
+        "Price": 100,
+        "OffLimits": false
+    },
+    "_519": {
+        "Id": "519",
+        "Name": "磁铁戒指",
+        "Type": "Ring",
+        "Category": 0,
+        "Price": 200,
+        "OffLimits": false
+    },
+    "_520": {
+        "Id": "520",
+        "Name": "史莱姆克星戒指",
+        "Type": "Ring",
+        "Category": 0,
+        "Price": 700,
+        "OffLimits": false
+    },
+    "_521": {
+        "Id": "521",
+        "Name": "战士戒指",
+        "Type": "Ring",
+        "Category": 0,
+        "Price": 1500,
+        "OffLimits": false
+    },
+    "_522": {
+        "Id": "522",
+        "Name": "吸血戒指",
+        "Type": "Ring",
+        "Category": 0,
+        "Price": 1500,
+        "OffLimits": false
+    },
+    "_523": {
+        "Id": "523",
+        "Name": "野蛮人戒指",
+        "Type": "Ring",
+        "Category": 0,
+        "Price": 1500,
+        "OffLimits": false
+    },
+    "_524": {
+        "Id": "524",
+        "Name": "由巴的戒指",
+        "Type": "Ring",
+        "Category": 0,
+        "Price": 1500,
+        "OffLimits": false
+    },
+    "_525": {
+        "Id": "525",
+        "Name": "结实戒指",
+        "Type": "Ring",
+        "Category": 0,
+        "Price": 1500,
+        "OffLimits": false
+    },
+    "_526": {
+        "Id": "526",
+        "Name": "窃贼戒指",
+        "Type": "Ring",
+        "Category": 0,
+        "Price": 1500,
+        "OffLimits": false
+    },
+    "_527": {
+        "Id": "527",
+        "Name": "铱环",
+        "Type": "Ring",
+        "Category": 0,
+        "Price": 2000,
+        "OffLimits": false
+    },
+    "_528": {
+        "Id": "528",
+        "Name": "点唱机戒指",
+        "Type": "Ring",
+        "Category": 0,
+        "Price": 200,
+        "OffLimits": false
+    },
+    "_529": {
+        "Id": "529",
+        "Name": "紫水晶戒指",
+        "Type": "Ring",
+        "Category": 0,
+        "Price": 200,
+        "OffLimits": false
+    },
+    "_530": {
+        "Id": "530",
+        "Name": "黄水晶戒指",
+        "Type": "Ring",
+        "Category": 0,
+        "Price": 200,
+        "OffLimits": false
+    },
+    "_531": {
+        "Id": "531",
+        "Name": "海蓝宝石戒指",
+        "Type": "Ring",
+        "Category": 0,
+        "Price": 400,
+        "OffLimits": false
+    },
+    "_532": {
+        "Id": "532",
+        "Name": "翡翠戒指",
+        "Type": "Ring",
+        "Category": 0,
+        "Price": 400,
+        "OffLimits": false
+    },
+    "_533": {
+        "Id": "533",
+        "Name": "绿宝石戒指",
+        "Type": "Ring",
+        "Category": 0,
+        "Price": 600,
+        "OffLimits": false
+    },
+    "_534": {
+        "Id": "534",
+        "Name": "红宝石戒指",
+        "Type": "Ring",
+        "Category": 0,
+        "Price": 600,
+        "OffLimits": false
+    },
+    "_535": {
+        "Id": "535",
+        "Name": "晶球",
+        "Type": "Basic",
+        "Category": 0,
+        "Price": 50,
+        "OffLimits": false
+    },
+    "_536": {
+        "Id": "536",
+        "Name": "冰封晶球",
+        "Type": "Basic",
+        "Category": 0,
+        "Price": 100,
+        "OffLimits": false
+    },
+    "_537": {
+        "Id": "537",
+        "Name": "岩浆晶球",
+        "Type": "Basic",
+        "Category": 0,
+        "Price": 150,
+        "OffLimits": false
+    },
+    "_538": {
+        "Id": "538",
+        "Name": "透闪石",
+        "Type": "Minerals",
+        "Category": -12,
+        "Price": 150,
+        "OffLimits": false
+    },
+    "_539": {
+        "Id": "539",
+        "Name": "黑方石",
+        "Type": "Minerals",
+        "Category": -12,
+        "Price": 300,
+        "OffLimits": false
+    },
+    "_540": {
+        "Id": "540",
+        "Name": "重晶石",
+        "Type": "Minerals",
+        "Category": -12,
+        "Price": 50,
+        "OffLimits": false
+    },
+    "_541": {
+        "Id": "541",
+        "Name": "青泥石",
+        "Type": "Minerals",
+        "Category": -12,
+        "Price": 125,
+        "OffLimits": false
+    },
+    "_542": {
+        "Id": "542",
+        "Name": "方解石",
+        "Type": "Minerals",
+        "Category": -12,
+        "Price": 75,
+        "OffLimits": false
+    },
+    "_543": {
+        "Id": "543",
+        "Name": "白云石",
+        "Type": "Minerals",
+        "Category": -12,
+        "Price": 300,
+        "OffLimits": false
+    },
+    "_544": {
+        "Id": "544",
+        "Name": "硅钙石",
+        "Type": "Minerals",
+        "Category": -12,
+        "Price": 100,
+        "OffLimits": false
+    },
+    "_545": {
+        "Id": "545",
+        "Name": "氟磷灰石",
+        "Type": "Minerals",
+        "Category": -12,
+        "Price": 200,
+        "OffLimits": false
+    },
+    "_546": {
+        "Id": "546",
+        "Name": "杰明石",
+        "Type": "Minerals",
+        "Category": -12,
+        "Price": 150,
+        "OffLimits": false
+    },
+    "_547": {
+        "Id": "547",
+        "Name": "日光榴石",
+        "Type": "Minerals",
+        "Category": -12,
+        "Price": 450,
+        "OffLimits": false
+    },
+    "_548": {
+        "Id": "548",
+        "Name": "绿水镍矿",
+        "Type": "Minerals",
+        "Category": -12,
+        "Price": 150,
+        "OffLimits": false
+    },
+    "_549": {
+        "Id": "549",
+        "Name": "铁铅矿",
+        "Type": "Minerals",
+        "Category": -12,
+        "Price": 115,
+        "OffLimits": false
+    },
+    "_550": {
+        "Id": "550",
+        "Name": "蓝晶石",
+        "Type": "Minerals",
+        "Category": -12,
+        "Price": 250,
+        "OffLimits": false
+    },
+    "_551": {
+        "Id": "551",
+        "Name": "酸性月岩",
+        "Type": "Minerals",
+        "Category": -12,
+        "Price": 200,
+        "OffLimits": false
+    },
+    "_552": {
+        "Id": "552",
+        "Name": "孔雀石",
+        "Type": "Minerals",
+        "Category": -12,
+        "Price": 100,
+        "OffLimits": false
+    },
+    "_553": {
+        "Id": "553",
+        "Name": "柱星叶石",
+        "Type": "Minerals",
+        "Category": -12,
+        "Price": 400,
+        "OffLimits": false
+    },
+    "_554": {
+        "Id": "554",
+        "Name": "柠檬石",
+        "Type": "Minerals",
+        "Category": -12,
+        "Price": 200,
+        "OffLimits": false
+    },
+    "_555": {
+        "Id": "555",
+        "Name": "新硅钙石",
+        "Type": "Minerals",
+        "Category": -12,
+        "Price": 80,
+        "OffLimits": false
+    },
+    "_556": {
+        "Id": "556",
+        "Name": "雌黄",
+        "Type": "Minerals",
+        "Category": -12,
+        "Price": 80,
+        "OffLimits": false
+    },
+    "_557": {
+        "Id": "557",
+        "Name": "石化史莱姆",
+        "Type": "Minerals",
+        "Category": -12,
+        "Price": 120,
+        "OffLimits": false
+    },
+    "_558": {
+        "Id": "558",
+        "Name": "雷公蛋",
+        "Type": "Minerals",
+        "Category": -12,
+        "Price": 100,
+        "OffLimits": false
+    },
+    "_559": {
+        "Id": "559",
+        "Name": "黄铁矿",
+        "Type": "Minerals",
+        "Category": -12,
+        "Price": 120,
+        "OffLimits": false
+    },
+    "_560": {
+        "Id": "560",
+        "Name": "海洋石",
+        "Type": "Minerals",
+        "Category": -12,
+        "Price": 220,
+        "OffLimits": false
+    },
+    "_561": {
+        "Id": "561",
+        "Name": "幽灵水晶",
+        "Type": "Minerals",
+        "Category": -12,
+        "Price": 200,
+        "OffLimits": false
+    },
+    "_562": {
+        "Id": "562",
+        "Name": "虎眼石",
+        "Type": "Minerals",
+        "Category": -12,
+        "Price": 275,
+        "OffLimits": false
+    },
+    "_563": {
+        "Id": "563",
+        "Name": "碧玉",
+        "Type": "Minerals",
+        "Category": -12,
+        "Price": 150,
+        "OffLimits": false
+    },
+    "_564": {
+        "Id": "564",
+        "Name": "猫眼石",
+        "Type": "Minerals",
+        "Category": -12,
+        "Price": 150,
+        "OffLimits": false
+    },
+    "_565": {
+        "Id": "565",
+        "Name": "赤红猫眼石",
+        "Type": "Minerals",
+        "Category": -12,
+        "Price": 350,
+        "OffLimits": false
+    },
+    "_566": {
+        "Id": "566",
+        "Name": "天青石",
+        "Type": "Minerals",
+        "Category": -12,
+        "Price": 125,
+        "OffLimits": false
+    },
+    "_567": {
+        "Id": "567",
+        "Name": "大理石",
+        "Type": "Minerals",
+        "Category": -12,
+        "Price": 110,
+        "OffLimits": false
+    },
+    "_568": {
+        "Id": "568",
+        "Name": "沙岩",
+        "Type": "Minerals",
+        "Category": -12,
+        "Price": 60,
+        "OffLimits": false
+    },
+    "_569": {
+        "Id": "569",
+        "Name": "花岗岩",
+        "Type": "Minerals",
+        "Category": -12,
+        "Price": 75,
+        "OffLimits": false
+    },
+    "_570": {
+        "Id": "570",
+        "Name": "玄武岩",
+        "Type": "Minerals",
+        "Category": -12,
+        "Price": 175,
+        "OffLimits": false
+    },
+    "_571": {
+        "Id": "571",
+        "Name": "石灰石",
+        "Type": "Minerals",
+        "Category": -12,
+        "Price": 15,
+        "OffLimits": false
+    },
+    "_572": {
+        "Id": "572",
+        "Name": "皂石",
+        "Type": "Minerals",
+        "Category": -12,
+        "Price": 120,
+        "OffLimits": false
+    },
+    "_573": {
+        "Id": "573",
+        "Name": "赤铁矿",
+        "Type": "Minerals",
+        "Category": -12,
+        "Price": 150,
+        "OffLimits": false
+    },
+    "_574": {
+        "Id": "574",
+        "Name": "泥石",
+        "Type": "Minerals",
+        "Category": -12,
+        "Price": 25,
+        "OffLimits": false
+    },
+    "_575": {
+        "Id": "575",
+        "Name": "黑曜石",
+        "Type": "Minerals",
+        "Category": -12,
+        "Price": 200,
+        "OffLimits": false
+    },
+    "_576": {
+        "Id": "576",
+        "Name": "板岩",
+        "Type": "Minerals",
+        "Category": -12,
+        "Price": 85,
+        "OffLimits": false
+    },
+    "_577": {
+        "Id": "577",
+        "Name": "精灵石",
+        "Type": "Minerals",
+        "Category": -12,
+        "Price": 250,
+        "OffLimits": false
+    },
+    "_578": {
+        "Id": "578",
+        "Name": "陶瓷碎片",
+        "Type": "Minerals",
+        "Category": -12,
+        "Price": 500,
+        "OffLimits": false
+    },
+    "_579": {
+        "Id": "579",
+        "Name": "史前肩胛骨",
+        "Type": "Arch",
+        "Category": 0,
+        "Price": 100,
+        "OffLimits": false
+    },
+    "_580": {
+        "Id": "580",
+        "Name": "史前胫骨",
+        "Type": "Arch",
+        "Category": 0,
+        "Price": 100,
+        "OffLimits": false
+    },
+    "_581": {
+        "Id": "581",
+        "Name": "史前头骨",
+        "Type": "Arch",
+        "Category": 0,
+        "Price": 100,
+        "OffLimits": false
+    },
+    "_582": {
+        "Id": "582",
+        "Name": "手部骨骼",
+        "Type": "Arch",
+        "Category": 0,
+        "Price": 100,
+        "OffLimits": false
+    },
+    "_583": {
+        "Id": "583",
+        "Name": "史前肋骨",
+        "Type": "Arch",
+        "Category": 0,
+        "Price": 100,
+        "OffLimits": false
+    },
+    "_584": {
+        "Id": "584",
+        "Name": "史前脊骨",
+        "Type": "Arch",
+        "Category": 0,
+        "Price": 100,
+        "OffLimits": false
+    },
+    "_585": {
+        "Id": "585",
+        "Name": "尾部骨骼",
+        "Type": "Arch",
+        "Category": 0,
+        "Price": 100,
+        "OffLimits": false
+    },
+    "_586": {
+        "Id": "586",
+        "Name": "鹦鹉螺化石",
+        "Type": "Arch",
+        "Category": 0,
+        "Price": 80,
+        "OffLimits": false
+    },
+    "_587": {
+        "Id": "587",
+        "Name": "两栖动物化石",
+        "Type": "Arch",
+        "Category": 0,
+        "Price": 150,
+        "OffLimits": false
+    },
+    "_588": {
+        "Id": "588",
+        "Name": "棕榈化石",
+        "Type": "Arch",
+        "Category": 0,
+        "Price": 100,
+        "OffLimits": false
+    },
+    "_589": {
+        "Id": "589",
+        "Name": "三叶虫",
+        "Type": "Arch",
+        "Category": 0,
+        "Price": 50,
+        "OffLimits": false
+    },
+    "_590": {
+        "Id": "590",
+        "Name": "远古斑点",
+        "Type": "asdf",
+        "Category": 0,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_591": {
+        "Id": "591",
+        "Name": "郁金香",
+        "Type": "Basic",
+        "Category": -80,
+        "Price": 30,
+        "OffLimits": false
+    },
+    "_593": {
+        "Id": "593",
+        "Name": "夏季亮片",
+        "Type": "Basic",
+        "Category": -80,
+        "Price": 90,
+        "OffLimits": false
+    },
+    "_595": {
+        "Id": "595",
+        "Name": "玫瑰仙子",
+        "Type": "Basic",
+        "Category": -80,
+        "Price": 290,
+        "OffLimits": false
+    },
+    "_597": {
+        "Id": "597",
+        "Name": "蓝爵",
+        "Type": "Basic",
+        "Category": -80,
+        "Price": 50,
+        "OffLimits": false
+    },
+    "_599": {
+        "Id": "599",
+        "Name": "洒水器",
+        "Type": "Crafting",
+        "Category": -8,
+        "Price": 100,
+        "OffLimits": false
+    },
+    "_376": {
+        "Id": "376",
+        "Name": "虞美人花",
+        "Type": "Basic",
+        "Category": -80,
+        "Price": 140,
+        "OffLimits": false
+    },
+    "_604": {
+        "Id": "604",
+        "Name": "葡萄干布丁",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 260,
+        "OffLimits": false
+    },
+    "_605": {
+        "Id": "605",
+        "Name": "水煮洋蓟",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 210,
+        "OffLimits": false
+    },
+    "_606": {
+        "Id": "606",
+        "Name": "蔬菜什锦盖饭",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 335,
+        "OffLimits": false
+    },
+    "_607": {
+        "Id": "607",
+        "Name": "烤榛子",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 270,
+        "OffLimits": false
+    },
+    "_608": {
+        "Id": "608",
+        "Name": "南瓜派",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 385,
+        "OffLimits": false
+    },
+    "_609": {
+        "Id": "609",
+        "Name": "萝卜沙拉",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 300,
+        "OffLimits": false
+    },
+    "_610": {
+        "Id": "610",
+        "Name": "水果沙拉",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 450,
+        "OffLimits": false
+    },
+    "_611": {
+        "Id": "611",
+        "Name": "黑莓脆皮饼",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 260,
+        "OffLimits": false
+    },
+    "_612": {
+        "Id": "612",
+        "Name": "蔓越莓糖果",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 175,
+        "OffLimits": false
+    },
+    "_613": {
+        "Id": "613",
+        "Name": "苹果",
+        "Type": "Basic",
+        "Category": -79,
+        "Price": 100,
+        "OffLimits": false
+    },
+    "_614": {
+        "Id": "614",
+        "Name": "绿茶",
+        "Type": "Basic",
+        "Category": -26,
+        "Price": 100,
+        "OffLimits": false
+    },
+    "_618": {
+        "Id": "618",
+        "Name": "意式烤面包",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 210,
+        "OffLimits": false
+    },
+    "_621": {
+        "Id": "621",
+        "Name": "优质洒水器",
+        "Type": "Crafting",
+        "Category": -8,
+        "Price": 450,
+        "OffLimits": false
+    },
+    "_645": {
+        "Id": "645",
+        "Name": "铱制洒水器",
+        "Type": "Crafting",
+        "Category": -8,
+        "Price": 1000,
+        "OffLimits": true
+    },
+    "_648": {
+        "Id": "648",
+        "Name": "卷心菜沙拉",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 345,
+        "OffLimits": false
+    },
+    "_649": {
+        "Id": "649",
+        "Name": "意式蕨菜炖饭",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 350,
+        "OffLimits": false
+    },
+    "_651": {
+        "Id": "651",
+        "Name": "虞美人籽松糕",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 250,
+        "OffLimits": false
+    },
+    "_628": {
+        "Id": "628",
+        "Name": "樱桃树苗",
+        "Type": "Basic",
+        "Category": -74,
+        "Price": 850,
+        "OffLimits": false
+    },
+    "_629": {
+        "Id": "629",
+        "Name": "杏子树苗",
+        "Type": "Basic",
+        "Category": -74,
+        "Price": 500,
+        "OffLimits": false
+    },
+    "_630": {
+        "Id": "630",
+        "Name": "橙子树苗",
+        "Type": "Basic",
+        "Category": -74,
+        "Price": 1000,
+        "OffLimits": false
+    },
+    "_631": {
+        "Id": "631",
+        "Name": "桃子树苗",
+        "Type": "Basic",
+        "Category": -74,
+        "Price": 1500,
+        "OffLimits": false
+    },
+    "_632": {
+        "Id": "632",
+        "Name": "石榴树苗",
+        "Type": "Basic",
+        "Category": -74,
+        "Price": 1500,
+        "OffLimits": false
+    },
+    "_633": {
+        "Id": "633",
+        "Name": "苹果树苗",
+        "Type": "Basic",
+        "Category": -74,
+        "Price": 1000,
+        "OffLimits": false
+    },
+    "_634": {
+        "Id": "634",
+        "Name": "杏子",
+        "Type": "Basic",
+        "Category": -79,
+        "Price": 50,
+        "OffLimits": false
+    },
+    "_635": {
+        "Id": "635",
+        "Name": "橙子",
+        "Type": "Basic",
+        "Category": -79,
+        "Price": 100,
+        "OffLimits": false
+    },
+    "_636": {
+        "Id": "636",
+        "Name": "桃子",
+        "Type": "Basic",
+        "Category": -79,
+        "Price": 140,
+        "OffLimits": false
+    },
+    "_637": {
+        "Id": "637",
+        "Name": "石榴",
+        "Type": "Basic",
+        "Category": -79,
+        "Price": 140,
+        "OffLimits": false
+    },
+    "_638": {
+        "Id": "638",
+        "Name": "樱桃",
+        "Type": "Basic",
+        "Category": -79,
+        "Price": 80,
+        "OffLimits": false
+    },
+    "_668": {
+        "Id": "668",
+        "Name": "石头",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_670": {
+        "Id": "670",
+        "Name": "石头",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_674": {
+        "Id": "674",
+        "Name": "杂草",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_675": {
+        "Id": "675",
+        "Name": "杂草",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_676": {
+        "Id": "676",
+        "Name": "杂草",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_677": {
+        "Id": "677",
+        "Name": "杂草",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_678": {
+        "Id": "678",
+        "Name": "杂草",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_679": {
+        "Id": "679",
+        "Name": "杂草",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_680": {
+        "Id": "680",
+        "Name": "绿色史莱姆蛋",
+        "Type": "Basic",
+        "Category": 0,
+        "Price": 1000,
+        "OffLimits": true
+    },
+    "_681": {
+        "Id": "681",
+        "Name": "雨水图腾",
+        "Type": "Crafting",
+        "Category": 0,
+        "Price": 20,
+        "OffLimits": true
+    },
+    "_682": {
+        "Id": "682",
+        "Name": "变种鲤鱼",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 1000,
+        "OffLimits": true
+    },
+    "_684": {
+        "Id": "684",
+        "Name": "虫肉",
+        "Type": "Basic",
+        "Category": -28,
+        "Price": 8,
+        "OffLimits": false
+    },
+    "_685": {
+        "Id": "685",
+        "Name": "鱼饵",
+        "Type": "Basic",
+        "Category": -21,
+        "Price": 1,
+        "OffLimits": false
+    },
+    "_686": {
+        "Id": "686",
+        "Name": "旋式鱼饵",
+        "Type": "Basic",
+        "Category": -22,
+        "Price": 250,
+        "OffLimits": false
+    },
+    "_687": {
+        "Id": "687",
+        "Name": "精装旋式鱼饵",
+        "Type": "Basic",
+        "Category": -22,
+        "Price": 500,
+        "OffLimits": false
+    },
+    "_688": {
+        "Id": "688",
+        "Name": "传送图腾：农场",
+        "Type": "Crafting",
+        "Category": 0,
+        "Price": 20,
+        "OffLimits": true
+    },
+    "_689": {
+        "Id": "689",
+        "Name": "传送图腾：山岭",
+        "Type": "Crafting",
+        "Category": 0,
+        "Price": 20,
+        "OffLimits": true
+    },
+    "_690": {
+        "Id": "690",
+        "Name": "传送图腾：海滩",
+        "Type": "Crafting",
+        "Category": 0,
+        "Price": 20,
+        "OffLimits": true
+    },
+    "_691": {
+        "Id": "691",
+        "Name": "倒刺钩",
+        "Type": "Basic",
+        "Category": -22,
+        "Price": 500,
+        "OffLimits": false
+    },
+    "_692": {
+        "Id": "692",
+        "Name": "铅制浮标",
+        "Type": "Basic",
+        "Category": -22,
+        "Price": 150,
+        "OffLimits": false
+    },
+    "_693": {
+        "Id": "693",
+        "Name": "寻宝者",
+        "Type": "Basic",
+        "Category": -22,
+        "Price": 250,
+        "OffLimits": false
+    },
+    "_694": {
+        "Id": "694",
+        "Name": "陷阱浮标",
+        "Type": "Basic",
+        "Category": -22,
+        "Price": 200,
+        "OffLimits": false
+    },
+    "_695": {
+        "Id": "695",
+        "Name": "软木塞浮标",
+        "Type": "Basic",
+        "Category": -22,
+        "Price": 250,
+        "OffLimits": false
+    },
+    "_698": {
+        "Id": "698",
+        "Name": "鲟鱼",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 200,
+        "OffLimits": false
+    },
+    "_699": {
+        "Id": "699",
+        "Name": "虎纹鳟鱼",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 150,
+        "OffLimits": false
+    },
+    "_700": {
+        "Id": "700",
+        "Name": "大头鱼",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 75,
+        "OffLimits": false
+    },
+    "_701": {
+        "Id": "701",
+        "Name": "罗非鱼",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 75,
+        "OffLimits": false
+    },
+    "_702": {
+        "Id": "702",
+        "Name": "鲢鱼",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 50,
+        "OffLimits": false
+    },
+    "_703": {
+        "Id": "703",
+        "Name": "磁铁",
+        "Type": "Basic",
+        "Category": -21,
+        "Price": 15,
+        "OffLimits": false
+    },
+    "_704": {
+        "Id": "704",
+        "Name": "麻哈脂鲤",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 100,
+        "OffLimits": false
+    },
+    "_705": {
+        "Id": "705",
+        "Name": "青花鱼",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 75,
+        "OffLimits": false
+    },
+    "_706": {
+        "Id": "706",
+        "Name": "西鲱",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 60,
+        "OffLimits": false
+    },
+    "_707": {
+        "Id": "707",
+        "Name": "蛇齿单线鱼",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 120,
+        "OffLimits": false
+    },
+    "_708": {
+        "Id": "708",
+        "Name": "大比目鱼",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 80,
+        "OffLimits": false
+    },
+    "_709": {
+        "Id": "709",
+        "Name": "硬木",
+        "Type": "Basic",
+        "Category": -16,
+        "Price": 15,
+        "OffLimits": false
+    },
+    "_710": {
+        "Id": "710",
+        "Name": "蟹笼",
+        "Type": "Crafting",
+        "Category": 0,
+        "Price": 50,
+        "OffLimits": false
+    },
+    "_715": {
+        "Id": "715",
+        "Name": "龙虾",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 120,
+        "OffLimits": false
+    },
+    "_716": {
+        "Id": "716",
+        "Name": "小龙虾",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 75,
+        "OffLimits": false
+    },
+    "_717": {
+        "Id": "717",
+        "Name": "螃蟹",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 100,
+        "OffLimits": false
+    },
+    "_718": {
+        "Id": "718",
+        "Name": "鸟蛤",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 50,
+        "OffLimits": false
+    },
+    "_719": {
+        "Id": "719",
+        "Name": "蚌",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 30,
+        "OffLimits": false
+    },
+    "_720": {
+        "Id": "720",
+        "Name": "虾",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 60,
+        "OffLimits": false
+    },
+    "_721": {
+        "Id": "721",
+        "Name": "蜗牛",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 65,
+        "OffLimits": false
+    },
+    "_722": {
+        "Id": "722",
+        "Name": "玉黍螺",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 20,
+        "OffLimits": false
+    },
+    "_723": {
+        "Id": "723",
+        "Name": "牡蛎",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 40,
+        "OffLimits": false
+    },
+    "_724": {
+        "Id": "724",
+        "Name": "枫糖浆",
+        "Type": "Basic",
+        "Category": -27,
+        "Price": 200,
+        "OffLimits": false
+    },
+    "_725": {
+        "Id": "725",
+        "Name": "橡树树脂",
+        "Type": "Basic",
+        "Category": -27,
+        "Price": 150,
+        "OffLimits": false
+    },
+    "_726": {
+        "Id": "726",
+        "Name": "松焦油",
+        "Type": "Basic",
+        "Category": -27,
+        "Price": 100,
+        "OffLimits": false
+    },
+    "_727": {
+        "Id": "727",
+        "Name": "海鲜杂烩汤",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 135,
+        "OffLimits": false
+    },
+    "_730": {
+        "Id": "730",
+        "Name": "龙虾浓汤",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 205,
+        "OffLimits": false
+    },
+    "_728": {
+        "Id": "728",
+        "Name": "烩鱼汤",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 175,
+        "OffLimits": false
+    },
+    "_729": {
+        "Id": "729",
+        "Name": "法式田螺",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 125,
+        "OffLimits": false
+    },
+    "_731": {
+        "Id": "731",
+        "Name": "枫糖棒",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 300,
+        "OffLimits": false
+    },
+    "_732": {
+        "Id": "732",
+        "Name": "蟹黄糕",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 275,
+        "OffLimits": false
+    },
+    "_733": {
+        "Id": "733",
+        "Name": "虾鸡尾酒",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 160,
+        "OffLimits": false
+    },
+    "_734": {
+        "Id": "734",
+        "Name": "木跃鱼",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 75,
+        "OffLimits": false
+    },
+    "_742": {
+        "Id": "742",
+        "Name": "Haley's Lost Bracelet",
+        "Type": "Quest",
+        "Category": 0,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_745": {
+        "Id": "745",
+        "Name": "草莓种子",
+        "Type": "Seeds",
+        "Category": -74,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_746": {
+        "Id": "746",
+        "Name": "南瓜灯",
+        "Type": "Crafting",
+        "Category": -8,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_747": {
+        "Id": "747",
+        "Name": "腐烂的植物",
+        "Type": "Basic",
+        "Category": -20,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_748": {
+        "Id": "748",
+        "Name": "腐烂的植物",
+        "Type": "Basic",
+        "Category": -20,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_749": {
+        "Id": "749",
+        "Name": "万象晶球",
+        "Type": "Basic",
+        "Category": 0,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_750": {
+        "Id": "750",
+        "Name": "杂草",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_751": {
+        "Id": "751",
+        "Name": "石头",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_760": {
+        "Id": "760",
+        "Name": "石头",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_762": {
+        "Id": "762",
+        "Name": "石头",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_764": {
+        "Id": "764",
+        "Name": "石头",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_765": {
+        "Id": "765",
+        "Name": "石头",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_766": {
+        "Id": "766",
+        "Name": "史莱姆泥",
+        "Type": "Basic",
+        "Category": -28,
+        "Price": 5,
+        "OffLimits": false
+    },
+    "_767": {
+        "Id": "767",
+        "Name": "蝙蝠翅膀",
+        "Type": "Basic",
+        "Category": -28,
+        "Price": 15,
+        "OffLimits": false
+    },
+    "_768": {
+        "Id": "768",
+        "Name": "太阳精华",
+        "Type": "Basic",
+        "Category": -28,
+        "Price": 40,
+        "OffLimits": false
+    },
+    "_769": {
+        "Id": "769",
+        "Name": "虚空精华",
+        "Type": "Basic",
+        "Category": -28,
+        "Price": 50,
+        "OffLimits": false
+    },
+    "_770": {
+        "Id": "770",
+        "Name": "混合种子",
+        "Type": "Seeds",
+        "Category": -74,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_771": {
+        "Id": "771",
+        "Name": "纤维",
+        "Type": "Basic",
+        "Category": -16,
+        "Price": 1,
+        "OffLimits": false
+    },
+    "_772": {
+        "Id": "772",
+        "Name": "蒜油",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 1000,
+        "OffLimits": false
+    },
+    "_773": {
+        "Id": "773",
+        "Name": "生命药水",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 250,
+        "OffLimits": false
+    },
+    "_774": {
+        "Id": "774",
+        "Name": "万能鱼饵",
+        "Type": "Basic",
+        "Category": -21,
+        "Price": 15,
+        "OffLimits": true
+    },
+    "_775": {
+        "Id": "775",
+        "Name": "冰川鱼",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 1000,
+        "OffLimits": true
+    },
+    "_784": {
+        "Id": "784",
+        "Name": "杂草",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_785": {
+        "Id": "785",
+        "Name": "杂草",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_786": {
+        "Id": "786",
+        "Name": "杂草",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_787": {
+        "Id": "787",
+        "Name": "电池组",
+        "Type": "Basic",
+        "Category": -16,
+        "Price": 500,
+        "OffLimits": false
+    },
+    "_788": {
+        "Id": "788",
+        "Name": "丢失的斧子",
+        "Type": "Quest",
+        "Category": 0,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_789": {
+        "Id": "789",
+        "Name": "幸运紫色短裤",
+        "Type": "Quest",
+        "Category": 0,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_790": {
+        "Id": "790",
+        "Name": "浆果篮",
+        "Type": "Quest",
+        "Category": 0,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_792": {
+        "Id": "792",
+        "Name": "杂草",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_793": {
+        "Id": "793",
+        "Name": "杂草",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_794": {
+        "Id": "794",
+        "Name": "杂草",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_795": {
+        "Id": "795",
+        "Name": "虚空鲑鱼",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 150,
+        "OffLimits": false
+    },
+    "_796": {
+        "Id": "796",
+        "Name": "史莱姆鱼",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 100,
+        "OffLimits": false
+    },
+    "_797": {
+        "Id": "797",
+        "Name": "珍珠",
+        "Type": "Basic",
+        "Category": 0,
+        "Price": 2500,
+        "OffLimits": true
+    },
+    "_798": {
+        "Id": "798",
+        "Name": "午夜鱿鱼",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 100,
+        "OffLimits": true
+    },
+    "_799": {
+        "Id": "799",
+        "Name": "幽灵鱼",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 220,
+        "OffLimits": true
+    },
+    "_800": {
+        "Id": "800",
+        "Name": "水滴鱼",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 500,
+        "OffLimits": true
+    },
+    "_801": {
+        "Id": "801",
+        "Name": "结婚戒指",
+        "Type": "Ring",
+        "Category": 0,
+        "Price": 2000,
+        "OffLimits": true
+    },
+    "_802": {
+        "Id": "802",
+        "Name": "仙人掌种子",
+        "Type": "Seeds",
+        "Category": -74,
+        "Price": 0,
+        "OffLimits": true
+    },
+    "_803": {
+        "Id": "803",
+        "Name": "铱奶",
+        "Type": "Basic",
+        "Category": 0,
+        "Price": 0,
+        "OffLimits": true
+    },
+    "_805": {
+        "Id": "805",
+        "Name": "树肥",
+        "Type": "Basic",
+        "Category": -19,
+        "Price": 10,
+        "OffLimits": false
+    },
+    "_807": {
+        "Id": "807",
+        "Name": "恐龙蛋黄酱",
+        "Type": "Basic",
+        "Category": -26,
+        "Price": 800,
+        "OffLimits": true
+    },
+    "_808": {
+        "Id": "808",
+        "Name": "虚空幽灵吊坠",
+        "Type": "Basic",
+        "Category": 0,
+        "Price": 4500,
+        "OffLimits": false
+    },
+    "_809": {
+        "Id": "809",
+        "Name": "电影票",
+        "Type": "Basic",
+        "Category": 0,
+        "Price": 500,
+        "OffLimits": false
+    },
+    "_810": {
+        "Id": "810",
+        "Name": "蟹壳戒指",
+        "Type": "Ring",
+        "Category": 0,
+        "Price": 2000,
+        "OffLimits": false
+    },
+    "_811": {
+        "Id": "811",
+        "Name": "燃烧弹戒指",
+        "Type": "Ring",
+        "Category": 0,
+        "Price": 2000,
+        "OffLimits": false
+    },
+    "_812": {
+        "Id": "812",
+        "Name": "鱼籽",
+        "Type": "Basic",
+        "Category": -23,
+        "Price": 30,
+        "OffLimits": true
+    },
+    "_445": {
+        "Id": "445",
+        "Name": "鱼籽酱",
+        "Type": "Basic",
+        "Category": -26,
+        "Price": 500,
+        "OffLimits": false
+    },
+    "_814": {
+        "Id": "814",
+        "Name": "鱿鱼墨汁",
+        "Type": "Basic",
+        "Category": -23,
+        "Price": 110,
+        "OffLimits": false
+    },
+    "_815": {
+        "Id": "815",
+        "Name": "茶叶",
+        "Type": "Basic",
+        "Category": -75,
+        "Price": 50,
+        "OffLimits": false
+    },
+    "_267": {
+        "Id": "267",
+        "Name": "比目鱼",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 100,
+        "OffLimits": false
+    },
+    "_265": {
+        "Id": "265",
+        "Name": "海泡布丁",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 300,
+        "OffLimits": false
+    },
+    "_269": {
+        "Id": "269",
+        "Name": "午夜鲤鱼",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 150,
+        "OffLimits": false
+    },
+    "_292": {
+        "Id": "292",
+        "Name": "桃花心木种子",
+        "Type": "Crafting",
+        "Category": -74,
+        "Price": 100,
+        "OffLimits": true
+    },
+    "_289": {
+        "Id": "289",
+        "Name": "鸵鸟蛋",
+        "Type": "Basic",
+        "Category": -5,
+        "Price": 600,
+        "OffLimits": true
+    },
+    "_25": {
+        "Id": "25",
+        "Name": "石头",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_73": {
+        "Id": "73",
+        "Name": "金色核桃",
+        "Type": "Basic",
+        "Category": 0,
+        "Price": 250,
+        "OffLimits": true
+    },
+    "_69": {
+        "Id": "69",
+        "Name": "香蕉树苗",
+        "Type": "Basic",
+        "Category": -74,
+        "Price": 850,
+        "OffLimits": true
+    },
+    "_91": {
+        "Id": "91",
+        "Name": "香蕉",
+        "Type": "Basic",
+        "Category": -79,
+        "Price": 150,
+        "OffLimits": true
+    },
+    "_791": {
+        "Id": "791",
+        "Name": "金色椰子",
+        "Type": "Quest",
+        "Category": 0,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_816": {
+        "Id": "816",
+        "Name": "石头",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_817": {
+        "Id": "817",
+        "Name": "石头",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_818": {
+        "Id": "818",
+        "Name": "石头",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_819": {
+        "Id": "819",
+        "Name": "石头",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_820": {
+        "Id": "820",
+        "Name": "颅骨化石",
+        "Type": "Basic",
+        "Category": 0,
+        "Price": 100,
+        "OffLimits": false
+    },
+    "_821": {
+        "Id": "821",
+        "Name": "脊柱化石",
+        "Type": "Basic",
+        "Category": 0,
+        "Price": 100,
+        "OffLimits": false
+    },
+    "_822": {
+        "Id": "822",
+        "Name": "尾巴化石",
+        "Type": "Basic",
+        "Category": 0,
+        "Price": 100,
+        "OffLimits": false
+    },
+    "_823": {
+        "Id": "823",
+        "Name": "腿骨化石",
+        "Type": "Basic",
+        "Category": 0,
+        "Price": 100,
+        "OffLimits": false
+    },
+    "_824": {
+        "Id": "824",
+        "Name": "肋骨化石",
+        "Type": "Basic",
+        "Category": 0,
+        "Price": 100,
+        "OffLimits": false
+    },
+    "_825": {
+        "Id": "825",
+        "Name": "蛇头骨",
+        "Type": "Basic",
+        "Category": 0,
+        "Price": 100,
+        "OffLimits": false
+    },
+    "_826": {
+        "Id": "826",
+        "Name": "蛇脊椎骨",
+        "Type": "Basic",
+        "Category": 0,
+        "Price": 100,
+        "OffLimits": false
+    },
+    "_827": {
+        "Id": "827",
+        "Name": "蝙蝠木乃伊",
+        "Type": "Basic",
+        "Category": 0,
+        "Price": 100,
+        "OffLimits": false
+    },
+    "_828": {
+        "Id": "828",
+        "Name": "青蛙木乃伊",
+        "Type": "Basic",
+        "Category": 0,
+        "Price": 100,
+        "OffLimits": false
+    },
+    "_829": {
+        "Id": "829",
+        "Name": "姜",
+        "Type": "Basic",
+        "Category": -81,
+        "Price": 60,
+        "OffLimits": false
+    },
+    "_830": {
+        "Id": "830",
+        "Name": "芋头",
+        "Type": "Basic",
+        "Category": -75,
+        "Price": 100,
+        "OffLimits": false
+    },
+    "_831": {
+        "Id": "831",
+        "Name": "芋头块茎",
+        "Type": "Seeds",
+        "Category": -74,
+        "Price": 20,
+        "OffLimits": false
+    },
+    "_832": {
+        "Id": "832",
+        "Name": "菠萝",
+        "Type": "Basic",
+        "Category": -79,
+        "Price": 300,
+        "OffLimits": false
+    },
+    "_833": {
+        "Id": "833",
+        "Name": "菠萝种子",
+        "Type": "Seeds",
+        "Category": -74,
+        "Price": 240,
+        "OffLimits": false
+    },
+    "_834": {
+        "Id": "834",
+        "Name": "芒果",
+        "Type": "Basic",
+        "Category": -79,
+        "Price": 130,
+        "OffLimits": false
+    },
+    "_835": {
+        "Id": "835",
+        "Name": "芒果幼苗",
+        "Type": "Basic",
+        "Category": -74,
+        "Price": 850,
+        "OffLimits": false
+    },
+    "_836": {
+        "Id": "836",
+        "Name": "黄貂鱼",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 180,
+        "OffLimits": false
+    },
+    "_837": {
+        "Id": "837",
+        "Name": "狮子鱼",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 100,
+        "OffLimits": false
+    },
+    "_838": {
+        "Id": "838",
+        "Name": "蓝铁饼鱼",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 120,
+        "OffLimits": false
+    },
+    "_839": {
+        "Id": "839",
+        "Name": "荆棘戒指",
+        "Type": "Ring",
+        "Category": 0,
+        "Price": 200,
+        "OffLimits": false
+    },
+    "_840": {
+        "Id": "840",
+        "Name": "乡村木地板",
+        "Type": "Crafting",
+        "Category": -24,
+        "Price": 1,
+        "OffLimits": false
+    },
+    "_841": {
+        "Id": "841",
+        "Name": "石制走道地板",
+        "Type": "Crafting",
+        "Category": -24,
+        "Price": 1,
+        "OffLimits": false
+    },
+    "_842": {
+        "Id": "842",
+        "Name": "Journal Scrap",
+        "Type": "asdf",
+        "Category": 0,
+        "Price": 1,
+        "OffLimits": false
+    },
+    "_843": {
+        "Id": "843",
+        "Name": "石头",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_844": {
+        "Id": "844",
+        "Name": "石头",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_845": {
+        "Id": "845",
+        "Name": "石头",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_846": {
+        "Id": "846",
+        "Name": "石头",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_847": {
+        "Id": "847",
+        "Name": "石头",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_848": {
+        "Id": "848",
+        "Name": "火山晶石",
+        "Type": "Basic",
+        "Category": -15,
+        "Price": 50,
+        "OffLimits": false
+    },
+    "_849": {
+        "Id": "849",
+        "Name": "石头",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_850": {
+        "Id": "850",
+        "Name": "石头",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_851": {
+        "Id": "851",
+        "Name": "熔岩菇",
+        "Type": "Basic",
+        "Category": -81,
+        "Price": 400,
+        "OffLimits": false
+    },
+    "_852": {
+        "Id": "852",
+        "Name": "龙牙",
+        "Type": "Basic",
+        "Category": 0,
+        "Price": 500,
+        "OffLimits": false
+    },
+    "_856": {
+        "Id": "856",
+        "Name": "珍稀诱钩",
+        "Type": "Basic",
+        "Category": -22,
+        "Price": 500,
+        "OffLimits": false
+    },
+    "_857": {
+        "Id": "857",
+        "Name": "老虎史莱姆蛋",
+        "Type": "Basic",
+        "Category": 0,
+        "Price": 8000,
+        "OffLimits": false
+    },
+    "_858": {
+        "Id": "858",
+        "Name": "齐钻",
+        "Type": "Basic",
+        "Category": 0,
+        "Price": 250,
+        "OffLimits": false
+    },
+    "_859": {
+        "Id": "859",
+        "Name": "幸运戒指",
+        "Type": "Ring",
+        "Category": 0,
+        "Price": 200,
+        "OffLimits": false
+    },
+    "_860": {
+        "Id": "860",
+        "Name": "热咖啡戒指",
+        "Type": "Ring",
+        "Category": 0,
+        "Price": 200,
+        "OffLimits": false
+    },
+    "_861": {
+        "Id": "861",
+        "Name": "保护戒指",
+        "Type": "Ring",
+        "Category": 0,
+        "Price": 200,
+        "OffLimits": false
+    },
+    "_862": {
+        "Id": "862",
+        "Name": "吸魂戒指",
+        "Type": "Ring",
+        "Category": 0,
+        "Price": 200,
+        "OffLimits": false
+    },
+    "_863": {
+        "Id": "863",
+        "Name": "凤凰戒指",
+        "Type": "Ring",
+        "Category": 0,
+        "Price": 200,
+        "OffLimits": false
+    },
+    "_864": {
+        "Id": "864",
+        "Name": "战争纪念物",
+        "Type": "Quest",
+        "Category": 0,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_865": {
+        "Id": "865",
+        "Name": "美食家番茄盐",
+        "Type": "Quest",
+        "Category": 0,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_866": {
+        "Id": "866",
+        "Name": "星露谷玫瑰",
+        "Type": "Quest",
+        "Category": 0,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_867": {
+        "Id": "867",
+        "Name": "高级电视遥控器",
+        "Type": "Quest",
+        "Category": 0,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_868": {
+        "Id": "868",
+        "Name": "极寒碎片",
+        "Type": "Quest",
+        "Category": 0,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_869": {
+        "Id": "869",
+        "Name": "蠕动蚯蚓",
+        "Type": "Quest",
+        "Category": 0,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_870": {
+        "Id": "870",
+        "Name": "海盗项链",
+        "Type": "Quest",
+        "Category": 0,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_872": {
+        "Id": "872",
+        "Name": "仙尘",
+        "Type": "Basic",
+        "Category": 0,
+        "Price": 300,
+        "OffLimits": false
+    },
+    "_873": {
+        "Id": "873",
+        "Name": "PiÃ±a Colada",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 300,
+        "OffLimits": false
+    },
+    "_874": {
+        "Id": "874",
+        "Name": "虫肉块",
+        "Type": "Crafting",
+        "Category": 0,
+        "Price": 50,
+        "OffLimits": false
+    },
+    "_875": {
+        "Id": "875",
+        "Name": "灵外质",
+        "Type": "Quest",
+        "Category": 0,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_876": {
+        "Id": "876",
+        "Name": "五彩胶冻",
+        "Type": "Quest",
+        "Category": 0,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_877": {
+        "Id": "877",
+        "Name": "优质浮标",
+        "Type": "Basic",
+        "Category": -22,
+        "Price": 300,
+        "OffLimits": false
+    },
+    "_879": {
+        "Id": "879",
+        "Name": "怪兽香水",
+        "Type": "Crafting",
+        "Category": 0,
+        "Price": 50,
+        "OffLimits": false
+    },
+    "_880": {
+        "Id": "880",
+        "Name": "组合戒指",
+        "Type": "Ring",
+        "Category": 0,
+        "Price": 100,
+        "OffLimits": false
+    },
+    "_881": {
+        "Id": "881",
+        "Name": "骨头碎片",
+        "Type": "Basic",
+        "Category": -15,
+        "Price": 12,
+        "OffLimits": false
+    },
+    "_882": {
+        "Id": "882",
+        "Name": "杂草",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_883": {
+        "Id": "883",
+        "Name": "杂草",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_884": {
+        "Id": "884",
+        "Name": "杂草",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_885": {
+        "Id": "885",
+        "Name": "纤维种子",
+        "Type": "Seeds",
+        "Category": -74,
+        "Price": 5,
+        "OffLimits": false
+    },
+    "_886": {
+        "Id": "886",
+        "Name": "传送图腾：姜岛",
+        "Type": "Crafting",
+        "Category": 0,
+        "Price": 20,
+        "OffLimits": false
+    },
+    "_887": {
+        "Id": "887",
+        "Name": "免疫指环",
+        "Type": "Ring",
+        "Category": 0,
+        "Price": 500,
+        "OffLimits": false
+    },
+    "_888": {
+        "Id": "888",
+        "Name": "辉石戒指",
+        "Type": "Ring",
+        "Category": 0,
+        "Price": 200,
+        "OffLimits": false
+    },
+    "_889": {
+        "Id": "889",
+        "Name": "齐瓜",
+        "Type": "Basic",
+        "Category": -79,
+        "Price": 1,
+        "OffLimits": false
+    },
+    "_890": {
+        "Id": "890",
+        "Name": "齐豆",
+        "Type": "Seeds",
+        "Category": -74,
+        "Price": 1,
+        "OffLimits": false
+    },
+    "_891": {
+        "Id": "891",
+        "Name": "蘑菇树种子",
+        "Type": "Crafting",
+        "Category": -74,
+        "Price": 100,
+        "OffLimits": false
+    },
+    "_892": {
+        "Id": "892",
+        "Name": "传送图腾：齐先生的场地",
+        "Type": "Crafting",
+        "Category": 0,
+        "Price": 20,
+        "OffLimits": false
+    },
+    "_893": {
+        "Id": "893",
+        "Name": "烟花（红色）",
+        "Type": "Crafting",
+        "Category": -8,
+        "Price": 50,
+        "OffLimits": false
+    },
+    "_894": {
+        "Id": "894",
+        "Name": "烟花（紫色）",
+        "Type": "Crafting",
+        "Category": -8,
+        "Price": 50,
+        "OffLimits": false
+    },
+    "_895": {
+        "Id": "895",
+        "Name": "烟花（绿色）",
+        "Type": "Crafting",
+        "Category": -8,
+        "Price": 50,
+        "OffLimits": false
+    },
+    "_896": {
+        "Id": "896",
+        "Name": "银河之魂",
+        "Type": "Crafting",
+        "Category": 0,
+        "Price": 5000,
+        "OffLimits": false
+    },
+    "_897": {
+        "Id": "897",
+        "Name": "皮埃尔丢失的存货单",
+        "Type": "Quest",
+        "Category": 0,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_898": {
+        "Id": "898",
+        "Name": "绯红鱼之子",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 1500,
+        "OffLimits": false
+    },
+    "_899": {
+        "Id": "899",
+        "Name": "雌鮟鱇鱼",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 900,
+        "OffLimits": false
+    },
+    "_900": {
+        "Id": "900",
+        "Name": "传说之鱼二代",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 5000,
+        "OffLimits": false
+    },
+    "_901": {
+        "Id": "901",
+        "Name": "放射性鲤鱼",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 1000,
+        "OffLimits": false
+    },
+    "_902": {
+        "Id": "902",
+        "Name": "小冰川鱼",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 1000,
+        "OffLimits": false
+    },
+    "_903": {
+        "Id": "903",
+        "Name": "姜汁汽水",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 200,
+        "OffLimits": false
+    },
+    "_904": {
+        "Id": "904",
+        "Name": "香蕉布丁",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 260,
+        "OffLimits": false
+    },
+    "_905": {
+        "Id": "905",
+        "Name": "芒果糯米饭",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 250,
+        "OffLimits": false
+    },
+    "_906": {
+        "Id": "906",
+        "Name": "夏威夷芋泥",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 400,
+        "OffLimits": false
+    },
+    "_907": {
+        "Id": "907",
+        "Name": "热带咖喱",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 500,
+        "OffLimits": false
+    },
+    "_908": {
+        "Id": "908",
+        "Name": "魔法鱼饵",
+        "Type": "Basic",
+        "Category": -21,
+        "Price": 1,
+        "OffLimits": false
+    },
+    "_909": {
+        "Id": "909",
+        "Name": "放射性矿石",
+        "Type": "Basic",
+        "Category": -15,
+        "Price": 300,
+        "OffLimits": false
+    },
+    "_910": {
+        "Id": "910",
+        "Name": "放射性矿锭",
+        "Type": "Basic",
+        "Category": -15,
+        "Price": 3000,
+        "OffLimits": false
+    },
+    "_911": {
+        "Id": "911",
+        "Name": "马笛",
+        "Type": "Crafting",
+        "Category": 0,
+        "Price": 3000,
+        "OffLimits": false
+    },
+    "_913": {
+        "Id": "913",
+        "Name": "施肥器",
+        "Type": "Basic",
+        "Category": 0,
+        "Price": 200,
+        "OffLimits": false
+    },
+    "_915": {
+        "Id": "915",
+        "Name": "加压喷头",
+        "Type": "Basic",
+        "Category": 0,
+        "Price": 200,
+        "OffLimits": false
+    },
+    "_917": {
+        "Id": "917",
+        "Name": "齐氏调味料",
+        "Type": "Basic",
+        "Category": 0,
+        "Price": 200,
+        "OffLimits": false
+    },
+    "_918": {
+        "Id": "918",
+        "Name": "顶级生长激素",
+        "Type": "Basic",
+        "Category": -19,
+        "Price": 70,
+        "OffLimits": false
+    },
+    "_919": {
+        "Id": "919",
+        "Name": "顶级肥料",
+        "Type": "Basic",
+        "Category": -19,
+        "Price": 70,
+        "OffLimits": false
+    },
+    "_920": {
+        "Id": "920",
+        "Name": "顶级保湿土壤",
+        "Type": "Basic",
+        "Category": -19,
+        "Price": 30,
+        "OffLimits": false
+    },
+    "_921": {
+        "Id": "921",
+        "Name": "墨汁意大利饺",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 150,
+        "OffLimits": false
+    },
+    "_922": {
+        "Id": "922",
+        "Name": "补给箱",
+        "Type": "Crafting",
+        "Category": 0,
+        "Price": 1,
+        "OffLimits": false
+    },
+    "_923": {
+        "Id": "923",
+        "Name": "补给箱",
+        "Type": "Crafting",
+        "Category": 0,
+        "Price": 1,
+        "OffLimits": false
+    },
+    "_924": {
+        "Id": "924",
+        "Name": "补给箱",
+        "Type": "Crafting",
+        "Category": 0,
+        "Price": 1,
+        "OffLimits": false
+    },
+    "_925": {
+        "Id": "925",
+        "Name": "史莱姆箱",
+        "Type": "Crafting",
+        "Category": 0,
+        "Price": 3000,
+        "OffLimits": false
+    },
+    "_926": {
+        "Id": "926",
+        "Name": "野炊工具",
+        "Type": "Crafting",
+        "Category": 0,
+        "Price": 80,
+        "OffLimits": false
+    },
+    "_927": {
+        "Id": "927",
+        "Name": "野营灶",
+        "Type": "Crafting",
+        "Category": 0,
+        "Price": 1,
+        "OffLimits": false
+    },
+    "_928": {
+        "Id": "928",
+        "Name": "金蛋",
+        "Type": "Basic",
+        "Category": -5,
+        "Price": 500,
+        "OffLimits": false
+    },
+    "_929": {
+        "Id": "929",
+        "Name": "树篱",
+        "Type": "Crafting",
+        "Category": -8,
+        "Price": 10,
+        "OffLimits": false
+    },
+    "_930": {
+        "Id": "930",
+        "Name": "???",
+        "Type": "Basic",
+        "Category": 0,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_FarAwayStone": {
+        "Id": "FarAwayStone",
+        "Name": "异界晶石",
+        "Type": "Basic",
+        "Category": 0,
+        "Price": 500,
+        "OffLimits": true
+    },
+    "_CalicoEgg": {
+        "Id": "CalicoEgg",
+        "Name": "卡利科三花蛋",
+        "Type": "Basic",
+        "Category": 0,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_MixedFlowerSeeds": {
+        "Id": "MixedFlowerSeeds",
+        "Name": "混合花卉种子",
+        "Type": "Seeds",
+        "Category": -74,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_GoldenBobber": {
+        "Id": "GoldenBobber",
+        "Name": "黄金浮漂",
+        "Type": "Quest",
+        "Category": 0,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_CalicoEggStone_0": {
+        "Id": "CalicoEggStone_0",
+        "Name": "石头",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_CalicoEggStone_1": {
+        "Id": "CalicoEggStone_1",
+        "Name": "石头",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_CalicoEggStone_2": {
+        "Id": "CalicoEggStone_2",
+        "Name": "石头",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_MysteryBox": {
+        "Id": "MysteryBox",
+        "Name": "谜之盒",
+        "Type": "Basic",
+        "Category": 0,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_TroutDerbyTag": {
+        "Id": "TroutDerbyTag",
+        "Name": "黄金标签",
+        "Type": "Basic",
+        "Category": 0,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_DeluxeBait": {
+        "Id": "DeluxeBait",
+        "Name": "高级鱼饵",
+        "Type": "Basic",
+        "Category": -21,
+        "Price": 1,
+        "OffLimits": false
+    },
+    "_Moss": {
+        "Id": "Moss",
+        "Name": "苔藓",
+        "Type": "Basic",
+        "Category": -16,
+        "Price": 5,
+        "OffLimits": false
+    },
+    "_MossySeed": {
+        "Id": "MossySeed",
+        "Name": "长满苔藓的种子",
+        "Type": "Crafting",
+        "Category": -74,
+        "Price": 100,
+        "OffLimits": false
+    },
+    "_GreenRainWeeds0": {
+        "Id": "GreenRainWeeds0",
+        "Name": "绿雨杂草",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_GreenRainWeeds1": {
+        "Id": "GreenRainWeeds1",
+        "Name": "绿雨杂草",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_GreenRainWeeds2": {
+        "Id": "GreenRainWeeds2",
+        "Name": "绿雨杂草",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_GreenRainWeeds3": {
+        "Id": "GreenRainWeeds3",
+        "Name": "绿雨杂草",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_GreenRainWeeds4": {
+        "Id": "GreenRainWeeds4",
+        "Name": "绿雨杂草",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_GreenRainWeeds5": {
+        "Id": "GreenRainWeeds5",
+        "Name": "绿雨杂草",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_GreenRainWeeds6": {
+        "Id": "GreenRainWeeds6",
+        "Name": "绿雨杂草",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_GreenRainWeeds7": {
+        "Id": "GreenRainWeeds7",
+        "Name": "绿雨杂草",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_SonarBobber": {
+        "Id": "SonarBobber",
+        "Name": "声纳浮漂",
+        "Type": "Basic",
+        "Category": -22,
+        "Price": 250,
+        "OffLimits": false
+    },
+    "_SpecificBait": {
+        "Id": "SpecificBait",
+        "Name": "鱼饵",
+        "Type": "Basic",
+        "Category": -21,
+        "Price": 5,
+        "OffLimits": false
+    },
+    "_TentKit": {
+        "Id": "TentKit",
+        "Name": "便携帐篷",
+        "Type": "Crafting",
+        "Category": 0,
+        "Price": 200,
+        "OffLimits": false
+    },
+    "_VolcanoGoldNode": {
+        "Id": "VolcanoGoldNode",
+        "Name": "石头",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_MysticTreeSeed": {
+        "Id": "MysticTreeSeed",
+        "Name": "神秘树种",
+        "Type": "Crafting",
+        "Category": -74,
+        "Price": 100,
+        "OffLimits": false
+    },
+    "_MysticSyrup": {
+        "Id": "MysticSyrup",
+        "Name": "神秘糖浆",
+        "Type": "Basic",
+        "Category": -27,
+        "Price": 1000,
+        "OffLimits": false
+    },
+    "_Raisins": {
+        "Id": "Raisins",
+        "Name": "葡萄干",
+        "Type": "Basic",
+        "Category": -26,
+        "Price": 600,
+        "OffLimits": false
+    },
+    "_DriedFruit": {
+        "Id": "DriedFruit",
+        "Name": "Dried",
+        "Type": "Basic",
+        "Category": -26,
+        "Price": 25,
+        "OffLimits": false
+    },
+    "_DriedMushrooms": {
+        "Id": "DriedMushrooms",
+        "Name": "Dried",
+        "Type": "Basic",
+        "Category": -26,
+        "Price": 25,
+        "OffLimits": false
+    },
+    "_StardropTea": {
+        "Id": "StardropTea",
+        "Name": "星之果茶",
+        "Type": "Basic",
+        "Category": 0,
+        "Price": 77,
+        "OffLimits": false
+    },
+    "_PrizeTicket": {
+        "Id": "PrizeTicket",
+        "Name": "兑奖券",
+        "Type": "Basic",
+        "Category": 0,
+        "Price": 1,
+        "OffLimits": false
+    },
+    "_GoldCoin": {
+        "Id": "GoldCoin",
+        "Name": "金币",
+        "Type": "Basic",
+        "Category": 0,
+        "Price": 1,
+        "OffLimits": false
+    },
+    "_TreasureTotem": {
+        "Id": "TreasureTotem",
+        "Name": "宝藏图腾",
+        "Type": "Crafting",
+        "Category": 0,
+        "Price": 20,
+        "OffLimits": false
+    },
+    "_ChallengeBait": {
+        "Id": "ChallengeBait",
+        "Name": "挑战鱼饵",
+        "Type": "Basic",
+        "Category": -21,
+        "Price": 1,
+        "OffLimits": false
+    },
+    "_CarrotSeeds": {
+        "Id": "CarrotSeeds",
+        "Name": "胡萝卜种子",
+        "Type": "Seeds",
+        "Category": -74,
+        "Price": 15,
+        "OffLimits": false
+    },
+    "_Carrot": {
+        "Id": "Carrot",
+        "Name": "胡萝卜",
+        "Type": "Basic",
+        "Category": -75,
+        "Price": 35,
+        "OffLimits": false
+    },
+    "_SummerSquashSeeds": {
+        "Id": "SummerSquashSeeds",
+        "Name": "金皮西葫芦种子",
+        "Type": "Seeds",
+        "Category": -74,
+        "Price": 20,
+        "OffLimits": false
+    },
+    "_SummerSquash": {
+        "Id": "SummerSquash",
+        "Name": "金皮西葫芦",
+        "Type": "Basic",
+        "Category": -75,
+        "Price": 45,
+        "OffLimits": false
+    },
+    "_BroccoliSeeds": {
+        "Id": "BroccoliSeeds",
+        "Name": "西蓝花种子",
+        "Type": "Seeds",
+        "Category": -74,
+        "Price": 40,
+        "OffLimits": false
+    },
+    "_Broccoli": {
+        "Id": "Broccoli",
+        "Name": "西蓝花",
+        "Type": "Basic",
+        "Category": -75,
+        "Price": 70,
+        "OffLimits": false
+    },
+    "_PowdermelonSeeds": {
+        "Id": "PowdermelonSeeds",
+        "Name": "霜瓜种子",
+        "Type": "Seeds",
+        "Category": -74,
+        "Price": 20,
+        "OffLimits": false
+    },
+    "_Powdermelon": {
+        "Id": "Powdermelon",
+        "Name": "霜瓜",
+        "Type": "Basic",
+        "Category": -79,
+        "Price": 60,
+        "OffLimits": false
+    },
+    "_SeedSpot": {
+        "Id": "SeedSpot",
+        "Name": "远古斑点",
+        "Type": "asdf",
+        "Category": 0,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_SmokedFish": {
+        "Id": "SmokedFish",
+        "Name": "Smoked",
+        "Type": "Basic",
+        "Category": -26,
+        "Price": 25,
+        "OffLimits": false
+    },
+    "_PurpleBook": {
+        "Id": "PurpleBook",
+        "Name": "星之书",
+        "Type": "asdf",
+        "Category": -103,
+        "Price": 2500,
+        "OffLimits": false
+    },
+    "_SkillBook_0": {
+        "Id": "SkillBook_0",
+        "Name": "星露谷年历",
+        "Type": "asdf",
+        "Category": -103,
+        "Price": 500,
+        "OffLimits": false
+    },
+    "_SkillBook_2": {
+        "Id": "SkillBook_2",
+        "Name": "樵夫周刊",
+        "Type": "asdf",
+        "Category": -103,
+        "Price": 500,
+        "OffLimits": false
+    },
+    "_SkillBook_1": {
+        "Id": "SkillBook_1",
+        "Name": "鱼饵和浮漂",
+        "Type": "asdf",
+        "Category": -103,
+        "Price": 500,
+        "OffLimits": false
+    },
+    "_SkillBook_3": {
+        "Id": "SkillBook_3",
+        "Name": "采矿月刊",
+        "Type": "asdf",
+        "Category": -103,
+        "Price": 500,
+        "OffLimits": false
+    },
+    "_SkillBook_4": {
+        "Id": "SkillBook_4",
+        "Name": "战斗季刊",
+        "Type": "asdf",
+        "Category": -103,
+        "Price": 500,
+        "OffLimits": false
+    },
+    "_Book_Trash": {
+        "Id": "Book_Trash",
+        "Name": "小巷自助餐",
+        "Type": "asdf",
+        "Category": -102,
+        "Price": 3000,
+        "OffLimits": false
+    },
+    "_Book_Crabbing": {
+        "Id": "Book_Crabbing",
+        "Name": "捕蟹秘籍",
+        "Type": "asdf",
+        "Category": -102,
+        "Price": 1000,
+        "OffLimits": false
+    },
+    "_Book_Bombs": {
+        "Id": "Book_Bombs",
+        "Name": "矮人安全手册",
+        "Type": "asdf",
+        "Category": -102,
+        "Price": 1000,
+        "OffLimits": false
+    },
+    "_Book_Roe": {
+        "Id": "Book_Roe",
+        "Name": "海之宝石",
+        "Type": "asdf",
+        "Category": -102,
+        "Price": 800,
+        "OffLimits": false
+    },
+    "_Book_WildSeeds": {
+        "Id": "Book_WildSeeds",
+        "Name": "Raccoon Journal",
+        "Type": "asdf",
+        "Category": -102,
+        "Price": 1000,
+        "OffLimits": false
+    },
+    "_Book_Woodcutting": {
+        "Id": "Book_Woodcutting",
+        "Name": "伐木秘事",
+        "Type": "asdf",
+        "Category": -102,
+        "Price": 500,
+        "OffLimits": false
+    },
+    "_Book_Defense": {
+        "Id": "Book_Defense",
+        "Name": "铜墙铁壁",
+        "Type": "asdf",
+        "Category": -102,
+        "Price": 500,
+        "OffLimits": false
+    },
+    "_Book_Friendship": {
+        "Id": "Book_Friendship",
+        "Name": "交友导论",
+        "Type": "asdf",
+        "Category": -102,
+        "Price": 3000,
+        "OffLimits": false
+    },
+    "_Book_Void": {
+        "Id": "Book_Void",
+        "Name": "怪物图鉴",
+        "Type": "asdf",
+        "Category": -102,
+        "Price": 2000,
+        "OffLimits": false
+    },
+    "_Book_Speed": {
+        "Id": "Book_Speed",
+        "Name": "风之道第一部分",
+        "Type": "asdf",
+        "Category": -102,
+        "Price": 5000,
+        "OffLimits": false
+    },
+    "_Book_Marlon": {
+        "Id": "Book_Marlon",
+        "Name": "洞穴地图绘制法",
+        "Type": "asdf",
+        "Category": -102,
+        "Price": 4000,
+        "OffLimits": false
+    },
+    "_Book_PriceCatalogue": {
+        "Id": "Book_PriceCatalogue",
+        "Name": "价格目录",
+        "Type": "asdf",
+        "Category": -102,
+        "Price": 1000,
+        "OffLimits": false
+    },
+    "_Book_QueenOfSauce": {
+        "Id": "Book_QueenOfSauce",
+        "Name": "酱料女皇烹饪秘籍",
+        "Type": "asdf",
+        "Category": -102,
+        "Price": 10000,
+        "OffLimits": false
+    },
+    "_Book_Diamonds": {
+        "Id": "Book_Diamonds",
+        "Name": "钻石猎人",
+        "Type": "asdf",
+        "Category": -102,
+        "Price": 1000,
+        "OffLimits": false
+    },
+    "_Book_Mystery": {
+        "Id": "Book_Mystery",
+        "Name": "谜之书",
+        "Type": "asdf",
+        "Category": -102,
+        "Price": 3000,
+        "OffLimits": false
+    },
+    "_Book_AnimalCatalogue": {
+        "Id": "Book_AnimalCatalogue",
+        "Name": "动物目录",
+        "Type": "asdf",
+        "Category": -102,
+        "Price": 2000,
+        "OffLimits": false
+    },
+    "_Book_Speed2": {
+        "Id": "Book_Speed2",
+        "Name": "风之道第二部分",
+        "Type": "asdf",
+        "Category": -102,
+        "Price": 10000,
+        "OffLimits": false
+    },
+    "_GoldenAnimalCracker": {
+        "Id": "GoldenAnimalCracker",
+        "Name": "金色动物饼干",
+        "Type": "asdf",
+        "Category": 0,
+        "Price": 1000,
+        "OffLimits": false
+    },
+    "_GoldenMysteryBox": {
+        "Id": "GoldenMysteryBox",
+        "Name": "金色谜之盒",
+        "Type": "Basic",
+        "Category": 0,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_SeaJelly": {
+        "Id": "SeaJelly",
+        "Name": "海凝胶",
+        "Type": "Fish",
+        "Category": 0,
+        "Price": 200,
+        "OffLimits": false
+    },
+    "_CaveJelly": {
+        "Id": "CaveJelly",
+        "Name": "洞穴凝胶",
+        "Type": "Fish",
+        "Category": 0,
+        "Price": 180,
+        "OffLimits": false
+    },
+    "_RiverJelly": {
+        "Id": "RiverJelly",
+        "Name": "河凝胶",
+        "Type": "Fish",
+        "Category": 0,
+        "Price": 125,
+        "OffLimits": false
+    },
+    "_Goby": {
+        "Id": "Goby",
+        "Name": "虾虎鱼",
+        "Type": "Fish",
+        "Category": -4,
+        "Price": 150,
+        "OffLimits": false
+    },
+    "_VolcanoCoalNode0": {
+        "Id": "VolcanoCoalNode0",
+        "Name": "石头",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_VolcanoCoalNode1": {
+        "Id": "VolcanoCoalNode1",
+        "Name": "石头",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_PotOfGold": {
+        "Id": "PotOfGold",
+        "Name": "石头",
+        "Type": "interactive",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_Book_Artifact": {
+        "Id": "Book_Artifact",
+        "Name": "Treasure Appraisal Guide",
+        "Type": "asdf",
+        "Category": -102,
+        "Price": 500,
+        "OffLimits": false
+    },
+    "_Book_Horse": {
+        "Id": "Book_Horse",
+        "Name": "Horse: The Book",
+        "Type": "asdf",
+        "Category": -102,
+        "Price": 1000,
+        "OffLimits": false
+    },
+    "_ButterflyPowder": {
+        "Id": "ButterflyPowder",
+        "Name": "蝴蝶粉",
+        "Type": "Basic",
+        "Category": 0,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_PetLicense": {
+        "Id": "PetLicense",
+        "Name": "宠物饲养证",
+        "Type": "Basic",
+        "Category": 0,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_BlueGrassStarter": {
+        "Id": "BlueGrassStarter",
+        "Name": "蓝色草籽",
+        "Type": "Crafting",
+        "Category": 0,
+        "Price": 50,
+        "OffLimits": false
+    },
+    "_MossSoup": {
+        "Id": "MossSoup",
+        "Name": "苔藓汤",
+        "Type": "Cooking",
+        "Category": -7,
+        "Price": 80,
+        "OffLimits": false
+    },
+    "_Book_Grass": {
+        "Id": "Book_Grass",
+        "Name": "Ol' Slitherlegs",
+        "Type": "asdf",
+        "Category": -102,
+        "Price": 1000,
+        "OffLimits": false
+    },
+    "_BasicCoalNode0": {
+        "Id": "BasicCoalNode0",
+        "Name": "石头",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    },
+    "_BasicCoalNode1": {
+        "Id": "BasicCoalNode1",
+        "Name": "石头",
+        "Type": "Litter",
+        "Category": -999,
+        "Price": 0,
+        "OffLimits": false
+    }
+}
