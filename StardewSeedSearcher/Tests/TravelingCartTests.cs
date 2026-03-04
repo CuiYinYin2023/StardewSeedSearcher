@@ -1,3 +1,6 @@
+//测试用代码，已不适用于新版本
+
+using System;
 using StardewSeedSearcher.Features;
 
 namespace StardewSeedSearcher.Tests
@@ -8,38 +11,38 @@ namespace StardewSeedSearcher.Tests
         {
             Console.WriteLine("=== 猪车预测测试 ===\n");
             
-            int testSeed = 10000;
-            bool useLegacyRandom = true;  // 1.6+ 用 false
+            // int testSeed = 10000;
+            // bool useLegacyRandom = true;  // 1.6+ 用 false
             
-            var predictor = new TravelingCartPredictor();
+            // var predictor = new TravelingCartPredictor();
             
-            Console.WriteLine($"种子: {testSeed}");
-            Console.WriteLine($"Legacy Random: {useLegacyRandom}\n");
+            // Console.WriteLine($"种子: {testSeed}");
+            // Console.WriteLine($"Legacy Random: {useLegacyRandom}\n");
             
-            var results = predictor.PredictSpring(testSeed, useLegacyRandom);
+            // var results = predictor.PredictCartDay(testSeed, useLegacyRandom);
             
-            foreach (var dayResult in results)
-            {
-                Console.WriteLine($"=== {dayResult.DayName} ===");
+            // foreach (var dayResult in results)
+            // {
+            //     Console.WriteLine($"=== {dayResult.DayName} ===");
                 
-                foreach (var item in dayResult.Items)
-                {
-                    if (item.Quantity > 0)
-                    {
-                        Console.WriteLine($"  {item.Category}: {item.Name}, 数量{item.Quantity}, 价格{item.Price}g");
-                    }
-                    else if (item.Quantity == -1)
-                    {
-                        Console.WriteLine($"  {item.Category}: {item.Name}, 数量不限, 价格{item.Price}g");
-                    }
-                    else
-                    {
-                        Console.WriteLine($"  {item.Category}: {item.Name}");
-                    }
-                }
+            //     foreach (var item in dayResult.Items)
+            //     {
+            //         if (item.Quantity > 0)
+            //         {
+            //             Console.WriteLine($"  {item.Category}: {item.Name}, 数量{item.Quantity}, 价格{item.Price}g");
+            //         }
+            //         else if (item.Quantity == -1)
+            //         {
+            //             Console.WriteLine($"  {item.Category}: {item.Name}, 数量不限, 价格{item.Price}g");
+            //         }
+            //         else
+            //         {
+            //             Console.WriteLine($"  {item.Category}: {item.Name}");
+            //         }
+            //     }
                 
-                Console.WriteLine();
-            }
+            //     Console.WriteLine();
+            // }
         }
     }
 }

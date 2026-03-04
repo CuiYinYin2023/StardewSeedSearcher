@@ -14,7 +14,6 @@ namespace StardewSeedSearcher.Features
     public class CartDayResult
     {
         public int Day { get; set; }
-        public string DayName { get; set; }
         public List<CartItem> Items { get; set; } = new List<CartItem>();
     }
 
@@ -207,29 +206,6 @@ namespace StardewSeedSearcher.Features
             // 未找到匹配
             return null;
         }
-
-        /// <summary>
-        /// 预测指定种子在春季的所有猪车内容（测试用）
-        /// </summary>
-        public List<CartDayResult> PredictSpring(int seed, bool useLegacyRandom)
-        {
-            int gameID = seed;
-            
-            // 红卷心菜保底
-            int guaranteeSeed = HashHelper.GetRandomSeed(12 * gameID, 0, 0, 0, 0, useLegacyRandom);
-            Random rngGuarantee = new Random(guaranteeSeed);
-            int originalGuarantee = rngGuarantee.Next(2, 31);
-            
-            var results = new List<CartDayResult>();
-            
-            foreach (int day in TravelingCartData.SpringCartDays)
-            {
-                var result = PredictCartDay(gameID, day, originalGuarantee, useLegacyRandom);
-                results.Add(result);
-            }
-            
-            return results;
-        }
         
         /// <summary>
         /// 预测指定日期的猪车内容
@@ -238,8 +214,7 @@ namespace StardewSeedSearcher.Features
         {
             var result = new CartDayResult
             {
-                Day = day,
-                DayName = GetDayName(day)
+                Day = day
             };
             
             // 1. 创建主RNG
