@@ -1,9 +1,18 @@
-using System;
 using StardewSeedSearcher.Core;
-using System.Collections.Generic;
 
 namespace StardewSeedSearcher.Features
 {
+    // 仙子条件类
+    public class FairyCondition
+    {
+        public int StartYear { get; set; }
+        public int StartSeason { get; set; }
+        public int StartDay { get; set; }
+        public int EndYear { get; set; }
+        public int EndSeason { get; set; }
+        public int EndDay { get; set; }
+    }
+
     /// <summary>
     /// 仙子预测器
     /// </summary>
@@ -27,28 +36,28 @@ namespace StardewSeedSearcher.Features
             // 所有条件都必须满足（AND）
             foreach (var condition in Conditions)
             {
-                int absoluteDay = CalculateAbsoluteDay(condition.Year, condition.Season, condition.Day);
+                int startAbs = TimeHelper.DateToAbsoluteDay(condition.StartYear, condition.StartSeason, condition.StartDay);
+                int endAbs = TimeHelper.DateToAbsoluteDay(condition.EndYear, condition.EndSeason, condition.EndDay);
                 
-                if (!HasFairy(seed, absoluteDay, useLegacyRandom))
+                bool foundInRange = false;
+                
+                // 在范围内寻找至少一个仙子
+                for (int day = startAbs; day <= endAbs; day++)
                 {
-                    return false;
+                    var date = TimeHelper.AbsoluteDaytoDate(day);
+                    if (date.season >= 3) continue; // 跳过冬天
+
+                    if (HasFairy(seed, day, useLegacyRandom))
+                    {
+                        foundInRange = true;
+                        break; // 只要找到一次，该范围条件即满足
+                    }
                 }
+
+                if (!foundInRange) return false;
             }
 
             return true;
-        }
-
-        private int CalculateAbsoluteDay(int year, Season season, int day)
-        {
-            int seasonOffset = season switch
-            {
-                Season.Spring => 0,
-                Season.Summer => 28,
-                Season.Fall => 56,
-                _ => 0
-            };
-
-            return (year - 1) * 112 + seasonOffset + day;
         }
 
         /// <summary>
@@ -75,11 +84,23 @@ namespace StardewSeedSearcher.Features
         {
             if (Conditions.Count == 0) return 0;
             
-            // 每个条件检查一天
             // 旧随机:1次随机判断
             // 新随机:10次跳过 + 1次判断 = 11次
             int callsPerDay = useLegacyRandom ? 1 : 11;
-            return Conditions.Count * callsPerDay;
+
+            int totalDays = 0;
+            
+            // 所有条件天数总和
+            foreach (var condition in Conditions)
+            {
+                int startAbs = TimeHelper.DateToAbsoluteDay(condition.StartYear, condition.StartSeason, condition.StartDay);
+                int endAbs = TimeHelper.DateToAbsoluteDay(condition.EndYear, condition.EndSeason, condition.EndDay);
+            
+                totalDays += endAbs - startAbs + 1;
+            }
+
+            // 总计算次数
+            return totalDays * callsPerDay;
         }
 
         /// <summary>
@@ -91,58 +112,26 @@ namespace StardewSeedSearcher.Features
             
             foreach (var condition in Conditions)
             {
-                int absoluteDay = CalculateAbsoluteDay(condition.Year, condition.Season, condition.Day);
+                int startAbs = TimeHelper.DateToAbsoluteDay(condition.StartYear, condition.StartSeason, condition.StartDay);
+                int endAbs = TimeHelper.DateToAbsoluteDay(condition.EndYear, condition.EndSeason, condition.EndDay);
                 
-                if (HasFairy(seed, absoluteDay, useLegacyRandom))
+                for (int day = startAbs; day <= endAbs; day++)
                 {
-                    fairyDays.Add(new
+                    var date = TimeHelper.AbsoluteDaytoDate(day);
+                    if (date.season >= 3) continue; // 跳过冬天
+
+                    if (HasFairy(seed, day, useLegacyRandom))
                     {
-                        year = condition.Year,
-                        season = condition.Season.ToString(),
-                        day = condition.Day
-                    });
+                        fairyDays.Add(new
+                        {
+                            date.year,
+                            date.season,
+                            date.day
+                        });
+                    }
                 }
             }
-            
             return fairyDays;
         }
-
-        /// <summary>
-        /// 查找第一次出现仙子的日期，仅用于测试
-        /// </summary>
-        /// <param name="gameID">游戏种子</param>
-        /// <param name="useLegacyRandom">是否使用旧随机模式</param>
-        /// <returns>绝对天数,如果搜索范围内没有则返回null</returns>
-        public int? FindFirstFairy(int gameID, bool useLegacyRandom, int maxDays = 1000)
-        {
-            // 持续搜索直到找到第一个仙子或达到最大天数
-            for (int day = 1; day <= maxDays; day++)
-            {
-                // 计算月份(季节): 0=春, 1=夏, 2=秋, 3=冬
-                int month = (day - 1) % 112 / 28;
-                
-                // 仙子只在春夏秋出现,冬天跳过
-                if (month >= 3)
-                {
-                    continue;
-                }
-                
-                // 判断当天是否出现仙子
-                if (HasFairy(gameID, day, useLegacyRandom))
-                {
-                    return day;
-                }
-            }
-            
-            // 搜索范围内没有仙子
-            return null;
-        }
-    }
-
-    public class FairyCondition
-    {
-        public int Year { get; set; }
-        public Season Season { get; set; }
-        public int Day { get; set; }
     }
 }

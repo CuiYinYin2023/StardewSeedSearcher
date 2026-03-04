@@ -152,52 +152,53 @@
 
                 <!-- 仙子功能 -->
                 <div class="checkbox-group">
-                    <input type="checkbox" id="fairyEnabled">
-                    <!-- <input type="checkbox" id="fairyEnabled" checked> -->
+                    <!-- <input type="checkbox" id="fairyEnabled"> -->
+                    <input type="checkbox" id="fairyEnabled" checked>
                     <label for="fairyEnabled">启用仙子筛选</label>
                     <span style="font-size: 14px; color: #a6a6a6">游戏中，仙子事件可能会被其他事件覆盖，或因没有合适地块而不发生。</span>
 
                 </div>
-                <!-- <div class="condition-config" id="fairyConfig"> -->
-                <div class="condition-config" id="fairyConfig" style="display: none;">
+                <div class="condition-config" id="fairyConfig">
+                <!-- <div class="condition-config" id="fairyConfig" style="display: none;"> -->
                     <h4 style="margin-bottom: 15px;">仙子筛选条件</h4>
                     
-                    <div class="fairy-conditions-container" id="fairyConditionsContainer">
-                        <div class="fairy-condition-row" data-index="0">
-                            <label>第</label>
-                            <input type="number" min="1" max="10" value="1" class="fairy-year" onchange="updateFairyCondition(0)">
-                            <label>年</label>
-                            <select class="fairy-season" onchange="updateFairyCondition(0)">
-                                <option value="Spring">春</option>
-                                <option value="Summer">夏</option>
-                                <option value="Fall">秋</option>
-                            </select>
-                            <input type="number" min="1" max="28" value="1" class="fairy-day" onchange="updateFairyCondition(0)">
-                            <label>日</label>
-                            <button type="button" class="btn-remove" onclick="removeFairyCondition(0)">删除</button>
-                        </div>
-                    </div>
-                    
-                    <template id="fairyConditionTemplate">
-                        <div class="fairy-condition-row">
-                            <label>年</label>
-                            <input type="number" min="1" max="10" value="1" class="fairy-year">
-                            <label>季</label>
-                            <select class="fairy-season">
-                                <option value="Spring">春</option>
-                                <option value="Summer">夏</option>
-                                <option value="Fall">秋</option>
-                            </select>
-                            <label>日</label>
-                            <input type="number" min="1" max="28" value="1" class="fairy-day">
-                            <button type="button" class="btn-remove">删除</button>
-                        </div>
-                    </template>
-                    
+                    <div class="fairy-conditions-container" id="fairyConditionsContainer"></div>
+
                     <button type="button" class="btn-add-condition" onclick="addFairyCondition()">添加条件</button>
-                    
                     <div class="error-message" id="fairyConditionError"></div>
                 </div>
+
+                <!-- 仙子条件行 -->
+                <template id="fairyConditionTemplate">
+                    <div class="fairy-condition-row">
+
+                        <span>第</span>
+                        <input type="number" step="1" min="1" max="10" value="1" class="fairy-start-year" style="width: 60px;">
+                        <span>年</span>
+                        <select class="fairy-start-season" style="width: 60px;">
+                            <option>春</option>
+                            <option>夏</option>
+                            <option>秋</option>
+                        </select>
+                        <input type="number" step="1" min="1" max="28" value="1" class="fairy-start-day" style="width: 60px;">
+                        <span>日</span>
+
+                        <span> - 第</span>
+                        <input type="number" step="1" min="1" max="10" value="1" class="fairy-end-year" style="width: 60px;">
+                        <span>年</span>
+                        <select class="fairy-end-season" style="width: 60px;">
+                            <option>春</option>
+                            <option>夏</option>
+                            <option>秋</option>
+                        </select>
+                        <input type="number" step="1" min="1" max="28" value="28" class="fairy-end-day" style="width: 60px;">
+                        <span>日</span>
+
+                        <button type="button" class="btn-remove">删除</button>
+
+                    </div>
+                </template>
+                    
                 <br>
 
                 <!-- 矿井宝箱 -->
@@ -360,17 +361,18 @@
 
                 <!-- 猪车部分 -->
                 <div class="checkbox-group">
-                    <input type="checkbox" id="cartEnabled" checked>
+                    <input type="checkbox" id="cartEnabled">
+                    <!-- <input type="checkbox" id="cartEnabled" checked> -->
                     <label for="cartEnabled">启用猪车预测</label>
                     <span style="font-size: 14px; color: #a6a6a6">不包含家具、稀有种子、家具目录等，只包含基础物品和技能书。默认游戏中不勾选“第一年必出红叶卷心菜”。</span>
 
                 </div>
                 
-                <div class="condition-config" id="cartConfig">
+                <!-- <div class="condition-config" id="cartConfig"> -->
+                <div class="condition-config" id="cartConfig" style="display: none;">
                     <h4 style="margin-bottom: 15px;">猪车筛选条件</h4>
                     
-                    <div class="cart-conditions-container" id="cartConditionsContainer">
-                        </div>
+                    <div class="cart-conditions-container" id="cartConditionsContainer"></div>
                     
                     <button type="button" class="btn-add-condition" onclick="addCartCondition()">添加条件</button>
                     
@@ -383,9 +385,9 @@
                         <!-- 第一行：时间范围 -->
                         <div class="row-time">
                             <span>第</span>
-                            <input type="number" class="cart-start-year" min="1" max="99" value="1" style="width: 45px;">
+                            <input type="number" class="cart-start-year" min="1" max="10" value="1" style="width: 60px;">
                             <span>年</span>
-                            <select class="cart-start-season">
+                            <select class="cart-start-season" style="width: 60px;">
                                 <option>春</option>
                                 <option>夏</option>
                                 <option>秋</option>
@@ -394,9 +396,9 @@
                             <input type="number" class="cart-start-day" min="1" max="28" value="1" style="width: 60px;">
 
                             <span>日 - 第</span>
-                            <input type="number" class="cart-end-year" min="1" max="99" value="1" style="width: 45px;">
+                            <input type="number" class="cart-end-year" min="1" max="10" value="1" style="width: 60px;">
                             <span>年</span>
-                            <select class="cart-end-season">
+                            <select class="cart-end-season" style="width: 60px;">
                                 <option>春</option>
                                 <option>夏</option>
                                 <option>秋</option>
@@ -428,7 +430,7 @@
 
                             <span class="cart-multi-count-wrap">
                                 （至少
-                                <input type="number" class="cart-min-occurrences" min="1" max="99" value="1" disabled style="width: 45px;">
+                                <input type="number" class="cart-min-occurrences" min="1" max="99" value="1" disabled style="width: 60px;">
                                 次）
                             </span>
                         </div>

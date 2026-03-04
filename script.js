@@ -4,8 +4,7 @@ let conditions = [];
 let currentSearchUseLegacy = false;
 let seedDetailsCache = {};
 let nextStartSeed = 0;
-let fairyConditions = [];
-let nextFairyIndex = 1;
+let nextFairyIndex = 0;
 let mineChestConditions = [];
 let nextMineChestIndex = 1;
 let monsterLevelConditions = [];
@@ -67,6 +66,53 @@ const MINE_CHEST_ITEMS = {
     90: ["黑曜石之刃", "淬火阔剑", "蛇形邪剑", "骨剑", "骨化剑"],
     110: ["太空之靴", "水晶鞋", "钢刀", "巨锤"]
 };
+
+// 日期转换
+const DaysPerSeason = 28;
+const SeasonsPerYear = 4;
+const DaysPerYear = DaysPerSeason * SeasonsPerYear;
+const SeasonNames = ["春", "夏", "秋", "冬"];
+const SeasonNameToIndex = { '春': 0, '夏': 1, '秋': 2, '冬': 3 };
+
+/**
+ * 转换为绝对天数（从 第1年春季第1天 = 0 开始）
+ * @param {number} year - 年份，从1开始
+ * @param {number} season - 季节（0=春季，1=夏季，2=秋季，3=冬季）
+ * @param {number} day - 日期（1-28）
+ * @returns {number} 绝对天数
+ */
+function dateToAbsoluteDay(year, season, day) {
+    // year starts from 1
+    const yearOffset = (year - 1) * DaysPerYear;
+    const seasonOffset = season * DaysPerSeason;
+    const dayOffset = day;
+
+    return yearOffset + seasonOffset + dayOffset;
+}
+
+/**
+ * 从绝对天数还原为 (年, 季节, 日)
+ * @param {number} absoluteDay - 绝对天数
+ * @returns {Object} 包含年、季节和日的对象
+ */
+function absoluteDayToDate(absoluteDay) {
+    let dayOfYear = absoluteDay % DaysPerYear;
+    if (dayOfYear === 0) {
+        dayOfYear = DaysPerYear;
+    }
+
+    const year = Math.floor((absoluteDay - dayOfYear) / DaysPerYear) + 1;
+
+    let day = dayOfYear % DaysPerSeason;
+    if (day === 0) {
+        day = DaysPerSeason;
+    }
+
+    const season = Math.floor((dayOfYear - day) / DaysPerSeason);
+
+    return { year, season, day };
+}
+
 
 // 天气
 elements.weatherEnabled.addEventListener('change', (e) => {
@@ -206,67 +252,42 @@ function hideError() {
 function addFairyCondition() {
     const container = document.getElementById('fairyConditionsContainer');
     const template = document.getElementById('fairyConditionTemplate');
-    const index = nextFairyIndex++;
     
     // 克隆模板
     const clone = template.content.cloneNode(true);
     const row = clone.querySelector('.fairy-condition-row');
-    row.setAttribute('data-index', index);
-    
-    // 绑定事件
-    row.querySelector('.fairy-year').onchange = () => updateFairyCondition(index);
-    row.querySelector('.fairy-season').onchange = () => updateFairyCondition(index);
-    row.querySelector('.fairy-day').onchange = () => updateFairyCondition(index);
-    row.querySelector('.btn-remove').onclick = () => removeFairyCondition(index);
+
+    // 删除条件
+    row.querySelector('.btn-remove').onclick = () => {
+        row.remove();
+    };
     
     container.appendChild(clone);
-    updateFairyCondition(index);
-}
-
-function updateFairyCondition(index) {
-    const row = document.querySelector(`.fairy-condition-row[data-index="${index}"]`);
-    if (!row) return;
-    
-    const year = parseInt(row.querySelector('.fairy-year').value) || 1;
-    const season = row.querySelector('.fairy-season').value;
-    const day = parseInt(row.querySelector('.fairy-day').value) || 1;
-    
-    fairyConditions[index] = { year, season, day };
-}
-
-function removeFairyCondition(index) {
-    const row = document.querySelector(`.fairy-condition-row[data-index="${index}"]`);
-    if (row) {
-        row.remove();
-        delete fairyConditions[index];
-    }
 }
 
 function validateFairyCondition(condition) {
-    const { year, day } = condition;
+    const { startYear, startSeason, startDay, endYear, endSeason, endDay } = condition;
     
-    if (year < 1 || year > 10) {
-        return { valid: false, error: '年份必须在 1-10 之间' };
+    // 绝对天数验证逻辑 (1年112天, 1季28天)
+    const startAbs = dateToAbsoluteDay(startYear, startSeason, startDay);
+    const endAbs = dateToAbsoluteDay(endYear, endSeason, endDay);
+
+    if (startAbs > endAbs) {
+        return { valid: false, error: '仙子搜索结束日期不能早于开始日期' };
     }
-    
-    if (day < 1 || day > 28) {
-        return { valid: false, error: '日期必须在 1-28 之间' };
-    }
-    
+
     return { valid: true };
 }
 
-function hasFairyDuplicate(newCondition, excludeIndex) {
-    const validConditions = fairyConditions.filter((c, i) => c && i !== excludeIndex);
-    
-    for (let condition of validConditions) {
-        if (condition.year === newCondition.year && 
-            condition.season === newCondition.season && 
-            condition.day === newCondition.day) {
-            return true;
-        }
-    }
-    return false;
+function isFairyDuplicate(currentCondition, allConditions) {
+    return allConditions.some(c => 
+        c.startYear === currentCondition.startYear && 
+        c.startSeason === currentCondition.startSeason && 
+        c.startDay === currentCondition.startDay &&
+        c.endYear === currentCondition.endYear && 
+        c.endSeason === currentCondition.endSeason && 
+        c.endDay === currentCondition.endDay
+    );
 }
 
 // 添加矿井宝箱条件
@@ -639,7 +660,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // 仙子条件初始化
-    updateFairyCondition(0);
+    addFairyCondition(); // 添加第一个条件行
 
     // 矿井宝箱条件初始化
     const firstMineChestRow = document.querySelector('.minechest-condition-row[data-index="0"]');
@@ -796,6 +817,7 @@ function updateResultsSummary() {
     const shown = Math.min(total, 20);
     elements.resultsSummary.textContent = `共找到 ${total} 个 (显示前 ${shown} 个)`;
 }
+
 elements.form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -803,8 +825,9 @@ elements.form.addEventListener('submit', async (e) => {
     const searchRange = parseInt(document.getElementById('searchRange').value);
     const useLegacy = document.getElementById('useLegacy').checked;
     currentSearchUseLegacy = useLegacy;  // 保存当前搜索模式
-    const weatherEnabled = elements.weatherEnabled.checked;
     const outputLimit = parseInt(document.getElementById('outputLimit').value); // 读取输出数量
+
+    const weatherEnabled = elements.weatherEnabled.checked;
     const mineChestEnabled = elements.mineChestEnabled.checked;
     const desertFestivalEnabled = elements.desertFestivalEnabled.checked;
     const desertFestivalCondition = desertFestivalEnabled ? {
@@ -868,29 +891,40 @@ elements.form.addEventListener('submit', async (e) => {
 
     // 仙子条件验证
     const fairyEnabled = elements.fairyEnabled.checked;
+    let fairyConditionsData = []; 
 
     if (fairyEnabled) {
-        const validFairyConditions = fairyConditions.filter(c => c);
+        const fairyRows = document.querySelectorAll('.fairy-condition-row');
         
-        if (validFairyConditions.length === 0) {
+        if (fairyRows.length === 0) {
             alert('请至少添加一个仙子条件！');
             return;
         }
         
-        for (let i = 0; i < fairyConditions.length; i++) {
-            const condition = fairyConditions[i];
-            if (!condition) continue;
-            
+        for (let row of fairyRows) {
+            const condition = {
+                startYear: parseInt(row.querySelector('.fairy-start-year').value),
+                startSeason: SeasonNameToIndex[row.querySelector('.fairy-start-season').value],
+                startDay: parseInt(row.querySelector('.fairy-start-day').value),
+                endYear: parseInt(row.querySelector('.fairy-end-year').value),
+                endSeason: SeasonNameToIndex[row.querySelector('.fairy-end-season').value],
+                endDay: parseInt(row.querySelector('.fairy-end-day').value)
+            };
+
+            // 1. 基础合法性验证
             const validation = validateFairyCondition(condition);
             if (!validation.valid) {
-                alert(`仙子条件 ${i + 1}: ${validation.error}`);
+                alert(`仙子搜索范围错误: ${validation.error}`);
                 return;
             }
-            
-            if (hasFairyDuplicate(condition, i)) {
-                alert(`仙子条件 ${i + 1}: 与其他条件重复`);
+
+            // 2. 查重验证
+            if (isFairyDuplicate(condition, fairyConditionsData)) {
+                alert(`仙子搜索存在重复范围！`);
                 return;
             }
+        
+            fairyConditionsData.push(condition);
         }
     } 
     
@@ -981,12 +1015,6 @@ elements.form.addEventListener('submit', async (e) => {
             startDay: c.startDay,
             endDay: c.endDay,
             minRainDays: c.minRain
-        })) : [];
-
-        const fairyConditionsData = fairyEnabled ? fairyConditions.filter(c => c).map(c => ({
-            year: c.year,
-            season: c.season,
-            day: c.day
         })) : [];
 
         const mineChestConditionsData = mineChestEnabled ? mineChestConditions.filter(c => c).map(c => ({
@@ -1111,10 +1139,9 @@ function showSeedDetail(seed) {
     
     // 只有启用了仙子功能才显示
     if (enabled.fairy && details.fairy && details.fairy.days) {
-        const seasonMap = { Spring: '春', Summer: '夏', Fall: '秋' };
         const fairyText = details.fairy.days.map(f => {
             const prefix = f.year === 1 ? '' : `${f.year}年`;
-            return `${prefix}${seasonMap[f.season]}${f.day}`;
+            return `${prefix}${SeasonNames[f.season]}${f.day}`;
         }).join('、');
         
         const fairyHtml = `

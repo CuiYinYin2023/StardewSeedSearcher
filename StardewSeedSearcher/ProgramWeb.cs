@@ -18,7 +18,7 @@ namespace StardewSeedSearcher
         private static readonly ConcurrentDictionary<string, WebSocket> ActiveConnections = new();
 
 
-        // 辅助方法
+        // 获得种子简介信息
         private static object CollectAllDetails(int seed, bool useLegacy, List<ISearchFeature> features)
         {
             WeatherDetailResult weatherDetail = null;
@@ -196,9 +196,12 @@ namespace StardewSeedSearcher
                     {
                         var condition = new FairyCondition
                         {
-                            Year = conditionDto.Year,
-                            Season = conditionDto.Season,
-                            Day = conditionDto.Day
+                            StartYear = conditionDto.StartYear,
+                            StartSeason = conditionDto.StartSeason,
+                            StartDay = conditionDto.StartDay,
+                            EndYear = conditionDto.EndYear,
+                            EndSeason = conditionDto.EndSeason,
+                            EndDay = conditionDto.EndDay
                         };
                         fairyPredictor.Conditions.Add(condition);
                     }
@@ -522,14 +525,23 @@ namespace StardewSeedSearcher
 
     public class FairyConditionDto
     {
-        [JsonPropertyName("year")]
-        public int Year { get; set; }
+        [JsonPropertyName("startYear")]
+        public int StartYear { get; set; }
 
-        [JsonPropertyName("season")]
-        public Season Season { get; set; }
+        [JsonPropertyName("startSeason")]
+        public int StartSeason { get; set; }
 
-        [JsonPropertyName("day")]
-        public int Day { get; set; }
+        [JsonPropertyName("startDay")]
+        public int StartDay { get; set; }
+
+        [JsonPropertyName("endYear")]
+        public int EndYear { get; set; }
+
+        [JsonPropertyName("endSeason")]
+        public int EndSeason { get; set; }
+
+        [JsonPropertyName("endDay")]
+        public int EndDay { get; set; }
     }
 
     public class MineChestConditionDto
