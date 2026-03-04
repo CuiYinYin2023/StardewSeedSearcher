@@ -497,8 +497,13 @@ function addCartCondition() {
     // 多次复选框联动：勾选时显示次数输入框
     const multiCheck = row.querySelector('.cart-multi-check');
     const multiWrap = row.querySelector('.cart-multi-count-wrap');
+    const multiInput = row.querySelector('.cart-min-occurrences');
+
+    // 初始状态（未勾选时禁用）
+    multiInput.disabled = !multiCheck.checked;
     multiCheck.addEventListener('change', () => {
-        multiWrap.style.display = multiCheck.checked ? 'inline-flex' : 'none';
+        // 只控制是否可编辑
+        multiInput.disabled = !multiCheck.checked;
         updateCartCondition(index);
     });
 
@@ -1007,8 +1012,6 @@ elements.form.addEventListener('submit', async (e) => {
             requireQty5: c.requireQty5,
             minOccurrences: c.minOccurrences || 1
         })) : [];
-        
-        console.log('怪物层条件:', monsterLevelConditionsData);
 
         const response = await fetch('http://localhost:5000/api/search', {
             method: 'POST',

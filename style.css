@@ -811,14 +811,40 @@
 
         .cart-condition-row {
             display: flex;
-            gap: 10px;
-            align-items: center;
+            flex-direction: column;
+            gap: 8px;
+            padding: 10px;
+            border: 1px solid #ccc;
             margin-bottom: 10px;
-            padding: 12px;
-            background-color: #f9f9f9;
-            border-radius: 6px;
-            border: 1px solid #e0e0e0;
+        }
+
+        /* 每一行横向排布 */
+        .row-time,
+        .row-item,
+        .row-multi {
+            display: flex;
+            align-items: center;
+            gap: 6px;
             flex-wrap: wrap;
+        }
+
+        /* 删除按钮单独一行 */
+        .row-delete {
+            display: flex;
+            justify-content: flex-start;
+        }
+
+        /* 勾选多次前 次数为灰色 */
+        .cart-min-occurrences:disabled {
+            background-color: #eee;
+            color: #999;
+            cursor: not-allowed;
+        }
+        
+        /* 默认隐藏次数输入 */
+        .cart-multi-count-wrap {
+            align-items: center;
+            gap: 4px;
         }
 
         .cart-condition-row select,

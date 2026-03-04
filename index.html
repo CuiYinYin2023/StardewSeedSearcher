@@ -92,10 +92,10 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label for="startSeed">起始种子</label>
-                        <input type="number" id="startSeed" value="0" required>
+                        <input type="number" id="startSeed" value="1" required>
                     </div>
                     <div class="form-group">
-                        <label for="searchRange">搜索范围</label>
+                        <label for="searchRange">搜索范围（建议第一次不要太高）</label>
                         <input type="number" id="searchRange" value="100000" min="1" required>
                     </div>                    
                     <div class="checkbox-group">
@@ -115,6 +115,7 @@
                     <!-- <input type="checkbox" id="weatherEnabled" checked> -->
                     <input type="checkbox" id="weatherEnabled">
                     <label for="weatherEnabled">启用天气筛选</label>
+                    <span style="font-size: 14px; color: #a6a6a6">目前只支持第一年，雨天包含绿雨和雷雨。</span>
                 </div>
                 <!-- <div class="condition-config" id="weatherConfig"> -->
                 <div class="condition-config" id="weatherConfig" style="display: none;">
@@ -154,6 +155,8 @@
                     <input type="checkbox" id="fairyEnabled">
                     <!-- <input type="checkbox" id="fairyEnabled" checked> -->
                     <label for="fairyEnabled">启用仙子筛选</label>
+                    <span style="font-size: 14px; color: #a6a6a6">游戏中，仙子事件可能会被其他事件覆盖，或因没有合适地块而不发生。</span>
+
                 </div>
                 <!-- <div class="condition-config" id="fairyConfig"> -->
                 <div class="condition-config" id="fairyConfig" style="display: none;">
@@ -202,6 +205,7 @@
                     <input type="checkbox" id="mineChestEnabled">
                     <!-- <input type="checkbox" id="mineChestEnabled" checked> -->
                     <label for="mineChestEnabled">启用矿井混合宝箱筛选</label>
+                    <span style="font-size: 14px; color: #a6a6a6">必须在创建存档时勾选混合矿井，否则为默认物品。</span>
                 </div>
                 <!-- <div class="condition-config" id="mineChestConfig"> -->
                 <div class="condition-config" id="mineChestConfig" style="display: none;">
@@ -256,6 +260,7 @@
                     <input type="checkbox" id="monsterLevelEnabled">
                     <!-- <input type="checkbox" id="monsterLevelEnabled" checked> -->
                     <label for="monsterLevelEnabled">启用怪物层筛选</label>
+                    <span style="font-size: 14px; color: #a6a6a6">该日期、层数范围内不出现怪物层，方便冲层。</span>
                 </div>
                 <!-- <div class="condition-config" id="monsterLevelConfig"> -->
                 <div class="condition-config" id="monsterLevelConfig" style="display: none;">
@@ -326,23 +331,26 @@
                     <!-- <input type="checkbox" id="desertFestivalEnabled" checked> -->
                     <input type="checkbox" id="desertFestivalEnabled">
                     <label for="desertFestivalEnabled">启用沙漠节筛选</label>
+                    <span style="font-size: 14px; color: #a6a6a6">第一年沙漠节（春15-17）摆摊商人</span>
                 </div>
                 <!-- <div class="condition-config" id="desertFestivalConfig"> -->
-                <div class="condition-config" id="desertFestivalConfig" style="display: none;">
-                    <h4 style="margin-bottom: 15px;">沙漠节商人筛选</h4>
-                    
+                <div class="condition-config" id="desertFestivalConfig" style="display: none;">   
                     <div class="checkbox-group" style="margin-left: 20px;">
                         <input type="checkbox" id="requireJas">
-                        <label for="requireJas">贾斯</label>
+                        <label for="requireJas">贾斯（出售魔法糖冰棍）</label>
                     </div>
                     
                     <div class="checkbox-group" style="margin-left: 20px;">
                         <input type="checkbox" id="requireLeah">
-                        <label for="requireLeah">莉亚</label>
+                        <label for="requireLeah">莉亚（出售100硬木用于开姜岛）</label>
                     </div>
                     
-                    <div class="info-text" style="margin-top: 10px; color: #666; font-size: 0.9em;">
-                        勾选后将筛选出第一年沙漠节（春15-17）该村民出现的种子
+                    <div class="info-text" style="margin-top: 10px; margin-left: 20px; color: #666; font-size: 0.9em;">
+                        如同时勾选，则两人必须都出现。
+                        <br>
+                        注意，沙漠节商人会根据玩家晚上睡觉时间而改变，因为存档会扫描入睡时村民的位置。
+                        <br>
+                        如果不是在凌晨2点入睡，则商人列表有概率改变。
                     </div>
                 </div>
                 <br>
@@ -354,7 +362,10 @@
                 <div class="checkbox-group">
                     <input type="checkbox" id="cartEnabled" checked>
                     <label for="cartEnabled">启用猪车预测</label>
+                    <span style="font-size: 14px; color: #a6a6a6">不包含家具、稀有种子、家具目录等，只包含基础物品和技能书。默认游戏中不勾选“第一年必出红叶卷心菜”。</span>
+
                 </div>
+                
                 <div class="condition-config" id="cartConfig">
                     <h4 style="margin-bottom: 15px;">猪车筛选条件</h4>
                     
@@ -368,57 +379,72 @@
 
                 <template id="cartConditionTemplate">
                     <div class="cart-condition-row">
-                        <span>第</span>
-                        <input type="number" class="cart-start-year" min="1" max="99" value="1" style="width: 45px;">
-                        <span>年</span>
-                        <select class="cart-start-season">
-                            <option>春</option>
-                            <option>夏</option>
-                            <option>秋</option>
-                            <option>冬</option>
-                        </select>
-                        <input type="number" class="cart-start-day" min="1" max="28" value="1" style="width: 60px;">
-                        
-                        <span>日 - 第</span>
-                        <input type="number" class="cart-end-year" min="1" max="99" value="1" style="width: 45px;">
-                        <span>年</span>
-                        <select class="cart-end-season">
-                            <option>春</option>
-                            <option>夏</option>
-                            <option>秋</option>
-                            <option>冬</option>
-                        </select>
-                        <input type="number" class="cart-end-day" min="1" max="28" value="28" style="width: 60px;">
-                        <span>日</span>
 
-                        <div class="item-search-container" style="display: inline-flex; gap: 5px;">
-                            <input type="text" class="cart-item-filter-input" placeholder="搜索物品..." style="width: 80px;">
-                            <select class="cart-item-select" style="width: 120px;">
-                                <option value="">--请选择--</option>
+                        <!-- 第一行：时间范围 -->
+                        <div class="row-time">
+                            <span>第</span>
+                            <input type="number" class="cart-start-year" min="1" max="99" value="1" style="width: 45px;">
+                            <span>年</span>
+                            <select class="cart-start-season">
+                                <option>春</option>
+                                <option>夏</option>
+                                <option>秋</option>
+                                <option>冬</option>
                             </select>
-                        </div>
-                        
-                        <label>
-                            <input type="checkbox" class="cart-require-qty5"> 数量5
-                        </label>
-                        
-                        <label>
-                            <input type="checkbox" class="cart-multi-check"> 多次
-                        </label>
-                        <span class="cart-multi-count-wrap" style="display: none; align-items: center; gap: 4px;">
-                            至少
-                            <input type="number" class="cart-min-occurrences" min="2" max="99" value="2" style="width: 45px;">
-                            次
-                        </span>
+                            <input type="number" class="cart-start-day" min="1" max="28" value="1" style="width: 60px;">
 
-                        <button type="button" class="btn-remove">删除</button>
+                            <span>日 - 第</span>
+                            <input type="number" class="cart-end-year" min="1" max="99" value="1" style="width: 45px;">
+                            <span>年</span>
+                            <select class="cart-end-season">
+                                <option>春</option>
+                                <option>夏</option>
+                                <option>秋</option>
+                                <option>冬</option>
+                            </select>
+                            <input type="number" class="cart-end-day" min="1" max="28" value="28" style="width: 60px;">
+                            <span>日</span>
+                        </div>
+
+                        <!-- 第二行：物品选择 + 数量5 -->
+                        <div class="row-item">
+                            <div class="item-search-container">
+                                <input type="text" class="cart-item-filter-input" placeholder="搜索物品..." style="width: 80px;">
+                                <select class="cart-item-select" style="width: 120px;">
+                                    <option value="">--请选择--</option>
+                                </select>
+                                <label>
+                                    <input type="checkbox" class="cart-require-qty5"> 数量为5
+                                </label>
+                                <span style="font-size: 14px; color: #a6a6a6">*猪车基础物品出售个数必为1或5，技能书则为无限</span>
+                            </div>
+                        </div>
+
+                        <!-- 第三行：多次 -->
+                        <div class="row-multi">
+                            <label>
+                                <input type="checkbox" class="cart-multi-check"> 多次出售
+                            </label>
+
+                            <span class="cart-multi-count-wrap">
+                                （至少
+                                <input type="number" class="cart-min-occurrences" min="1" max="99" value="1" disabled style="width: 45px;">
+                                次）
+                            </span>
+                        </div>
+
+                        <!-- 第四行：删除 -->
+                        <div class="row-delete">
+                            <button type="button" class="btn-remove">删除</button>
+                        </div>
+
                     </div>
                 </template>
 
                 <hr class="form-separator">
                 <div class="form-group form-group--inline">
                     <label for="outputLimit">最大种子数量 (达到数量后将提前停止搜索，不建议太高)</label>
-                    <input type="number" id="outputLimit" value="20" min="1" required>
+                    <input type="number" id="outputLimit" value="5" min="1" required>
                 </div>
 
                 <button type="submit" class="btn-search" id="searchBtn">🔍 开始搜索</button>
