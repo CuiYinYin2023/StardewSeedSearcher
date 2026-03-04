@@ -4,6 +4,7 @@ using System.Net.WebSockets;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading.Channels;
 using StardewSeedSearcher.Features;
 using StardewSeedSearcher.Data;
 
@@ -167,203 +168,138 @@ namespace StardewSeedSearcher
                 var stopwatch = Stopwatch.StartNew();
                 int totalSeeds = request.EndSeed - request.StartSeed + 1;
                 int checkedCount = 0;
-                int lastProgressUpdate = 0;
 
-                // 配置天气功能
-                var features = new List<ISearchFeature>();
-                if (request.WeatherConditions != null && request.WeatherConditions.Count > 0)
+                // 配置所有搜种功能
+                var features = InitializeFeatures(request);
+
+                /* 各 Worker 线程为 Channel 的生产者，负责暴力搜索并将结果传递给 Channel，Channel 消费者则负责广播结果（发送给前端更新进度）和提前终止搜索
+                 * [Worker 线程 1] ──┐
+                 * [Worker 线程 2] ──┤──► Channel<消息> ──► [单一消费者] ──► BroadcastMessage (async)
+                 * [Worker 线程 N] ──┘
+                 */
+                var channel = Channel.CreateUnbounded<SearchMessage>(new UnboundedChannelOptions { SingleReader = true });
+
+                // 用于通知停止搜索
+                var cts = new CancellationTokenSource();
+                // 消费者任务：从 Channel 读取数据并广播
+                var consumerTask = Task.Run(async () =>
                 {
-                    var predictor = new WeatherPredictor { IsEnabled = true };
-                    
-                    foreach (var conditionDto in request.WeatherConditions)
+                    try
                     {
-                        var condition = new WeatherCondition
+                        while (await channel.Reader.WaitToReadAsync())
                         {
-                            Season = conditionDto.Season,
-                            StartDay = conditionDto.StartDay,
-                            EndDay = conditionDto.EndDay,
-                            MinRainDays = conditionDto.MinRainDays
-                        };
-                        predictor.Conditions.Add(condition);
+                            while (channel.Reader.TryRead(out var msg))
+                            {
+                                await BroadcastMessage(msg.Data);
+
+                                // 如果达到搜索上限，通知生产者停止
+                                if (msg.Type == "found" && results.Count >= request.OutputLimit)
+                                {
+                                    cts.Cancel();
+                                }
+                            }
+                        }
                     }
-                    
-                    features.Add(predictor);
-                }
-                
-                // 配置仙子预测
-                if (request.FairyConditions != null && request.FairyConditions.Count > 0)
-                {
-                    var fairyPredictor = new FairyPredictor { IsEnabled = true };
-                    
-                    foreach (var conditionDto in request.FairyConditions)
-                    {
-                        var condition = new FairyCondition
-                        {
-                            StartYear = conditionDto.StartYear,
-                            StartSeason = conditionDto.StartSeason,
-                            StartDay = conditionDto.StartDay,
-                            EndYear = conditionDto.EndYear,
-                            EndSeason = conditionDto.EndSeason,
-                            EndDay = conditionDto.EndDay
-                        };
-                        fairyPredictor.Conditions.Add(condition);
-                    }
-                    
-                    features.Add(fairyPredictor);
-                }
+                    catch (Exception ex) { Console.WriteLine($"Consumer Error: {ex.Message}"); }
+                });
 
-                // 配置矿井宝箱功能
-                if (request.MineChestConditions != null && request.MineChestConditions.Count > 0)
-                {
-                    var mineChestPredictor = new MineChestPredictor { IsEnabled = true };
-                    
-                    foreach (var conditionDto in request.MineChestConditions)
-                    {
-                        var condition = new MineChestPredictor.MineChestCondition
-                        {
-                            Floor = conditionDto.Floor,
-                            ItemName = conditionDto.ItemName
-                        };
-                        mineChestPredictor.Conditions.Add(condition);
-                    }
-                    
-                    features.Add(mineChestPredictor);
-                }
-
-                // 配置怪物层预测
-                if (request.MonsterLevelConditions != null && request.MonsterLevelConditions.Count > 0)
-                {
-                    var monsterLevelPredictor = new MonsterLevelPredictor { IsEnabled = true };
-                    
-                    foreach (var conditionDto in request.MonsterLevelConditions)
-                    {
-                        var condition = new MonsterLevelPredictor.MonsterLevelCondition
-                        {
-                            StartDay = conditionDto.StartDay,
-                            EndDay = conditionDto.EndDay,
-                            StartLevel = conditionDto.StartLevel,
-                            EndLevel = conditionDto.EndLevel
-                        };
-                        monsterLevelPredictor.Conditions.Add(condition);
-                    }
-                    
-                    features.Add(monsterLevelPredictor);
-                }
-
-                // 配置沙漠节预测
-                if (request.DesertFestivalCondition != null && 
-                    (request.DesertFestivalCondition.RequireJas || request.DesertFestivalCondition.RequireLeah))
-                {
-                    var desertFestivalPredictor = new DesertFestivalPredictor 
-                    { 
-                        IsEnabled = true,
-                        RequireJas = request.DesertFestivalCondition.RequireJas,
-                        RequireLeah = request.DesertFestivalCondition.RequireLeah
-                    };
-                    
-                    features.Add(desertFestivalPredictor);
-                }
-
-                // 配置猪车预测
-                if (request.CartConditions != null && request.CartConditions.Count > 0)
-                {
-                    var cartPredictor = new TravelingCartPredictor { IsEnabled = true };
-
-                    foreach (var conditionDto in request.CartConditions)
-                    {
-                        var condition = new CartCondition
-                        {
-                            StartYear = conditionDto.StartYear,
-                            StartSeason = conditionDto.StartSeason,
-                            StartDay = conditionDto.StartDay,
-                            EndYear = conditionDto.EndYear,
-                            EndSeason = conditionDto.EndSeason,
-                            EndDay = conditionDto.EndDay,
-                            ItemName = conditionDto.ItemName,
-                            RequireQty5 = conditionDto.RequireQty5,
-                            MinOccurrences = conditionDto.MinOccurrences < 1 ? 1 : conditionDto.MinOccurrences
-                        };
-                        cartPredictor.Conditions.Add(condition);
-                    }
-
-                    features.Add(cartPredictor);
-                }
 
                 // 发送开始消息
                 await BroadcastMessage(new { type = "start", total = totalSeeds });
 
-                // 在后台线程执行搜索
-                await Task.Run(async () =>
+                // 多线程暴力搜索 （同时是 Channel 的生产者）
+                await Task.Run(() =>
                 {
-                    // 动态成本计算
                     var sortedFeatures = features
-                        .Where(f => f.IsEnabled) // 只看启用功能
+                        .Where(f => f.IsEnabled)
                         .OrderBy(f => f.EstimateCost(request.UseLegacyRandom))
                         .ToList();
 
-                    for (int seed = request.StartSeed; seed <= request.EndSeed; seed++)
+                    // 使用 Partitioner 减少线程调度开销
+                    var rangePartitioner = Partitioner.Create(request.StartSeed, request.EndSeed + 1);
+
+                    // 预留一个核心给 Channel 消费者以防止进度不能及时更新，单核时则不能避免
+                    int degreeOfParallelism = Math.Max(1, Environment.ProcessorCount - 1);
+                    var parallelOptions = new ParallelOptions
                     {
-                        checkedCount++;
+                        CancellationToken = cts.Token,
+                        MaxDegreeOfParallelism = degreeOfParallelism
+                    };
 
-                        // 检查是否符合所有启用的功能条件
-                        bool allMatch = true;
-                        foreach (var feature in sortedFeatures)  // 使用排序后的列表
+                    try
+                    {
+                        Parallel.ForEach(rangePartitioner, parallelOptions, (range, state) =>
                         {
-                            if (!feature.Check(seed, request.UseLegacyRandom))
+                            for (int seed = range.Item1; seed < range.Item2; seed++)
                             {
-                                allMatch = false;
-                                break;
-                            }
-                        }
+                                // 提前终止
+                                if (cts.Token.IsCancellationRequested) break;
 
-                        if (allMatch)
-                        {
-                            results.Add(seed);
-                            
-                            // 收集所有功能的详情
-                            var allDetails = CollectAllDetails(seed, request.UseLegacyRandom, features);
-                            
-                            await BroadcastMessage(new
-                            {
-                                type = "found",
-                                seed = seed,
-                                details = allDetails,
-                                enabledFeatures = new
+                                // 检查是否符合所有启用的功能条件
+                                bool allMatch = true;
+                                foreach (var feature in sortedFeatures)  // 使用排序后的列表
                                 {
-                                    weather = request.WeatherConditions != null && request.WeatherConditions.Count > 0,
-                                    fairy = request.FairyConditions != null && request.FairyConditions.Count > 0,
-                                    mineChest = request.MineChestConditions != null && request.MineChestConditions.Count > 0,
-                                    monsterLevel = request.MonsterLevelConditions != null && request.MonsterLevelConditions.Count > 0,
-                                    desertFestival = request.DesertFestivalCondition != null && 
-                                                    (request.DesertFestivalCondition.RequireJas || request.DesertFestivalCondition.RequireLeah),
-                                    cart = request.CartConditions != null && request.CartConditions.Count > 0
+                                    if (!feature.Check(seed, request.UseLegacyRandom))
+                                    {
+                                        allMatch = false;
+                                        break;
+                                    }
                                 }
-                            });
-                            
-                            if (results.Count >= request.OutputLimit) break;
-                        }
-                        
-                        // 每 100 个种子更新一次进度（避免过于频繁）
-                        if (checkedCount - lastProgressUpdate >= 100)
-                        {
-                            lastProgressUpdate = checkedCount;
-                            double progress = (double)checkedCount / totalSeeds * 100;
-                            double speed = checkedCount / stopwatch.Elapsed.TotalSeconds;
 
-                            await BroadcastMessage(new
-                            {
-                                type = "progress",
-                                checkedCount = checkedCount,
-                                total = totalSeeds,
-                                progress = Math.Round(progress, 2),
-                                speed = Math.Round(speed, 0),
-                                elapsed = Math.Round(stopwatch.Elapsed.TotalSeconds, 1)
-                            });
-                        }
+                                int localChecked = Interlocked.Increment(ref checkedCount);
+
+                                if (allMatch)
+                                {
+                                    lock (results) // 保证 List 线程安全
+                                    {
+                                        if (results.Count < request.OutputLimit)
+                                        {
+                                            results.Add(seed);
+                                            var details = CollectAllDetails(seed, request.UseLegacyRandom, features);
+                                            channel.Writer.TryWrite(new SearchMessage("found", new
+                                            {
+                                                type = "found",
+                                                seed = seed,
+                                                details = details,
+                                                enabledFeatures = GetEnabledFeatures(request)
+                                            }));
+                                        }
+                                        else { state.Stop(); break; }
+                                    }
+                                }
+
+                                // 每 500 个种子更新一次进度（避免过于频繁）
+                                if (localChecked % 1000 == 0 || localChecked == totalSeeds)
+                                {
+                                    double progress = (double)localChecked / totalSeeds * 100;
+                                    double speed = localChecked / stopwatch.Elapsed.TotalSeconds;
+
+                                    channel.Writer.TryWrite(new SearchMessage("progress", new
+                                    {
+                                        type = "progress",
+                                        checkedCount = localChecked,
+                                        total = totalSeeds,
+                                        progress = Math.Round(progress, 2),
+                                        speed = Math.Round(speed, 0),
+                                        elapsed = Math.Round(stopwatch.Elapsed.TotalSeconds, 1)
+                                    }));
+                                }
+                            }
+                        });
+                    }
+                    catch (OperationCanceledException) 
+                    {
+                        // 搜索完成，正常退出
+                    }
+                    finally
+                    {
+                        channel.Writer.Complete(); // 标记 Channel 完成
                     }
                 });
 
                 stopwatch.Stop();
+                await consumerTask; // 等待所有广播发送完毕
+                
 
                 // 发送完成消息
                 // 发送最后一次精确的进度更新。
@@ -470,6 +406,152 @@ namespace StardewSeedSearcher
 
             await Task.WhenAll(tasks);
         }
+
+        /// <summary>
+        /// 配置各搜种功能
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        private static List<ISearchFeature> InitializeFeatures(SearchRequest request)
+        {
+            var features = new List<ISearchFeature>();
+            // 配置天气功能
+            if (request.WeatherConditions != null && request.WeatherConditions.Count > 0)
+            {
+                var predictor = new WeatherPredictor { IsEnabled = true };
+
+                foreach (var conditionDto in request.WeatherConditions)
+                {
+                    var condition = new WeatherCondition
+                    {
+                        Season = conditionDto.Season,
+                        StartDay = conditionDto.StartDay,
+                        EndDay = conditionDto.EndDay,
+                        MinRainDays = conditionDto.MinRainDays
+                    };
+                    predictor.Conditions.Add(condition);
+                }
+
+                features.Add(predictor);
+            }
+
+            // 配置仙子预测
+            if (request.FairyConditions != null && request.FairyConditions.Count > 0)
+            {
+                var fairyPredictor = new FairyPredictor { IsEnabled = true };
+
+                foreach (var conditionDto in request.FairyConditions)
+                {
+                    var condition = new FairyCondition
+                    {
+                        StartYear = conditionDto.StartYear,
+                        StartSeason = conditionDto.StartSeason,
+                        StartDay = conditionDto.StartDay,
+                        EndYear = conditionDto.EndYear,
+                        EndSeason = conditionDto.EndSeason,
+                        EndDay = conditionDto.EndDay
+                    };
+                    fairyPredictor.Conditions.Add(condition);
+                }
+
+                features.Add(fairyPredictor);
+            }
+
+            // 配置矿井宝箱功能
+            if (request.MineChestConditions != null && request.MineChestConditions.Count > 0)
+            {
+                var mineChestPredictor = new MineChestPredictor { IsEnabled = true };
+
+                foreach (var conditionDto in request.MineChestConditions)
+                {
+                    var condition = new MineChestPredictor.MineChestCondition
+                    {
+                        Floor = conditionDto.Floor,
+                        ItemName = conditionDto.ItemName
+                    };
+                    mineChestPredictor.Conditions.Add(condition);
+                }
+
+                features.Add(mineChestPredictor);
+            }
+
+            // 配置怪物层预测
+            if (request.MonsterLevelConditions != null && request.MonsterLevelConditions.Count > 0)
+            {
+                var monsterLevelPredictor = new MonsterLevelPredictor { IsEnabled = true };
+
+                foreach (var conditionDto in request.MonsterLevelConditions)
+                {
+                    var condition = new MonsterLevelPredictor.MonsterLevelCondition
+                    {
+                        StartDay = conditionDto.StartDay,
+                        EndDay = conditionDto.EndDay,
+                        StartLevel = conditionDto.StartLevel,
+                        EndLevel = conditionDto.EndLevel
+                    };
+                    monsterLevelPredictor.Conditions.Add(condition);
+                }
+
+                features.Add(monsterLevelPredictor);
+            }
+
+            // 配置沙漠节预测
+            if (request.DesertFestivalCondition != null &&
+                (request.DesertFestivalCondition.RequireJas || request.DesertFestivalCondition.RequireLeah))
+            {
+                var desertFestivalPredictor = new DesertFestivalPredictor
+                {
+                    IsEnabled = true,
+                    RequireJas = request.DesertFestivalCondition.RequireJas,
+                    RequireLeah = request.DesertFestivalCondition.RequireLeah
+                };
+
+                features.Add(desertFestivalPredictor);
+            }
+
+            // 配置猪车预测
+            if (request.CartConditions != null && request.CartConditions.Count > 0)
+            {
+                var cartPredictor = new TravelingCartPredictor { IsEnabled = true };
+
+                foreach (var conditionDto in request.CartConditions)
+                {
+                    var condition = new CartCondition
+                    {
+                        StartYear = conditionDto.StartYear,
+                        StartSeason = conditionDto.StartSeason,
+                        StartDay = conditionDto.StartDay,
+                        EndYear = conditionDto.EndYear,
+                        EndSeason = conditionDto.EndSeason,
+                        EndDay = conditionDto.EndDay,
+                        ItemName = conditionDto.ItemName,
+                        RequireQty5 = conditionDto.RequireQty5,
+                        MinOccurrences = conditionDto.MinOccurrences < 1 ? 1 : conditionDto.MinOccurrences
+                    };
+                    cartPredictor.Conditions.Add(condition);
+                }
+
+                features.Add(cartPredictor);
+            }
+
+            return features;
+        }
+
+        /// <summary>
+        /// 获取各功能的启用情况
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        private static object GetEnabledFeatures(SearchRequest request) => new
+        {
+            weather = request.WeatherConditions?.Count > 0,
+            fairy = request.FairyConditions?.Count > 0,
+            mineChest = request.MineChestConditions?.Count > 0,
+            monsterLevel = request.MonsterLevelConditions?.Count > 0,
+            desertFestival = request.DesertFestivalCondition != null && (request.DesertFestivalCondition.RequireJas || request.DesertFestivalCondition.RequireLeah),
+            cart = request.CartConditions?.Count > 0
+        };
+
     }
 
     /// <summary>
@@ -610,4 +692,6 @@ namespace StardewSeedSearcher
         [JsonPropertyName("minOccurrences")]
         public int MinOccurrences { get; set; } = 1;
     }
+
+    record SearchMessage(string Type, object Data);
 }
