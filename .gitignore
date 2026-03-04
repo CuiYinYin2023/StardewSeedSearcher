@@ -8,3 +8,5 @@ start.bat
 StardewSeedSearcher.exe
 temp.py
 StardewSeedSearcher.sln
+StardewSeedSearcher/Tests/
+StardewSeedSearcher/TestRunner.cs
