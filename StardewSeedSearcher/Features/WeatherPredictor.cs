@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using StardewSeedSearcher.Core;
 
 namespace StardewSeedSearcher.Features
@@ -104,46 +101,43 @@ namespace StardewSeedSearcher.Features
             {
                 return false; // 季节第一天强制晴天
             }
-            // 春季 (season 0)
-            if (season == 0)
+
+            switch (season)
             {
-                if (dayOfMonth == 2 || dayOfMonth == 4 || dayOfMonth == 5)
-                    return false; // 晴天
-                if (dayOfMonth == 3)
-                    return true; // 雨天
-                if (dayOfMonth == 13 || dayOfMonth == 24)
-                    return false; // 节日固定晴天
-                return IsRainyDaySpringFall(gameID, absoluteDay, useLegacyRandom);
-            }
-            
-            // 夏季 (season 1)
-            else if (season == 1)
-            {
-                if (dayOfMonth == greenRainDay)  // 绿雨直接用传入的参数
-                    return true;
-                if (dayOfMonth == 11 || dayOfMonth == 28)
-                    return false; // 节日固定晴天
-                if (dayOfMonth % 13 == 0) // 第13、26天
-                    return true; // 雷暴（算雨天）
-                
-                // 普通雨天：概率随日期递增
-                int rainSeed = HashHelper.GetRandomSeed(absoluteDay - 1, gameID / 2, HashHelper.GetHashFromString("summer_rain_chance"), 0, 0, useLegacyRandom);
-                Random rainRng = new Random(rainSeed);
-                double rainChance = 0.12 + 0.003 * (dayOfMonth - 1);
-                return rainRng.NextDouble() < rainChance;
-            }
-            
-            // 秋季 (season 2)
-            else // 目前只支持第一年春夏秋
-            {
-                if (dayOfMonth == 16 || dayOfMonth == 27)
-                    return false; // 节日固定晴天
-                return IsRainyDaySpringFall(gameID, absoluteDay, useLegacyRandom);
+                case 0: // 春季
+                    return dayOfMonth switch
+                    {
+                        2 => false, // 晴天
+                        3 => true, // 雨天
+                        4 => false, // 晴天
+                        5 => false, // 晴天
+                        13 => false, // 节日固定晴天
+                        24 => false, // 节日固定晴天
+                        _ => IsRainyDaySpringFall(gameID, absoluteDay, useLegacyRandom) // 预测
+                    };
+                case 1: // 夏季
+                    return dayOfMonth == greenRainDay || dayOfMonth switch
+                    {
+                        11 => false, // 节日固定晴天
+                        13 => true, // 雷暴
+                        28 => false, // 节日固定晴天
+                        26 => true, // 雷暴
+                        _ => IsRainyDaySummer(gameID, absoluteDay, useLegacyRandom, dayOfMonth) // 预测
+                    };
+                case 2: // 秋季
+                    return dayOfMonth switch
+                    {
+                        16 => false, // 节日固定晴天
+                        27 => false, // 节日固定晴天
+                        _ => IsRainyDaySpringFall(gameID, absoluteDay, useLegacyRandom) // 预测
+                    };
+                default: // 冬季
+                    return false;
             }
         }
 
         /// <summary>
-        // 计算绿雨日期
+        /// 计算绿雨日期
         /// </summary>
         private int GetGreenRainDay(int gameID, bool useLegacyRandom)
         {
@@ -163,6 +157,20 @@ namespace StardewSeedSearcher.Features
             Random rng = new Random(seed);
             // 春季和秋季的普通日期：18.3% 概率
             return rng.NextDouble() < 0.183;
+        }
+
+        /// <summary>
+        /// 按概率计算夏季雨天
+        /// </summary>
+        private bool IsRainyDaySummer(int gameID, int absoluteDay, bool useLegacyRandom, int dayOfMonth)
+        {
+            int rainSeed = HashHelper.GetRandomSeed(
+                absoluteDay - 1, 
+                gameID / 2, 
+                HashHelper.GetHashFromString("summer_rain_chance"), 0, 0, useLegacyRandom);
+            Random rainRng = new Random(rainSeed);
+            double rainChance = 0.12 + 0.003 * (dayOfMonth - 1);
+            return rainRng.NextDouble() < rainChance;
         }
 
         /// <summary>
@@ -192,6 +200,8 @@ namespace StardewSeedSearcher.Features
             return string.Join("; ", Conditions.Select(c => c.ToString()));
         }
 
+        /*  Unused Part
+
         /// <summary>
         /// 预测第一年春夏秋所有天气（1-84天），仅用于测试
         /// </summary>
@@ -205,18 +215,18 @@ namespace StardewSeedSearcher.Features
             Random greenRainRng = new Random(greenRainSeed);
             int[] greenRainDays = { 5, 6, 7, 14, 15, 16, 18, 23 };
             int greenRainDay = greenRainDays[greenRainRng.Next(greenRainDays.Length)];
-
+        
             for (int absoluteDay = 1; absoluteDay <= 84; absoluteDay++)
             {
                 int season = (absoluteDay - 1) / 28;       // 0=春, 1=夏, 2=秋
                 int dayOfMonth = ((absoluteDay - 1) % 28) + 1;
-
+        
                 bool isRain = IsRainyDay(season, dayOfMonth, absoluteDay, gameID, useLegacyRandom, greenRainDay);
                 weather[absoluteDay] = isRain;
             }
-
+        
             return weather;
-        }
+        }*/
         
         /// <summary>
         /// 预测天气并返回详细信息（用于前端展示）
@@ -226,8 +236,8 @@ namespace StardewSeedSearcher.Features
             var weather = new Dictionary<int, bool>();
             
             // 计算绿雨日期
-            int year = 1;
-            int greenRainSeed = HashHelper.GetRandomSeed(year * 777, gameID, 0, 0, 0, useLegacyRandom);
+            // int year = 1; // 这里很奇怪，如果是只支持第一年的话，下面一行直接写 777 就好了不用 *year
+            int greenRainSeed = HashHelper.GetRandomSeed(777, gameID, 0, 0, 0, useLegacyRandom);
             Random greenRainRng = new Random(greenRainSeed);
             int[] greenRainDays = { 5, 6, 7, 14, 15, 16, 18, 23 };
             int greenRainDay = greenRainDays[greenRainRng.Next(greenRainDays.Length)];
