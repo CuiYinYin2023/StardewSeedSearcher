@@ -402,6 +402,15 @@
                             <input type="checkbox" class="cart-require-qty5"> 数量5
                         </label>
                         
+                        <label>
+                            <input type="checkbox" class="cart-multi-check"> 多次
+                        </label>
+                        <span class="cart-multi-count-wrap" style="display: none; align-items: center; gap: 4px;">
+                            至少
+                            <input type="number" class="cart-min-occurrences" min="2" max="99" value="2" style="width: 45px;">
+                            次
+                        </span>
+
                         <button type="button" class="btn-remove">删除</button>
                     </div>
                 </template>

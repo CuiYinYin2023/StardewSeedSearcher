@@ -494,6 +494,14 @@ function addCartCondition() {
         input.addEventListener('input', () => updateCartCondition(index));
     });
 
+    // 多次复选框联动：勾选时显示次数输入框
+    const multiCheck = row.querySelector('.cart-multi-check');
+    const multiWrap = row.querySelector('.cart-multi-count-wrap');
+    multiCheck.addEventListener('change', () => {
+        multiWrap.style.display = multiCheck.checked ? 'inline-flex' : 'none';
+        updateCartCondition(index);
+    });
+
     // 移除按钮
     row.querySelector('.btn-remove').onclick = () => removeCartCondition(index);
     
@@ -514,16 +522,22 @@ function updateCartCondition(index) {
     const endDay = parseInt(row.querySelector('.cart-end-day').value);
     const itemName = row.querySelector('.cart-item-select').value;
     const requireQty5 = row.querySelector('.cart-require-qty5').checked;
-    
+    // 多次出现
+    const multiCheck = row.querySelector('.cart-multi-check');
+    const minOccurrences = multiCheck.checked
+        ? (parseInt(row.querySelector('.cart-min-occurrences').value) || 2)
+        : 1;
+
     cartConditions[index] = { 
         startYear,
-        startSeason, 
-        startDay, 
+        startSeason,
+        startDay,
         endYear,
-        endSeason, 
+        endSeason,
         endDay,
         itemName,
-        requireQty5
+        requireQty5,
+        minOccurrences
     };
     
     // 清除错误消息
@@ -990,7 +1004,8 @@ elements.form.addEventListener('submit', async (e) => {
             endSeason: { '春': 0, '夏': 1, '秋': 2, '冬': 3 }[c.endSeason],     // 转换为 0-3
             endDay: c.endDay,
             itemName: c.itemName,
-            requireQty5: c.requireQty5
+            requireQty5: c.requireQty5,
+            minOccurrences: c.minOccurrences || 1
         })) : [];
         
         console.log('怪物层条件:', monsterLevelConditionsData);
