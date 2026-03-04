@@ -79,6 +79,7 @@ namespace StardewSeedSearcher
 
         public static void Main(string[] args)
         {
+            TravelingCartData.Initialize();
             var builder = WebApplication.CreateBuilder(args);
 
             // 配置 CORS（允许本地 HTML 访问）
