@@ -18,6 +18,9 @@ namespace StardewSeedSearcher
         // 存储活跃的 WebSocket 连接
         private static readonly ConcurrentDictionary<string, WebSocket> ActiveConnections = new();
 
+        // 当前搜索的取消令牌，用于支持停止搜索功能
+        private static CancellationTokenSource? _currentSearchCts = null;
+
 
         // 获得种子简介信息
         private static object CollectAllDetails(int seed, bool useLegacy, List<ISearchFeature> features)
@@ -179,8 +182,17 @@ namespace StardewSeedSearcher
                  */
                 var channel = Channel.CreateUnbounded<SearchMessage>(new UnboundedChannelOptions { SingleReader = true });
 
-                // 用于通知停止搜索
-                var cts = new CancellationTokenSource();
+                // userStopCts：由 /api/stop 触发，即用户主动停止
+                _currentSearchCts?.Cancel();
+                var userStopCts = new CancellationTokenSource();
+                _currentSearchCts = userStopCts;
+
+                // limitCts：达到输出上限时触发，代表"自动停止"
+                var limitCts = new CancellationTokenSource();
+
+                // linkedCts：合并两者，搜索线程只需监听它
+                var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(userStopCts.Token, limitCts.Token);
+
                 // 消费者任务：从 Channel 读取数据并广播
                 var consumerTask = Task.Run(async () =>
                 {
@@ -195,7 +207,7 @@ namespace StardewSeedSearcher
                                 // 如果达到搜索上限，通知生产者停止
                                 if (msg.Type == "found" && results.Count >= request.OutputLimit)
                                 {
-                                    cts.Cancel();
+                                    limitCts.Cancel();
                                 }
                             }
                         }
@@ -222,7 +234,7 @@ namespace StardewSeedSearcher
                     int degreeOfParallelism = Math.Max(1, Environment.ProcessorCount - 1);
                     var parallelOptions = new ParallelOptions
                     {
-                        CancellationToken = cts.Token,
+                        CancellationToken = linkedCts.Token,
                         MaxDegreeOfParallelism = degreeOfParallelism
                     };
 
@@ -233,7 +245,7 @@ namespace StardewSeedSearcher
                             for (int seed = range.Item1; seed < range.Item2; seed++)
                             {
                                 // 提前终止
-                                if (cts.Token.IsCancellationRequested) break;
+                                if (linkedCts.Token.IsCancellationRequested) break;
 
                                 // 检查是否符合所有启用的功能条件
                                 bool allMatch = true;
@@ -315,15 +327,23 @@ namespace StardewSeedSearcher
                     elapsed = Math.Round(stopwatch.Elapsed.TotalSeconds, 1)
                 });
 
-                // 广播“完成”消息
+                // 广播"完成"消息
                 await BroadcastMessage(new
                 {
                     type = "complete",
                     totalFound = results.Count,
-                    elapsed = Math.Round(stopwatch.Elapsed.TotalSeconds, 1)
+                    elapsed = Math.Round(stopwatch.Elapsed.TotalSeconds, 1),
+                    cancelled = userStopCts.IsCancellationRequested
                 });
 
                 return Results.Ok(new { message = "Search started." });
+            });
+
+            // 停止搜索
+            app.MapPost("/api/stop", () =>
+            {
+                _currentSearchCts?.Cancel();
+                return Results.Ok(new { message = "Stop requested." });
             });
 
             // 健康检查

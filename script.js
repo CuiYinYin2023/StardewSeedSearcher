@@ -1,4 +1,5 @@
 let ws = null;
+let isSearching = false;
 let foundSeeds = [];
 let conditions = [];
 let currentSearchUseLegacy = false;
@@ -791,10 +792,14 @@ function handleWebSocketMessage(data) {
             break;
 
         case 'complete':
-            elements.statusMessage.textContent = `搜索完成！找到 ${data.totalFound} 个符合条件的种子`;
+            elements.statusMessage.textContent = data.cancelled
+                ? `搜索已停止，共找到 ${data.totalFound} 个符合条件的种子`
+                : `搜索完成！找到 ${data.totalFound} 个符合条件的种子`;
             elements.statusMessage.className = 'status-message status-complete';
             elements.searchBtn.disabled = false;
             elements.searchBtn.textContent = '🔍 开始搜索';
+            elements.searchBtn.classList.remove('btn-stop');
+            isSearching = false;
 
             const loopSearch = document.getElementById('loopSearch').checked;
             if (loopSearch) {
@@ -821,6 +826,11 @@ function updateResultsSummary() {
 elements.form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
+    // 如果正在搜索，点击按钮则停止搜索
+    if (isSearching) {
+        await fetch('http://localhost:5000/api/stop', { method: 'POST' });
+        return;
+    }
     const loopSearch = document.getElementById('loopSearch').checked;
     const searchRange = parseInt(document.getElementById('searchRange').value);
     const useLegacy = document.getElementById('useLegacy').checked;
@@ -993,8 +1003,10 @@ elements.form.addEventListener('submit', async (e) => {
     // 显示进度区域
     elements.progressSection.style.display = 'block';
     elements.resultsSection.style.display = 'block';
-    elements.searchBtn.disabled = true;
-    elements.searchBtn.textContent = '搜索中...';
+    elements.searchBtn.disabled = false;
+    elements.searchBtn.textContent = '⏹ 停止搜索';
+    elements.searchBtn.classList.add('btn-stop');
+    isSearching = true;
     
     // 更新状态消息(显示搜索范围)
     elements.statusMessage.textContent = `正在搜索: ${startSeed.toLocaleString()}-${endSeed.toLocaleString()}`;
@@ -1068,6 +1080,8 @@ elements.form.addEventListener('submit', async (e) => {
         alert('搜索失败,请确保后端服务正在运行!');
         elements.searchBtn.disabled = false;
         elements.searchBtn.textContent = '🔍 开始搜索';
+        elements.searchBtn.classList.remove('btn-stop');
+        isSearching = false;
     }
 });
 
