@@ -262,7 +262,7 @@ namespace StardewSeedSearcher
                 if (request.CartConditions != null && request.CartConditions.Count > 0)
                 {
                     var cartPredictor = new TravelingCartPredictor { IsEnabled = true };
-                    
+
                     foreach (var conditionDto in request.CartConditions)
                     {
                         var condition = new CartCondition
@@ -274,11 +274,12 @@ namespace StardewSeedSearcher
                             EndSeason = conditionDto.EndSeason,
                             EndDay = conditionDto.EndDay,
                             ItemName = conditionDto.ItemName,
-                            RequireQty5 = conditionDto.RequireQty5
+                            RequireQty5 = conditionDto.RequireQty5,
+                            MinOccurrences = conditionDto.MinOccurrences < 1 ? 1 : conditionDto.MinOccurrences
                         };
                         cartPredictor.Conditions.Add(condition);
                     }
-                    
+
                     features.Add(cartPredictor);
                 }
 
@@ -569,19 +570,19 @@ namespace StardewSeedSearcher
 
         [JsonPropertyName("startYear")]
         public int StartYear { get; set; }
-        
+
         [JsonPropertyName("startSeason")]
         public int StartSeason { get; set; }
-        
+
         [JsonPropertyName("startDay")]
         public int StartDay { get; set; }
-        
+
         [JsonPropertyName("endYear")]
         public int EndYear { get; set; }
-        
+
         [JsonPropertyName("endSeason")]
         public int EndSeason { get; set; }
-        
+
         [JsonPropertyName("endDay")]
         public int EndDay { get; set; }
 
@@ -590,5 +591,8 @@ namespace StardewSeedSearcher
 
         [JsonPropertyName("requireQty5")]
         public bool RequireQty5 { get; set; }
+
+        [JsonPropertyName("minOccurrences")]
+        public int MinOccurrences { get; set; } = 1;
     }
 }

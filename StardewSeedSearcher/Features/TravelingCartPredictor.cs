@@ -48,17 +48,14 @@ namespace StardewSeedSearcher.Features
                 int startDay = TimeHelper.DateToAbsoluteDay(condition.StartYear, condition.StartSeason, condition.StartDay);
                 int endDay = TimeHelper.DateToAbsoluteDay(condition.EndYear, condition.EndSeason, condition.EndDay);
 
-                string searchTerm = condition.ItemName;
-                
-                // 查找第一个匹配的日期
-                var match = FindFirstMatch(seed, startDay, endDay, 
-                    searchTerm, condition.RequireQty5, useLegacyRandom);
+                int minOccurrences = condition.MinOccurrences < 1 ? 1 : condition.MinOccurrences;
 
-                // 如果没找到匹配，淘汰这个种子
-                if (match == null)
-                {
+                // 找到 minOccurrences 个匹配即可提前退出
+                var matches = FindAllMatches(seed, startDay, endDay,
+                    condition.ItemName, condition.RequireQty5, useLegacyRandom, stopAt: minOccurrences);
+
+                if (matches.Count < minOccurrences)
                     return false;
-                }
             }
 
             return true;
@@ -135,7 +132,7 @@ namespace StardewSeedSearcher.Features
         }
 
         /// <summary>
-        /// 获取种子简介信息
+        /// 获取种子简介信息（返回所有匹配项）
         /// </summary>
         public List<object> GetCartMatches(int seed, bool useLegacyRandom)
         {
@@ -146,55 +143,53 @@ namespace StardewSeedSearcher.Features
                 int startDay = TimeHelper.DateToAbsoluteDay(condition.StartYear, condition.StartSeason, condition.StartDay);
                 int endDay = TimeHelper.DateToAbsoluteDay(condition.EndYear, condition.EndSeason, condition.EndDay);
 
-                var match = FindFirstMatch(seed, startDay, endDay,
+                var matches = FindAllMatches(seed, startDay, endDay,
                     condition.ItemName, condition.RequireQty5, useLegacyRandom);
 
-                if (match != null)
-                {
-                    cartMatches.Add(match);
-                }
+                cartMatches.AddRange(matches.Cast<object>());
             }
 
             return cartMatches;
         }
 
         /// <summary>
-        /// 在日期范围内查找第一个匹配的物品
+        /// 在日期范围内查找所有匹配的物品出现记录，找到 stopAt 个后提前退出
         /// </summary>
-        private CartDayMatch? FindFirstMatch(int seed, int startDay, int endDay, 
-            string itemName, bool requireQty5, bool useLegacyRandom)
+        private List<CartDayMatch> FindAllMatches(int seed, int startDay, int endDay,
+            string itemName, bool requireQty5, bool useLegacyRandom, int stopAt = int.MaxValue)
         {
+            var matches = new List<CartDayMatch>();
             int gameID = seed;
-            
-            // 计算红卷心菜保底（即使不用，也要初始化）
+
+            // 计算红卷心菜保底
             int guaranteeSeed = HashHelper.GetRandomSeed(12 * gameID, 0, 0, 0, 0, useLegacyRandom);
             Random rngGuarantee = new Random(guaranteeSeed);
             int originalGuarantee = rngGuarantee.Next(2, 31);
-            
+
             // 遍历日期范围内的所有猪车日期
             for (int day = startDay; day <= endDay; day++)
             {
                 if (!IsCartDay(day)) continue;
-                
+
                 // 预测这天的猪车
                 var result = PredictCartDay(gameID, day, originalGuarantee, useLegacyRandom);
-                
+
                 // 检查是否匹配
                 foreach (var item in result.Items)
-                {
-                    // 跳过非物品项（如"还需X次访问"）
+                {   
+                    // 跳过非物品项（如"还需X次访问"）                
                     if (item.Quantity == 0) continue;
                     
                     // 检查数量要求
                     // 技能书的数量是-1，不能要求数量为5
                     if (requireQty5 && item.Quantity != 5) continue;
-                    
+
                     // 检查物品名称
                     if (item.Name != itemName) continue;
                     
                     // 找到匹配！
                     var dateInfo = TimeHelper.AbsoluteDaytoDate(day);
-                    return new CartDayMatch
+                    matches.Add(new CartDayMatch
                     {
                         Year = dateInfo.year,
                         Season = dateInfo.season,
@@ -202,13 +197,18 @@ namespace StardewSeedSearcher.Features
                         AbsoluteDay = day, // 用于前端排序
                         ItemName = item.Name,
                         Quantity = item.Quantity,
-                        Price = item.Price 
-                    };
+                        Price = item.Price
+                    });
+
+                    // 每天最多记录一次匹配，找到后跳出内层循环
+                    break;
                 }
+
+                if (matches.Count >= stopAt)
+                    break;
             }
-            
-            // 未找到匹配
-            return null;
+
+            return matches;
         }
 
         /// <summary>
@@ -401,6 +401,7 @@ namespace StardewSeedSearcher.Features
         public int EndDay { get; set; }
         public string ItemName { get; set; }
         public bool RequireQty5 { get; set; }
+        public int MinOccurrences { get; set; } = 1;
     }
 
     /// <summary>
