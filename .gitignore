@@ -7,6 +7,5 @@ start.bat
 用户使用说明.txt
 StardewSeedSearcher.exe
 temp.py
+/.idea
 StardewSeedSearcher.sln
-StardewSeedSearcher/Tests/
-StardewSeedSearcher/TestRunner.cs
