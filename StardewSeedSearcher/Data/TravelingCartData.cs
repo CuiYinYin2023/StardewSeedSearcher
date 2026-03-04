@@ -35,8 +35,12 @@ namespace StardewSeedSearcher.Data
 
         public static void Initialize()
         {
-            var tcData = File.OpenRead(Path.Combine("Data", "TravelingCartData.json"));
-            Objects = JsonSerializer.Deserialize<Dictionary<string, ItemInfo>>(tcData)!;
+            // 确保获取的是程序运行时的绝对根目录，方便后续打包
+            string basePath = AppContext.BaseDirectory;
+            string jsonPath = Path.Combine(basePath, "Data", "TravelingCartData.json");
+
+            string jsonString = File.ReadAllText(jsonPath);
+            Objects = JsonSerializer.Deserialize<Dictionary<string, ItemInfo>>(jsonString) ?? new();
         }
     }
 }

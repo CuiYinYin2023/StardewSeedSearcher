@@ -17,6 +17,12 @@
     <PackageReference Include="System.Data.HashFunction.xxHash" Version="2.0.0" />
   </ItemGroup>
 
-
+  <ItemGroup>
+    <!-- 确保 Data 文件夹及其内容被复制到输出目录 -->
+    <None Update="Data\TravelingCartData.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 
 </Project>
+
