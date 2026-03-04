@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using StardewSeedSearcher.Features;
 
 namespace StardewSeedSearcher.Tests

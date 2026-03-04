@@ -1,5 +1,4 @@
-﻿using System;
-using StardewSeedSearcher.Tests;
+﻿using StardewSeedSearcher.Tests;
 
 namespace StardewSeedSearcher
 {

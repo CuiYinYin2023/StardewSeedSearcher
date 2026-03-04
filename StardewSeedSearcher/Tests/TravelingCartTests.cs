@@ -1,4 +1,3 @@
-using System;
 using StardewSeedSearcher.Features;
 
 namespace StardewSeedSearcher.Tests

@@ -1,4 +1,3 @@
-using System;
 using System.Data.HashFunction.xxHash;
 using System.Text;
 

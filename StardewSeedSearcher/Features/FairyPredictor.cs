@@ -1,6 +1,4 @@
-using System;
 using StardewSeedSearcher.Core;
-using System.Collections.Generic;
 
 namespace StardewSeedSearcher.Features
 {
