@@ -6,6 +6,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using StardewSeedSearcher.Data;
 using StardewSeedSearcher.Features;
+using StardewSeedSearcher.Framework;
 
 namespace StardewSeedSearcher
 {
@@ -195,12 +196,7 @@ namespace StardewSeedSearcher
                     
                     foreach (var conditionDto in request.FairyConditions)
                     {
-                        var condition = new FairyCondition
-                        {
-                            Year = conditionDto.Year,
-                            Season = conditionDto.Season,
-                            Day = conditionDto.Day
-                        };
+                        var condition = new Date(conditionDto.Year, conditionDto.Season, conditionDto.Day);
                         fairyPredictor.Conditions.Add(condition);
                     }
                     

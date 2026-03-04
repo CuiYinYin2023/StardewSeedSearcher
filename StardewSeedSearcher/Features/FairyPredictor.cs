@@ -1,4 +1,5 @@
 using StardewSeedSearcher.Core;
+using StardewSeedSearcher.Framework;
 
 namespace StardewSeedSearcher.Features
 {
@@ -8,7 +9,7 @@ namespace StardewSeedSearcher.Features
     public class FairyPredictor : ISearchFeature
     {
         public bool IsEnabled { get; set; }
-        public List<FairyCondition> Conditions { get; set; } = new();
+        public List<Date> Conditions { get; } = new();
 
         public string Name => "仙子预测";
 
@@ -25,7 +26,7 @@ namespace StardewSeedSearcher.Features
             // 所有条件都必须满足（AND）
             foreach (var condition in Conditions)
             {
-                int absoluteDay = CalculateAbsoluteDay(condition.Year, condition.Season, condition.Day);
+                int absoluteDay = condition.ConvertToDaysPlayed();
                 
                 if (!HasFairy(seed, absoluteDay, useLegacyRandom))
                 {
@@ -34,19 +35,6 @@ namespace StardewSeedSearcher.Features
             }
 
             return true;
-        }
-
-        private int CalculateAbsoluteDay(int year, Season season, int day)
-        {
-            int seasonOffset = season switch
-            {
-                Season.Spring => 0,
-                Season.Summer => 28,
-                Season.Fall => 56,
-                _ => 0
-            };
-
-            return (year - 1) * 112 + seasonOffset + day;
         }
 
         /// <summary>
@@ -87,17 +75,17 @@ namespace StardewSeedSearcher.Features
         {
             var fairyDays = new List<object>();
             
-            foreach (var condition in Conditions)
+            foreach (var date in Conditions)
             {
-                int absoluteDay = CalculateAbsoluteDay(condition.Year, condition.Season, condition.Day);
+                int absoluteDay = date.ConvertToDaysPlayed();
                 
                 if (HasFairy(seed, absoluteDay, useLegacyRandom))
                 {
                     fairyDays.Add(new
                     {
-                        year = condition.Year,
-                        season = condition.Season.ToString(),
-                        day = condition.Day
+                        year = date.Year,
+                        season = date.Season.ToString(),
+                        day = date.Day
                     });
                 }
             }
@@ -110,6 +98,7 @@ namespace StardewSeedSearcher.Features
         /// </summary>
         /// <param name="gameID">游戏种子</param>
         /// <param name="useLegacyRandom">是否使用旧随机模式</param>
+        /// <param name="maxDays">总共搜索这么多天</param>
         /// <returns>绝对天数,如果搜索范围内没有则返回null</returns>
         public int? FindFirstFairy(int gameID, bool useLegacyRandom, int maxDays = 1000)
         {
@@ -135,12 +124,5 @@ namespace StardewSeedSearcher.Features
             // 搜索范围内没有仙子
             return null;
         }
-    }
-
-    public class FairyCondition
-    {
-        public int Year { get; set; }
-        public Season Season { get; set; }
-        public int Day { get; set; }
     }
 }
