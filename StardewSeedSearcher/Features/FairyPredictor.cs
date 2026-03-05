@@ -8,9 +8,13 @@ namespace StardewSeedSearcher.Features
         public int StartYear { get; set; }
         public int StartSeason { get; set; }
         public int StartDay { get; set; }
+        
         public int EndYear { get; set; }
         public int EndSeason { get; set; }
         public int EndDay { get; set; }
+
+        public int AbsoluteStartDay => TimeHelper.DateToAbsoluteDay(StartYear, StartSeason, StartDay);
+        public int AbsoluteEndDay => TimeHelper.DateToAbsoluteDay(EndYear, EndSeason, EndDay);
     }
 
     /// <summary>
@@ -31,13 +35,10 @@ namespace StardewSeedSearcher.Features
             // 所有条件都必须满足（AND）
             foreach (var condition in Conditions)
             {
-                int startAbs = TimeHelper.DateToAbsoluteDay(condition.StartYear, condition.StartSeason, condition.StartDay);
-                int endAbs = TimeHelper.DateToAbsoluteDay(condition.EndYear, condition.EndSeason, condition.EndDay);
-                
                 bool foundInRange = false;
                 
                 // 在范围内寻找至少一个仙子
-                for (int day = startAbs; day <= endAbs; day++)
+                for (int day = condition.AbsoluteStartDay; day <= condition.AbsoluteEndDay; day++)
                 {
                     var date = TimeHelper.AbsoluteDaytoDate(day);
                     if (date.season >= 3) continue; // 跳过冬天
@@ -88,10 +89,7 @@ namespace StardewSeedSearcher.Features
             // 所有条件天数总和
             foreach (var condition in Conditions)
             {
-                int startAbs = TimeHelper.DateToAbsoluteDay(condition.StartYear, condition.StartSeason, condition.StartDay);
-                int endAbs = TimeHelper.DateToAbsoluteDay(condition.EndYear, condition.EndSeason, condition.EndDay);
-            
-                totalDays += endAbs - startAbs + 1;
+                totalDays += condition.AbsoluteEndDay - condition.AbsoluteStartDay + 1;
             }
 
             // 总计算次数
@@ -107,10 +105,7 @@ namespace StardewSeedSearcher.Features
             
             foreach (var condition in Conditions)
             {
-                int startAbs = TimeHelper.DateToAbsoluteDay(condition.StartYear, condition.StartSeason, condition.StartDay);
-                int endAbs = TimeHelper.DateToAbsoluteDay(condition.EndYear, condition.EndSeason, condition.EndDay);
-                
-                for (int day = startAbs; day <= endAbs; day++)
+                for (int day = condition.AbsoluteStartDay; day <= condition.AbsoluteEndDay; day++)
                 {
                     var date = TimeHelper.AbsoluteDaytoDate(day);
                     if (date.season >= 3) continue; // 跳过冬天

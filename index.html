@@ -112,13 +112,13 @@
 
                 <!-- 天气功能 -->
                 <div class="checkbox-group">
-                    <input type="checkbox" id="weatherEnabled" checked>
-                    <!-- <input type="checkbox" id="weatherEnabled"> -->
+                    <!-- <input type="checkbox" id="weatherEnabled" checked> -->
+                    <input type="checkbox" id="weatherEnabled">
                     <label for="weatherEnabled">启用天气筛选</label>
                     <span style="font-size: 14px; color: #a6a6a6">目前只支持第一年，雨天包含绿雨和雷雨。</span>
                 </div>
-                <div class="condition-config" id="weatherConfig">
-                <!-- <div class="condition-config" id="weatherConfig" style="display: none;"> -->
+                <!-- <div class="condition-config" id="weatherConfig"> -->
+                <div class="condition-config" id="weatherConfig" style="display: none;">
                     <h4 style="margin-bottom: 15px;">天气筛选条件</h4>
                     
                     <!-- 初始不放内容，由 JavaScript 动态添加，或者在页面加载时调用 addCondition() -->
@@ -210,14 +210,14 @@
 
                 <!-- 矿井宝箱 -->
                 <div class="checkbox-group">
-                    <!-- <input type="checkbox" id="mineChestEnabled"> -->
-                    <input type="checkbox" id="mineChestEnabled" checked>
+                    <input type="checkbox" id="mineChestEnabled">
+                    <!-- <input type="checkbox" id="mineChestEnabled" checked> -->
                     <label for="mineChestEnabled">启用矿井混合宝箱筛选</label>
                     <span style="font-size: 14px; color: #a6a6a6">必须在创建存档时选择<strong>矿洞掉落-重新混合</strong>，否则为默认物品。</span>
                 </div>
 
-                <div class="condition-config" id="mineChestConfig">
-                <!-- <div class="condition-config" id="mineChestConfig" style="display: none;"> -->
+                <!-- <div class="condition-config" id="mineChestConfig"> -->
+                <div class="condition-config" id="mineChestConfig" style="display: none;">
                     <h4 style="margin-bottom: 15px;">矿井混合宝箱筛选条件</h4>
                     
                     <!-- 初始不放内容，由 JavaScript 动态添加，或者在页面加载时调用 addCondition() -->
@@ -252,73 +252,59 @@
 
                 <!-- 怪物层部分 -->
                 <div class="checkbox-group">
-                    <input type="checkbox" id="monsterLevelEnabled">
-                    <!-- <input type="checkbox" id="monsterLevelEnabled" checked> -->
+                    <!-- <input type="checkbox" id="monsterLevelEnabled"> -->
+                    <input type="checkbox" id="monsterLevelEnabled" checked>
                     <label for="monsterLevelEnabled">启用怪物层筛选</label>
-                    <span style="font-size: 14px; color: #a6a6a6">该日期、层数范围内不出现怪物层，方便冲层。</span>
+                    <span style="font-size: 14px; color: #a6a6a6">在指定日期和层数范围内，确保不出现任何怪物层（感染层）。</span>
                 </div>
-                <!-- <div class="condition-config" id="monsterLevelConfig"> -->
-                <div class="condition-config" id="monsterLevelConfig" style="display: none;">
+
+                <!-- <div class="condition-config" id="monsterLevelConfig" style="display: none;"> -->
+                <div class="condition-config" id="monsterLevelConfig">
                     <h4 style="margin-bottom: 15px;">怪物层筛选条件（第一年）</h4>
                     
-                    <div class="monsterlevel-conditions-container" id="monsterLevelConditionsContainer">
-                        
-                        <!-- 第一个条件行 -->
-                        <div class="monsterlevel-condition-row" data-index="0">
-                            <span>起始日期</span>
-                            <select class="monsterlevel-start-season" onchange="updateMonsterLevelCondition(0)">
-                                <option value="Spring">春</option>
-                                <option value="Summer">夏</option>
-                                <option value="Fall">秋</option>
-                                <option value="Winter">冬</option>
-                            </select>
-                            <input type="number" class="monsterlevel-start-day" min="1" max="28" value="5" onchange="updateMonsterLevelCondition(0)">
-                            <span>结束日期</span>
-                            <select class="monsterlevel-end-season" onchange="updateMonsterLevelCondition(0)">
-                                <option value="Spring">春</option>
-                                <option value="Summer">夏</option>
-                                <option value="Fall">秋</option>
-                                <option value="Winter">冬</option>
-                            </select>
-                            <input type="number" class="monsterlevel-end-day" min="1" max="28" value="5" onchange="updateMonsterLevelCondition(0)">
-                            <span>起始层数</span>
-                            <input type="number" class="monsterlevel-start-level" min="1" max="120" value="1" onchange="updateMonsterLevelCondition(0)">
-                            <span>结束层数</span>
-                            <input type="number" class="monsterlevel-end-level" min="1" max="120" value="80" onchange="updateMonsterLevelCondition(0)">
-                            <button type="button" class="btn-remove" onclick="removeMonsterLevelCondition(0)">删除</button>
-                        </div>
-                    </div>
-                    
-                    <template id="monsterLevelConditionTemplate">
-                        <div class="monsterlevel-condition-row">
-                            <span>起始日期</span>
-                            <select class="monsterlevel-start-season">
-                                <option value="Spring">春</option>
-                                <option value="Summer">夏</option>
-                                <option value="Fall">秋</option>
-                                <option value="Winter">冬</option>
-                            </select>
-                            <input type="number" class="monsterlevel-start-day" min="1" max="28" value="1">
-                            <span>结束日期</span>
-                            <select class="monsterlevel-end-season">
-                                <option value="Spring">春</option>
-                                <option value="Summer">夏</option>
-                                <option value="Fall">秋</option>
-                                <option value="Winter">冬</option>
-                            </select>
-                            <input type="number" class="monsterlevel-end-day" min="1" max="28" value="1">
-                            <span>起始层数</span>
-                            <input type="number" class="monsterlevel-start-level" min="1" max="120" value="1">
-                            <span>结束层数</span>
-                            <input type="number" class="monsterlevel-end-level" min="1" max="120" value="10">
-                            <button type="button" class="btn-remove">删除</button>
-                        </div>
-                    </template>
+                    <div class="monsterlevel-conditions-container" id="monsterLevelConditionsContainer"></div>
                     
                     <button type="button" class="btn-add-condition" onclick="addMonsterLevelCondition()">添加条件</button>
-                    
                     <div class="error-message" id="monsterLevelConditionError"></div>
                 </div>
+
+                <!-- 怪物层条件行模板 -->
+                <template id="monsterLevelConditionTemplate">
+                    <div class="monsterlevel-condition-row">
+                        <!-- 第一行：日期范围 -->
+                        <div>
+                            <span>第一年</span>
+                            <select class="monsterlevel-start-season" style="width: 60px;">
+                                <option>春</option>
+                                <option>夏</option>
+                                <option>秋</option>
+                                <option>冬</option>
+                            </select>
+                            <input type="number" class="monsterlevel-start-day" min="1" max="28" value="5" step="1" style="width: 60px;">
+                            <span>日 - </span>
+                            <select class="monsterlevel-end-season" style="width: 60px;">
+                                <option>春</option>
+                                <option>夏</option>
+                                <option>秋</option>
+                                <option>冬</option>
+                            </select>
+                            <input type="number" class="monsterlevel-end-day" min="1" max="28" value="5" step="1" style="width: 60px;">
+                            <span>日</span>
+                        </div>
+
+                        <!-- 第二行：层数范围 + 删除按钮 -->
+                        <div style="display: flex; align-items: center; gap: 5px;">
+                            <span>  矿井</span>
+                            <input type="number" class="monsterlevel-start-level" min="1" max="120" value="1" style="width: 60px;">
+                            <span>层 - </span>
+                            <input type="number" class="monsterlevel-end-level" min="1" max="120" value="40" style="width: 60px;">
+                            <span>层</span>
+                            
+                            <button type="button" class="btn-remove">删除</button>
+                        </div>
+                    </div>
+                </template>
+
                 <br>
 
                 <!-- 沙漠节部分 -->

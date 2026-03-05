@@ -506,10 +506,14 @@ namespace StardewSeedSearcher
                 {
                     var condition = new MonsterLevelPredictor.MonsterLevelCondition
                     {
-                        StartDay = conditionDto.StartDay,
-                        EndDay = conditionDto.EndDay,
-                        StartLevel = conditionDto.StartLevel,
-                        EndLevel = conditionDto.EndLevel
+                        StartSeason=conditionDto.StartSeason,
+                        EndSeason=conditionDto.EndSeason,
+
+                        StartDay=conditionDto.StartDay,
+                        EndDay=conditionDto.EndDay,
+
+                        StartLevel=conditionDto.StartLevel,
+                        EndLevel=conditionDto.EndLevel,
                     };
                     monsterLevelPredictor.Conditions.Add(condition);
                 }
@@ -662,6 +666,12 @@ namespace StardewSeedSearcher
 
     public class MonsterLevelConditionDto
     {
+        [JsonPropertyName("startSeason")]
+        public int StartSeason { get; set; }
+
+        [JsonPropertyName("endSeason")]
+        public int EndSeason { get; set; }
+
         [JsonPropertyName("startDay")]
         public int StartDay { get; set; }
 

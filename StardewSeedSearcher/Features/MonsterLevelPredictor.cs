@@ -12,34 +12,17 @@ namespace StardewSeedSearcher.Features
         
         public class MonsterLevelCondition
         {
-            /// <summary>
-            /// 起始日期（1-112，第一年）
-            /// </summary>
+            public int StartSeason { get; set; }
+            public int EndSeason { get; set; }
+
             public int StartDay { get; set; }
-
-            /// <summary>
-            /// 结束日期（1-112，第一年）
-            /// </summary>
             public int EndDay { get; set; }
-
-            /// <summary>
-            /// 起始层数（1-120）
-            /// </summary>
+            
             public int StartLevel { get; set; }
-
-            /// <summary>
-            /// 结束层数（1-120）
-            /// </summary>
             public int EndLevel { get; set; }
-        }
-        
-        /// <summary>
-        /// 设置条件（从前端请求传入）
-        /// </summary>
-        public void SetConditions(List<MonsterLevelCondition> conditions)
-        {
-            this.Conditions = conditions ?? new();
-            IsEnabled = this.Conditions.Count > 0;
+
+            public int AbsoluteStartDay => TimeHelper.DateToAbsoluteDay(1, StartSeason, StartDay);
+            public int AbsoluteEndDay => TimeHelper.DateToAbsoluteDay(1, EndSeason, EndDay);
         }
         
         /// <summary>
@@ -53,7 +36,7 @@ namespace StardewSeedSearcher.Features
             foreach (var condition in Conditions)
             {
                 // 检查指定日期和层数范围内是否有感染层
-                for (int day = condition.StartDay; day <= condition.EndDay; day++)
+                for (int day = condition.AbsoluteStartDay; day <= condition.AbsoluteEndDay; day++)
                 {
                     for (int mineLevel = condition.StartLevel; mineLevel <= condition.EndLevel; mineLevel++)
                     {
@@ -105,7 +88,7 @@ namespace StardewSeedSearcher.Features
             int totalCost = 0;
             foreach (var condition in Conditions)
             {
-                int days = condition.EndDay - condition.StartDay + 1;
+                int days = condition.AbsoluteEndDay - condition.AbsoluteStartDay + 1;
                 int levels = condition.EndLevel - condition.StartLevel + 1;
                 // 减去电梯层数量
                 int elevatorCount = 0;
@@ -135,15 +118,9 @@ namespace StardewSeedSearcher.Features
         /// </summary>
         private string FormatConditionDescription(MonsterLevelCondition c)
         {
-            string[] seasonNames = { "春", "夏", "秋", "冬" };
-            int startSeason = (c.StartDay - 1) / 28;
-            int startDayOfMonth = ((c.StartDay - 1) % 28) + 1;
-            int endSeason = (c.EndDay - 1) / 28;
-            int endDayOfMonth = ((c.EndDay - 1) % 28) + 1;
-            
-            string dateRange = c.StartDay == c.EndDay
-                ? $"{seasonNames[startSeason]}{startDayOfMonth}"
-                : $"{seasonNames[startSeason]}{startDayOfMonth}-{seasonNames[endSeason]}{endDayOfMonth}";
+            string dateRange = c.AbsoluteStartDay == c.AbsoluteEndDay
+                ? $"{TimeHelper.GetSeasonName(c.StartSeason)}{c.StartDay}"
+                : $"{TimeHelper.GetSeasonName(c.StartSeason)}{c.StartDay}-{TimeHelper.GetSeasonName(c.EndSeason)}{c.EndDay}";
             
             return $"{dateRange} {c.StartLevel}-{c.EndLevel}层无怪物层";
         }

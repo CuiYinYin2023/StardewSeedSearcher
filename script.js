@@ -319,89 +319,38 @@ function populateMineItemOptions(floor, selectElement) {
     selectElement.innerHTML = items.map(item => `<option value="${item}">${item}</option>`).join('');
 }
 
-// 怪物层相关函数
+// 添加怪物层条件
 function addMonsterLevelCondition() {
     const container = document.getElementById('monsterLevelConditionsContainer');
     const template = document.getElementById('monsterLevelConditionTemplate');
-    const index = nextMonsterLevelIndex++;
     
-    // 克隆模板
     const clone = template.content.cloneNode(true);
     const row = clone.querySelector('.monsterlevel-condition-row');
-    row.setAttribute('data-index', index);
-    
-    // 绑定事件
-    row.querySelector('.monsterlevel-start-season').onchange = () => updateMonsterLevelCondition(index);
-    row.querySelector('.monsterlevel-start-day').onchange = () => updateMonsterLevelCondition(index);
-    row.querySelector('.monsterlevel-end-season').onchange = () => updateMonsterLevelCondition(index);
-    row.querySelector('.monsterlevel-end-day').onchange = () => updateMonsterLevelCondition(index);
-    row.querySelector('.monsterlevel-start-level').onchange = () => updateMonsterLevelCondition(index);
-    row.querySelector('.monsterlevel-end-level').onchange = () => updateMonsterLevelCondition(index);
-    row.querySelector('.btn-remove').onclick = () => removeMonsterLevelCondition(index);
+
+    // 删除逻辑
+    row.querySelector('.btn-remove').onclick = () => {
+        row.remove();
+    };
     
     container.appendChild(clone);
-    updateMonsterLevelCondition(index);
-}
-
-function updateMonsterLevelCondition(index) {
-    const row = document.querySelector(`.monsterlevel-condition-row[data-index="${index}"]`);
-    if (!row) return;
-    
-    const startSeason = row.querySelector('.monsterlevel-start-season').value;
-    const startDay = parseInt(row.querySelector('.monsterlevel-start-day').value) || 5;
-    const endSeason = row.querySelector('.monsterlevel-end-season').value;
-    const endDay = parseInt(row.querySelector('.monsterlevel-end-day').value) || 5;
-    const startLevel = parseInt(row.querySelector('.monsterlevel-start-level').value) || 1;
-    const endLevel = parseInt(row.querySelector('.monsterlevel-end-level').value) || 80;
-    
-    // 转换为绝对天数
-    const seasonMap = { Spring: 0, Summer: 1, Fall: 2, Winter: 3 };
-    const startDayAbsolute = seasonMap[startSeason] * 28 + startDay;
-    const endDayAbsolute = seasonMap[endSeason] * 28 + endDay;
-    
-    monsterLevelConditions[index] = {
-        startDay: startDayAbsolute,
-        endDay: endDayAbsolute,
-        startLevel: startLevel,
-        endLevel: endLevel
-    };
-}
-
-function removeMonsterLevelCondition(index) {
-    const row = document.querySelector(`.monsterlevel-condition-row[data-index="${index}"]`);
-    if (row) {
-        row.remove();
-        delete monsterLevelConditions[index];
-    }
 }
 
 function validateMonsterLevelCondition(condition) {
-    const { startDay, endDay, startLevel, endLevel } = condition;
-    
-    if (startDay < 1 || startDay > 112) {
-        return { valid: false, error: '起始日期必须在第一年范围内' };
+    const { startSeason, startDay, endSeason, endDay, startLevel, endLevel } = condition;
+
+    // 1. 日期验证 (利用之前定义的 dateToAbsoluteDay)
+    const startAbs = dateToAbsoluteDay(1, startSeason, startDay);
+    const endAbs = dateToAbsoluteDay(1, endSeason, endDay);
+
+    if (startAbs > endAbs) {
+        return { valid: false, error: '日期范围：起始日期不能晚于结束日期' };
     }
-    
-    if (endDay < 1 || endDay > 112) {
-        return { valid: false, error: '结束日期必须在第一年范围内' };
-    }
-    
-    if (startDay > endDay) {
-        return { valid: false, error: '起始日期不能晚于结束日期' };
-    }
-    
-    if (startLevel < 1 || startLevel > 120) {
-        return { valid: false, error: '起始层数必须在 1-120 之间' };
-    }
-    
-    if (endLevel < 1 || endLevel > 120) {
-        return { valid: false, error: '结束层数必须在 1-120 之间' };
-    }
-    
+
+    // 2. 层数验证
     if (startLevel > endLevel) {
-        return { valid: false, error: '起始层数不能大于结束层数' };
+        return { valid: false, error: '层数范围：起始层数不能大于结束层数' };
     }
-    
+
     return { valid: true };
 }
 
@@ -595,7 +544,7 @@ document.addEventListener('DOMContentLoaded', function() {
     addMineChestCondition("110", "巨锤"); 
 
     // 怪物层条件初始化
-    updateMonsterLevelCondition(0);
+    addMonsterLevelCondition(0);
     
     // 猪车条件初始化
     loadCartItems();
@@ -758,6 +707,10 @@ elements.form.addEventListener('submit', async (e) => {
     const mineChestEnabled = elements.mineChestEnabled.checked;
     let mineChestConditionsData = [];
 
+    // 矿井宝箱
+    const monsterLevelEnabled = document.getElementById('monsterLevelEnabled').checked;
+    let monsterLevelConditionsData = [];
+
     // 沙漠节
     const desertFestivalEnabled = elements.desertFestivalEnabled.checked;
     const desertFestivalCondition = desertFestivalEnabled ? {
@@ -897,25 +850,34 @@ elements.form.addEventListener('submit', async (e) => {
     }
 
     // 怪物层条件验证
-    const monsterLevelEnabled = elements.monsterLevelEnabled.checked;
-
     if (monsterLevelEnabled) {
-        const validMonsterLevelConditions = monsterLevelConditions.filter(c => c);
+        const monsterRows = document.querySelectorAll('.monsterlevel-condition-row');
         
-        if (validMonsterLevelConditions.length === 0) {
-            alert('请至少添加一个怪物层条件！');
+        if (monsterRows.length === 0) {
+            alert('请至少添加一个怪物层筛选条件！');
             return;
         }
         
-        for (let i = 0; i < monsterLevelConditions.length; i++) {
-            const condition = monsterLevelConditions[i];
-            if (!condition) continue;
-            
-            const validation = validateMonsterLevelCondition(condition);
-            if (!validation.valid) {
-                alert(`怪物层条件 ${i + 1}: ${validation.error}`);
+        for (let row of monsterRows) {
+            const condition = {
+                // 默认第一年
+                startSeason: SeasonNameToIndex[row.querySelector('.monsterlevel-start-season').value],
+                endSeason: SeasonNameToIndex[row.querySelector('.monsterlevel-end-season').value],
+                startDay: parseInt(row.querySelector('.monsterlevel-start-day').value),
+                endDay: parseInt(row.querySelector('.monsterlevel-end-day').value),
+                // 层数数据
+                startLevel: parseInt(row.querySelector('.monsterlevel-start-level').value),
+                endLevel: parseInt(row.querySelector('.monsterlevel-end-level').value)
+            };
+
+            // 验证
+            const v = validateMonsterLevelCondition(condition);
+            if (!v.valid) {
+                alert(`怪物层错误: ${v.error}`);
                 return;
             }
+
+            monsterLevelConditionsData.push(condition);
         }
     }
 
@@ -961,13 +923,6 @@ elements.form.addEventListener('submit', async (e) => {
     // 发送搜索请求
     try {
 
-        const monsterLevelConditionsData = monsterLevelEnabled ? monsterLevelConditions.filter(c => c).map(c => ({
-            startDay: c.startDay,
-            endDay: c.endDay,
-            startLevel: c.startLevel,
-            endLevel: c.endLevel
-        })) : [];
-
         const cartConditionsData = cartEnabled ? validCartConditions.map(c => ({
             startYear: c.startYear,
             startSeason: { '春': 0, '夏': 1, '秋': 2, '冬': 3 }[c.startSeason], // 转换为 0-3
@@ -1012,25 +967,6 @@ elements.form.addEventListener('submit', async (e) => {
     }
 });
 
-/**
- * 将绝对天数转换为 [季节][天数] 格式
- */
-function convertAbsoluteDay(day) {
-    const seasonNames = ['春', '夏', '秋', '冬'];
-    const daysPerSeason = 28;
-
-    // 绝对天数从 1 开始
-    const adjustedDay = day - 1; 
-    
-    const seasonIndex = Math.floor(adjustedDay / daysPerSeason);
-    const dayOfMonth = (adjustedDay % daysPerSeason) + 1;
-    
-    // 确保季节在范围内
-    if (seasonIndex >= 0 && seasonIndex < seasonNames.length) {
-        return `${seasonNames[seasonIndex]}${dayOfMonth}`;
-    }
-    return `第${day}天`; 
-}
 
 // 显示种子详情
 function showSeedDetail(seed) {

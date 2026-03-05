@@ -25,9 +25,11 @@ namespace StardewSeedSearcher.Features
         public int StartYear { get; set; }
         public int StartSeason { get; set; }  // 0-3
         public int StartDay { get; set; }
+
         public int EndYear { get; set; }
         public int EndSeason { get; set; }  // 0-3
         public int EndDay { get; set; }
+        
         public string ItemName { get; set; }
         public bool RequireQty5 { get; set; }
         public int MinOccurrences { get; set; } = 1;

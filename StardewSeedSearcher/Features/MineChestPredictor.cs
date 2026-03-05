@@ -18,15 +18,6 @@ namespace StardewSeedSearcher.Features
         }
         
         /// <summary>
-        /// 设置条件（从前端请求传入）
-        /// </summary>
-        public void SetConditions(List<MineChestCondition> conditions)
-        {
-            this.Conditions = conditions ?? new();
-            IsEnabled = this.Conditions.Count > 0;
-        }
-        
-        /// <summary>
         /// 检查种子是否匹配所有条件（AND关系）
         /// </summary>
         public bool Check(int gameID, bool useLegacyRandom)
