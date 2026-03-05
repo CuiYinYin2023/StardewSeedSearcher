@@ -121,7 +121,7 @@
             margin-bottom: 15px;
         }
 
-        .condition-row {
+        .weather-condition-row {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
             gap: 10px;
@@ -133,8 +133,8 @@
             padding: 12px;
         }
 
-        .condition-row select,
-        .condition-row input {
+        .weather-condition-row select,
+        .weather-condition-row input {
             padding: 8px;
             border: 1px solid #ddd;
             border-radius: 4px;
@@ -142,11 +142,11 @@
             text-align: center; 
         }
 
-        .condition-row select {
+        .weather-condition-row select {
             flex: 0 0 100px;
         }
 
-        .condition-row input {
+        .weather-condition-row input {
             flex: 1;
             min-width: 80px;
         }

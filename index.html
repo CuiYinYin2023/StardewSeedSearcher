@@ -112,15 +112,15 @@
 
                 <!-- 天气功能 -->
                 <div class="checkbox-group">
-                    <!-- <input type="checkbox" id="weatherEnabled" checked> -->
-                    <input type="checkbox" id="weatherEnabled">
+                    <input type="checkbox" id="weatherEnabled" checked>
+                    <!-- <input type="checkbox" id="weatherEnabled"> -->
                     <label for="weatherEnabled">启用天气筛选</label>
                     <span style="font-size: 14px; color: #a6a6a6">目前只支持第一年，雨天包含绿雨和雷雨。</span>
                 </div>
-                <!-- <div class="condition-config" id="weatherConfig"> -->
-                <div class="condition-config" id="weatherConfig" style="display: none;">
+                <div class="condition-config" id="weatherConfig">
+                <!-- <div class="condition-config" id="weatherConfig" style="display: none;"> -->
                     <h4 style="margin-bottom: 15px;">天气筛选条件</h4>
-                    <!-- 新的容器,用来放所有可编辑的条件行 -->
+                    
                     <div class="conditions-container" id="conditionsContainer">  
                         <!-- 字段标签 -->
                         <div class="condition-grid" style="margin-bottom: 5px;">
@@ -131,16 +131,16 @@
                             <div style="font-size: 13px; color: #000000; text-align: center;"></div>
                         </div>                  
                         <!-- 第一个编辑框(初始存在) -->
-                        <div class="condition-row">                          
+                        <div class="weather-condition-row">                          
                             <select>
-                                <option value="Spring">春</option>
-                                <option value="Summer">夏</option>
-                                <option value="Fall">秋</option>
+                                <option>春</option>
+                                <option>夏</option>
+                                <option>秋</option>
                             </select>
-                            <input type="number" placeholder="起始 (1-28)" min="1" max="28" value="1">
-                            <input type="number" placeholder="结束 (1-28)" min="1" max="28" value="28">
-                            <input type="number" placeholder="最少雨天" min="1" value="10">
-                            <button type="button" class="btn-remove" onclick="removeCondition(0)">删除</button>
+                            <input type="number" min="1" max="28" value="1">
+                            <input type="number" min="1" max="28" value="28">
+                            <input type="number" min="1" value="10">
+                            <button type="button" class="btn-remove">删除</button>
                         </div>
                     </div>
                     
@@ -152,19 +152,20 @@
 
                 <!-- 仙子功能 -->
                 <div class="checkbox-group">
-                    <!-- <input type="checkbox" id="fairyEnabled"> -->
-                    <input type="checkbox" id="fairyEnabled" checked>
+                    <input type="checkbox" id="fairyEnabled">
+                    <!-- <input type="checkbox" id="fairyEnabled" checked> -->
                     <label for="fairyEnabled">启用仙子筛选</label>
                     <span style="font-size: 14px; color: #a6a6a6">游戏中，仙子事件可能会被其他事件覆盖，或因没有合适地块而不发生。</span>
 
                 </div>
-                <div class="condition-config" id="fairyConfig">
-                <!-- <div class="condition-config" id="fairyConfig" style="display: none;"> -->
+                <!-- <div class="condition-config" id="fairyConfig"> -->
+                <div class="condition-config" id="fairyConfig" style="display: none;">
                     <h4 style="margin-bottom: 15px;">仙子筛选条件</h4>
                     
                     <div class="fairy-conditions-container" id="fairyConditionsContainer"></div>
 
                     <button type="button" class="btn-add-condition" onclick="addFairyCondition()">添加条件</button>
+                    
                     <div class="error-message" id="fairyConditionError"></div>
                 </div>
 

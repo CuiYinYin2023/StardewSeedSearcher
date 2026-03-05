@@ -146,16 +146,16 @@ function addCondition() {
     const container = document.getElementById('conditionsContainer');
     
     const newRow = document.createElement('div');
-    newRow.className = 'condition-row';
+    newRow.className = 'weather-condition-row';
     newRow.innerHTML = `
         <select>
-            <option value="Spring">春</option>
-            <option value="Summer">夏</option>
-            <option value="Fall">秋</option>
+            <option>春</option>
+            <option>夏</option>
+            <option>秋</option>
         </select>
-        <input type="number" placeholder="起始 (1-28)" min="1" max="28" value="1">
-        <input type="number" placeholder="结束 (1-28)" min="1" max="28" value="28">
-        <input type="number" placeholder="最少雨天" min="1" value="10">
+        <input type="number" min="1" max="28" value="1">
+        <input type="number" min="1" max="28" value="28">
+        <input type="number" min="1" value="10">
         <button type="button" class="btn-remove">删除</button>
     `;
     
@@ -178,7 +178,7 @@ function addCondition() {
 
 // 同步条件数据（从DOM读取）
 function syncConditions() {
-    const rows = document.querySelectorAll('.condition-row');
+    const rows = document.querySelectorAll('.weather-condition-row');
     conditions = Array.from(rows).map(row => {
         const inputs = row.querySelectorAll('select, input');
         return {
@@ -644,7 +644,7 @@ function updateOutputLimitMax() {
 
 document.addEventListener('DOMContentLoaded', function() {
     // 天气条件初始化
-    const firstRow = document.querySelector('.condition-row');
+    const firstRow = document.querySelector('.weather-condition-row');
     if (firstRow) {
         // 为第一行添加删除事件
         firstRow.querySelector('.btn-remove').addEventListener('click', function() {
