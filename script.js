@@ -4,14 +4,16 @@ let foundSeeds = [];
 let currentSearchUseLegacy = false;
 let seedDetailsCache = {};
 let nextStartSeed = 0;
+
 let nextFairyIndex = 0;
+
 let mineChestConditions = [];
 let nextMineChestIndex = 1;
+
 let monsterLevelConditions = [];
 let nextMonsterLevelIndex = 1;
+
 let ALL_CART_ITEM_NAMES = [];
-let cartConditions = [];
-let nextCartIndex = 1;
 
 const elements = {
     form: document.getElementById('searchForm'),
@@ -335,6 +337,7 @@ function addMonsterLevelCondition() {
     container.appendChild(clone);
 }
 
+// 检查怪物层数据
 function validateMonsterLevelCondition(condition) {
     const { startSeason, startDay, endSeason, endDay, startLevel, endLevel } = condition;
 
@@ -369,11 +372,9 @@ async function loadCartItems() {
 function addCartCondition() {
     const container = elements.cartConditionsContainer;
     const template = document.getElementById('cartConditionTemplate');
-    const index = nextCartIndex++;
     
     const clone = template.content.cloneNode(true);
     const row = clone.querySelector('.cart-condition-row');
-    row.setAttribute('data-index', index);
     
     const filterInput = row.querySelector('.cart-item-filter-input');
     const itemSelect = row.querySelector('.cart-item-select');
@@ -398,15 +399,9 @@ function addCartCondition() {
         if (filtered.length === 1) {
             itemSelect.value = filtered[0];
         }
-        updateCartCondition(index); // 触发数据更新
-    });
-    
-    // 为当前行内所有的 input (year, day, itemName, checkbox) 和 select (season) 绑定监听
-    row.querySelectorAll('select, input').forEach(input => {
-        input.addEventListener('input', () => updateCartCondition(index));
     });
 
-    // 多次复选框联动：勾选时显示次数输入框
+    // “多次出现”联动逻辑
     const multiCheck = row.querySelector('.cart-multi-check');
     const multiWrap = row.querySelector('.cart-multi-count-wrap');
     const multiInput = row.querySelector('.cart-min-occurrences');
@@ -416,87 +411,30 @@ function addCartCondition() {
     multiCheck.addEventListener('change', () => {
         // 只控制是否可编辑
         multiInput.disabled = !multiCheck.checked;
-        updateCartCondition(index);
     });
 
     // 移除按钮
-    row.querySelector('.btn-remove').onclick = () => removeCartCondition(index);
-    
-    container.appendChild(clone);
-    updateCartCondition(index); // 初始化当前行数据
-}
-
-// 更新指定索引的猪车条件数据
-function updateCartCondition(index) {
-    const row = document.querySelector(`.cart-condition-row[data-index="${index}"]`);
-    if (!row) return;
-    
-    const startYear = row.querySelector('.cart-start-year').value;
-    const startSeason = row.querySelector('.cart-start-season').value;
-    const startDay = parseInt(row.querySelector('.cart-start-day').value);
-    const endYear = row.querySelector('.cart-end-year').value;
-    const endSeason = row.querySelector('.cart-end-season').value;
-    const endDay = parseInt(row.querySelector('.cart-end-day').value);
-    const itemName = row.querySelector('.cart-item-select').value;
-    const requireQty5 = row.querySelector('.cart-require-qty5').checked;
-    // 多次出现
-    const multiCheck = row.querySelector('.cart-multi-check');
-    const minOccurrences = multiCheck.checked
-        ? (parseInt(row.querySelector('.cart-min-occurrences').value) || 2)
-        : 1;
-
-    cartConditions[index] = { 
-        startYear,
-        startSeason,
-        startDay,
-        endYear,
-        endSeason,
-        endDay,
-        itemName,
-        requireQty5,
-        minOccurrences
+    row.querySelector('.btn-remove').onclick = () => {
+        row.remove();
     };
     
-    // 清除错误消息
-    elements.cartConditionError.textContent = '';
+    container.appendChild(clone);
 }
-
-// 移除指定索引的猪车条件行
-function removeCartCondition(index) {
-    const row = document.querySelector(`.cart-condition-row[data-index="${index}"]`);
-    if (row) {
-        row.remove();
-        delete cartConditions[index];
-    }
-}
-
 
 // 验证猪车条件
 function validateCartCondition(condition) {
     const { startYear, startSeason, startDay, endYear, endSeason, endDay, itemName } = condition;
     
-    // 1. 年份验证
-    if (startYear < 1 || endYear < 1) {
-        return { valid: false, error: '年份不能小于 1' };
-    }
-
-    // 2. 日期验证
-    if (startDay < 1 || startDay > 28 || endDay < 1 || endDay > 28) {
-        return { valid: false, error: '日期必须在 1-28 之间' };
-    }
-    
-    // 3. 物品名验证（只需要检查是否选了值）
     if (!itemName || itemName === "") {
-        return { valid: false, error: '请在下拉菜单中选择一个具体的物品' };
+        return { valid: false, error: '请在猪车下拉菜单中选择一个具体的物品' };
     }
     
-    // 4. 跨年绝对日期验证 (一年 112 天)
-    const seasonOrder = { 'Spring': 0, 'Summer': 1, 'Fall': 2, 'Winter': 3 };
-    const startAbs = ((startYear - 1) * 112) + (seasonOrder[startSeason] * 28) + startDay;
-    const endAbs = ((endYear - 1) * 112) + (seasonOrder[endSeason] * 28) + endDay;
+    // 跨年绝对日期验证 (利用绝对天数)
+    const startAbs = dateToAbsoluteDay(startYear, startSeason, startDay);
+    const endAbs = dateToAbsoluteDay(endYear, endSeason, endDay);
 
     if (startAbs > endAbs) {
-        return { valid: false, error: '起始日期不能晚于结束日期' };
+        return { valid: false, error: '猪车起始日期不能晚于结束日期' };
     }
 
     return { valid: true };
@@ -707,7 +645,7 @@ elements.form.addEventListener('submit', async (e) => {
     const mineChestEnabled = elements.mineChestEnabled.checked;
     let mineChestConditionsData = [];
 
-    // 矿井宝箱
+    // 怪物层
     const monsterLevelEnabled = document.getElementById('monsterLevelEnabled').checked;
     let monsterLevelConditionsData = [];
 
@@ -720,7 +658,7 @@ elements.form.addEventListener('submit', async (e) => {
 
     // 猪车
     const cartEnabled = elements.cartEnabled.checked;
-    const validCartConditions = cartConditions.filter(c => c);
+    let cartConditionsData = [];
 
     // 计算起始种子
     let startSeed = loopSearch && nextStartSeed > 0 
@@ -883,23 +821,41 @@ elements.form.addEventListener('submit', async (e) => {
 
     // 猪车条件验证
     if (cartEnabled) {
-        if (validCartConditions.length === 0) {
+        const cartRows = document.querySelectorAll('.cart-condition-row');
+
+        if (cartRows.length === 0) {
             alert('请至少添加一个猪车条件！');
             return;
         }
         
-        for (let i = 0; i < cartConditions.length; i++) {
-            const condition = cartConditions[i];
-            if (!condition) continue;
+        for (let row of cartRows) {
+            const multiCheck = row.querySelector('.cart-multi-check').checked;
             
+            const condition = {
+                startYear: parseInt(row.querySelector('.cart-start-year').value),
+                startSeason: SeasonNameToIndex[row.querySelector('.cart-start-season').value],
+                startDay: parseInt(row.querySelector('.cart-start-day').value),
+
+                endYear: parseInt(row.querySelector('.cart-end-year').value),
+                endSeason: SeasonNameToIndex[row.querySelector('.cart-end-season').value],
+                endDay: parseInt(row.querySelector('.cart-end-day').value),
+                
+                itemName: row.querySelector('.cart-item-select').value,
+                requireQty5: row.querySelector('.cart-require-qty5').checked,
+                minOccurrences: multiCheck ? parseInt(row.querySelector('.cart-min-occurrences').value) : 1
+            };
+
+            // 验证合法性
             const validation = validateCartCondition(condition);
             if (!validation.valid) {
-                alert(`猪车条件 ${i + 1}: ${validation.error}`);
+                alert(`猪车筛选错误: ${validation.error}`);
                 return;
             }
-            // 假设您有 hasCartDuplicate 检查重复的逻辑
+
+            cartConditionsData.push(condition);
         }
     }
+
     // 显示进度区域
     elements.progressSection.style.display = 'block';
     elements.resultsSection.style.display = 'block';
@@ -922,19 +878,6 @@ elements.form.addEventListener('submit', async (e) => {
 
     // 发送搜索请求
     try {
-
-        const cartConditionsData = cartEnabled ? validCartConditions.map(c => ({
-            startYear: c.startYear,
-            startSeason: { '春': 0, '夏': 1, '秋': 2, '冬': 3 }[c.startSeason], // 转换为 0-3
-            startDay: c.startDay,
-            endYear: c.endYear,
-            endSeason: { '春': 0, '夏': 1, '秋': 2, '冬': 3 }[c.endSeason],     // 转换为 0-3
-            endDay: c.endDay,
-            itemName: c.itemName,
-            requireQty5: c.requireQty5,
-            minOccurrences: c.minOccurrences || 1
-        })) : [];
-
         const response = await fetch('http://localhost:5000/api/search', {
             method: 'POST',
             headers: {

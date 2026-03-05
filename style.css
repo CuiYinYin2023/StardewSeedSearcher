@@ -839,7 +839,6 @@
             cursor: not-allowed;
         }
         
-        /* 默认隐藏次数输入 */
         .cart-multi-count-wrap {
             align-items: center;
             gap: 4px;
