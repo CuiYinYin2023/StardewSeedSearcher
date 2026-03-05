@@ -1,3 +1,5 @@
+namespace StardewSeedSearcher.Core;
+
 public static class TimeHelper
 {
     private const int DaysPerSeason = 28;
