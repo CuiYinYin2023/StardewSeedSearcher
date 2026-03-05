@@ -3,6 +3,7 @@ using StardewSeedSearcher.Data;
 
 namespace StardewSeedSearcher.Features
 {
+    // 商品
     public class CartItem
     {
         public string Category { get; set; }
@@ -11,10 +12,40 @@ namespace StardewSeedSearcher.Features
         public int Price { get; set; }
     }
     
+    // 单日猪车出售列表
     public class CartDayResult
     {
         public int Day { get; set; }
         public List<CartItem> Items { get; set; } = new List<CartItem>();
+    }
+
+    // 猪车搜索条件
+    public class CartCondition
+    {
+        public int StartYear { get; set; }
+        public int StartSeason { get; set; }  // 0-3
+        public int StartDay { get; set; }
+        public int EndYear { get; set; }
+        public int EndSeason { get; set; }  // 0-3
+        public int EndDay { get; set; }
+        public string ItemName { get; set; }
+        public bool RequireQty5 { get; set; }
+        public int MinOccurrences { get; set; } = 1;
+
+        public int AbsoluteStartDay => TimeHelper.DateToAbsoluteDay(StartYear, StartSeason, StartDay);
+        public int AbsoluteEndDay => TimeHelper.DateToAbsoluteDay(EndYear, EndSeason, EndDay);
+    }
+
+    // 猪车匹配结果（内部使用）
+    public class CartDayMatch
+    {
+        public int Year { get; set; }
+        public int Season { get; set; } // 整数 0-3
+        public int Day { get; set; }    // 1-28
+        public int AbsoluteDay { get; set; } // 用于种子简介排序
+        public string ItemName { get; set; }
+        public int Quantity { get; set; }
+        public int Price { get; set; }
     }
 
     /// <summary>
@@ -35,34 +66,20 @@ namespace StardewSeedSearcher.Features
             // 所有条件都必须满足（AND）
             foreach (var condition in Conditions)
             {
-                // 转换为绝对天数
-                int startDay = TimeHelper.DateToAbsoluteDay(condition.StartYear, condition.StartSeason, condition.StartDay);
-                int endDay = TimeHelper.DateToAbsoluteDay(condition.EndYear, condition.EndSeason, condition.EndDay);
-
-                int minOccurrences = condition.MinOccurrences < 1 ? 1 : condition.MinOccurrences;
 
                 // 找到 minOccurrences 个匹配即可提前退出
-                var matches = FindAllMatches(seed, startDay, endDay,
-                    condition.ItemName, condition.RequireQty5, useLegacyRandom, stopAt: minOccurrences);
+                var matches = FindAllMatches(
+                    seed, condition.AbsoluteStartDay, condition.AbsoluteEndDay,
+                    condition.ItemName, condition.RequireQty5, useLegacyRandom, 
+                    stopAt: condition.MinOccurrences);
 
-                if (matches.Count < minOccurrences)
+                if (matches.Count < condition.MinOccurrences)
                     return false;
             }
 
             return true;
         }
 
-        private int MapSeasonToInteger(string seasonName)
-        {
-            return seasonName.ToLower() switch
-            {
-                "spring" => 0,
-                "summer" => 1,
-                "fall" => 2,
-                "winter" => 3,
-                _ => 0
-            };
-        }
         public int EstimateCost(bool useLegacyRandom)
         {
             if (Conditions.Count == 0) return 0;
@@ -82,12 +99,9 @@ namespace StardewSeedSearcher.Features
 
             foreach (var condition in Conditions)
             {
-                int startDay = TimeHelper.DateToAbsoluteDay(condition.StartYear, condition.StartSeason, condition.StartDay);
-                int endDay = TimeHelper.DateToAbsoluteDay(condition.EndYear, condition.EndSeason, condition.EndDay);
-
                 // 计算范围内有多少个猪车日期
                 int cartDayCount = 0;
-                for (int day = startDay; day <= endDay; day++)
+                for (int day = condition.AbsoluteStartDay; day <= condition.AbsoluteEndDay; day++)
                 {
                     if (IsCartDay(day))
                     {
@@ -131,10 +145,7 @@ namespace StardewSeedSearcher.Features
 
             foreach (var condition in Conditions)
             {
-                int startDay = TimeHelper.DateToAbsoluteDay(condition.StartYear, condition.StartSeason, condition.StartDay);
-                int endDay = TimeHelper.DateToAbsoluteDay(condition.EndYear, condition.EndSeason, condition.EndDay);
-
-                var matches = FindAllMatches(seed, startDay, endDay,
+                var matches = FindAllMatches(seed, condition.AbsoluteStartDay, condition.AbsoluteEndDay,
                     condition.ItemName, condition.RequireQty5, useLegacyRandom);
 
                 cartMatches.AddRange(matches.Cast<object>());
@@ -341,47 +352,5 @@ namespace StardewSeedSearcher.Features
             
             return visitsNow;
         }
-        
-        private string GetDayName(int day)
-        {
-            string[] seasonNames = { "春", "夏", "秋", "冬" };
-            string[] dayNames = { "周一", "周二", "周三", "周四", "周五", "周六", "周日" };
-            
-            int season = (day - 1) / 28;
-            int dayOfMonth = ((day - 1) % 28) + 1;
-            int dayOfWeek = (day - 1) % 7;
-            
-            return $"{seasonNames[season]}{dayOfMonth} ({dayNames[dayOfWeek]})";
-        }
-    }
-
-    /// <summary>
-    /// 猪车搜索条件
-    /// </summary>
-    public class CartCondition
-    {
-        public int StartYear { get; set; }
-        public int StartSeason { get; set; }  // 0-3
-        public int StartDay { get; set; }
-        public int EndYear { get; set; }
-        public int EndSeason { get; set; }  // 0-3
-        public int EndDay { get; set; }
-        public string ItemName { get; set; }
-        public bool RequireQty5 { get; set; }
-        public int MinOccurrences { get; set; } = 1;
-    }
-
-    /// <summary>
-    /// 猪车匹配结果（内部使用）
-    /// </summary>
-    public class CartDayMatch
-    {
-        public int Year { get; set; }
-        public int Season { get; set; } // 整数 0-3
-        public int Day { get; set; }    // 1-28
-        public int AbsoluteDay { get; set; } // 用于种子简介排序
-        public string ItemName { get; set; }
-        public int Quantity { get; set; }
-        public int Price { get; set; }
     }
 }
