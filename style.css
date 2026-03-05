@@ -212,6 +212,14 @@
             transform: none;
         }
 
+        .btn-search.btn-stop {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        }
+
+        .btn-search.btn-stop:hover {
+            box-shadow: 0 5px 20px rgba(231, 76, 60, 0.4);
+        }
+
         .progress-section {
             display: none;
             margin-top: 20px;

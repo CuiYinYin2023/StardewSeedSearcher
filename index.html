@@ -22,7 +22,7 @@
                     <summary class="guide-summary">操作指南</summary>
                     <ul class="guide-list">
                         <li>如果搜索无响应或出现 Bug，请<strong>完全关闭黑色的程序窗口</strong>和此页面，然后再重新运行start.bat。仅刷新此页面可能无法解决问题。</li>
-                        <li>目前没有停止搜索功能，可以关掉黑色程序窗口强行停止。</li>
+                        <li>搜索开始后，按钮会变为"停止搜索"，点击即可停止。</li>
                         <li>遇到影响使用的BUG或预测错误，请点击左下角联系作者反馈。</li>
                         <li>如果找到了合适的种子，欢迎点击左下角支持作者。</li>
                         <!-- 未来可以填写更多说明 -->
@@ -96,7 +96,7 @@
                     </div>
                     <div class="form-group">
                         <label for="searchRange">搜索范围（建议第一次不要太高）</label>
-                        <input type="number" id="searchRange" value="100000" min="1" required>
+                        <input type="number" id="searchRange" value="100000" min="1" max="2147483648" required>
                     </div>                    
                     <div class="checkbox-group">
                         <input type="checkbox" id="loopSearch" checked>
@@ -385,7 +385,7 @@
                         <!-- 第一行：时间范围 -->
                         <div class="row-time">
                             <span>第</span>
-                            <input type="number" class="cart-start-year" min="1" max="10" value="1" style="width: 60px;">
+                            <input type="number" class="cart-start-year" min="1" max="20" value="1" style="width: 60px;">
                             <span>年</span>
                             <select class="cart-start-season" style="width: 60px;">
                                 <option>春</option>
@@ -396,7 +396,7 @@
                             <input type="number" class="cart-start-day" min="1" max="28" value="1" style="width: 60px;">
 
                             <span>日 - 第</span>
-                            <input type="number" class="cart-end-year" min="1" max="10" value="1" style="width: 60px;">
+                            <input type="number" class="cart-end-year" min="1" max="20" value="1" style="width: 60px;">
                             <span>年</span>
                             <select class="cart-end-season" style="width: 60px;">
                                 <option>春</option>
@@ -433,6 +433,7 @@
                                 <input type="number" class="cart-min-occurrences" min="1" max="99" value="1" disabled style="width: 60px;">
                                 次）
                             </span>
+                            <span style="font-size: 14px; color: #a6a6a6">*例：春1-28至少出售2次电池组。同一天内不会重复出售相同物品。</span>
                         </div>
 
                         <!-- 第四行：删除 -->
