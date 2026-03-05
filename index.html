@@ -167,6 +167,7 @@
                 <div class="condition-config" id="fairyConfig" style="display: none;">
                     <h4 style="margin-bottom: 15px;">仙子筛选条件</h4>
                     
+                    <!-- 初始不放内容，由 JavaScript 动态添加，或者在页面加载时调用 addCondition() -->
                     <div class="fairy-conditions-container" id="fairyConditionsContainer"></div>
 
                     <button type="button" class="btn-add-condition" onclick="addFairyCondition()">添加条件</button>
@@ -179,7 +180,7 @@
                     <div class="fairy-condition-row">
 
                         <span>第</span>
-                        <input type="number" step="1" min="1" max="10" value="1" class="fairy-start-year">
+                        <input type="number" step="1" min="1" max="10" value="1" class="fairy-start-year" style="width: 60px;">
                         <span>年</span>
                         <select class="fairy-start-season" style="width: 60px;">
                             <option>春</option>
@@ -209,57 +210,44 @@
 
                 <!-- 矿井宝箱 -->
                 <div class="checkbox-group">
-                    <input type="checkbox" id="mineChestEnabled">
-                    <!-- <input type="checkbox" id="mineChestEnabled" checked> -->
+                    <!-- <input type="checkbox" id="mineChestEnabled"> -->
+                    <input type="checkbox" id="mineChestEnabled" checked>
                     <label for="mineChestEnabled">启用矿井混合宝箱筛选</label>
-                    <span style="font-size: 14px; color: #a6a6a6">必须在创建存档时勾选混合矿井，否则为默认物品。</span>
+                    <span style="font-size: 14px; color: #a6a6a6">必须在创建存档时选择<strong>矿洞掉落-重新混合</strong>，否则为默认物品。</span>
                 </div>
-                <!-- <div class="condition-config" id="mineChestConfig"> -->
-                <div class="condition-config" id="mineChestConfig" style="display: none;">
+
+                <div class="condition-config" id="mineChestConfig">
+                <!-- <div class="condition-config" id="mineChestConfig" style="display: none;"> -->
                     <h4 style="margin-bottom: 15px;">矿井混合宝箱筛选条件</h4>
                     
-                    <div class="minechest-conditions-container" id="mineChestConditionsContainer">
+                    <!-- 初始不放内容，由 JavaScript 动态添加，或者在页面加载时调用 addCondition() -->
+                    <div class="minechest-conditions-container" id="mineChestConditionsContainer"></div>
                         
-                        <!-- 第一个条件行 -->
-                        <div class="minechest-condition-row" data-index="0">
-                            <select class="minechest-floor" onchange="onFloorChange(0)">
-                                <option value="10">10层</option>
-                                <option value="20">20层</option>
-                                <option value="50">50层</option>
-                                <option value="60">60层</option>
-                                <option value="80">80层</option>
-                                <option value="90">90层</option>
-                                <option value="110" selected>110层</option>
-                            </select>
-                            <select class="minechest-item" onchange="updateMineChestCondition(0)">
-                                <!-- 动态填充物品列表 -->
-                            </select>
-                            <button type="button" class="btn-remove" onclick="removeMineChestCondition(0)">删除</button>
-                        </div>
-                    </div>
-                    
-                    <template id="mineChestConditionTemplate">
-                        <div class="minechest-condition-row">
-                            <select class="minechest-floor">
-                                <option value="10">10层</option>
-                                <option value="20">20层</option>
-                                <option value="50">50层</option>
-                                <option value="60">60层</option>
-                                <option value="80">80层</option>
-                                <option value="90">90层</option>
-                                <option value="110">110层</option>
-                            </select>
-                            <select class="minechest-item">
-                                <!-- 动态填充物品列表 -->
-                            </select>
-                            <button type="button" class="btn-remove">删除</button>
-                        </div>
-                    </template>
-                    
                     <button type="button" class="btn-add-condition" onclick="addMineChestCondition()">添加条件</button>
-                    
                     <div class="error-message" id="mineChestConditionError"></div>
                 </div>
+
+                <!-- 矿井宝箱条件行模板 -->
+                <template id="mineChestConditionTemplate">
+                    <div class="minechest-condition-row">
+                        <select class="minechest-floor">
+                            <option value="10">10层</option>
+                            <option value="20">20层</option>
+                            <option value="50">50层</option>
+                            <option value="60">60层</option>
+                            <option value="80">80层</option>
+                            <option value="90">90层</option>
+                            <option value="110">110层</option>
+                        </select>
+                        <span>层  宝箱物品</span>
+                        
+                        <select class="minechest-item" style="width: 160px;">
+                            <option value=""></option>
+                        </select>
+
+                        <button type="button" class="btn-remove">删除</button>
+                    </div>
+                </template>
                 <br>
 
                 <!-- 怪物层部分 -->

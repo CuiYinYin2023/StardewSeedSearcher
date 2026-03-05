@@ -57,6 +57,7 @@ const elements = {
     cartConditionError: document.getElementById('cartConditionError')
 };
 
+// 混合宝箱数据
 const MINE_CHEST_ITEMS = { 
     10: ["皮靴", "工作靴", "木剑", "铁制短剑", "疾风利剑", "股骨"],
     20: ["钢制轻剑", "木棒", "精灵之刃", "光辉戒指", "磁铁戒指"],
@@ -66,6 +67,7 @@ const MINE_CHEST_ITEMS = {
     90: ["黑曜石之刃", "淬火阔剑", "蛇形邪剑", "骨剑", "骨化剑"],
     110: ["太空之靴", "水晶鞋", "钢刀", "巨锤"]
 };
+const ALL_MINE_FLOORS = [10, 20, 50, 60, 80, 90, 110];
 
 // 日期转换
 const DaysPerSeason = 28;
@@ -261,90 +263,60 @@ function isFairyDuplicate(currentCondition, allConditions) {
 }
 
 // 添加矿井宝箱条件
-function addMineChestCondition() {
+function addMineChestCondition(targetFloor = null, targetItem = null) {
     const container = document.getElementById('mineChestConditionsContainer');
     const template = document.getElementById('mineChestConditionTemplate');
-    const index = nextMineChestIndex++;
     
+    // 1. 获取当前页面已有的所有层数
+    const existingFloors = Array.from(document.querySelectorAll('.minechest-floor'))
+                                .map(select => parseInt(select.value));
+
+    let floorToSet = targetFloor;
+    let itemToSet = targetItem;
+
+    // 2. 如果没指定层数（点击“添加条件”按钮时），寻找下一个可用层数
+    if (floorToSet === null) {
+        const availableFloors = ALL_MINE_FLOORS.filter(f => !existingFloors.includes(f));
+        
+        if (availableFloors.length === 0) {
+            alert("所有矿井层数已设置完毕，无法继续添加。");
+            return;
+        }
+        // 自动取剩余层数里的第一个
+        floorToSet = availableFloors[0];
+        // 自动取该层数物品池里的第一个
+        itemToSet = MINE_CHEST_ITEMS[floorToSet][0];
+    }
+
+    // 3. 实例化模板
     const clone = template.content.cloneNode(true);
     const row = clone.querySelector('.minechest-condition-row');
-    row.setAttribute('data-index', index);
-    
     const floorSelect = row.querySelector('.minechest-floor');
     const itemSelect = row.querySelector('.minechest-item');
-    
-    // 默认填充第一个楼层的物品
-    populateItemOptions(itemSelect, 10);
-    
-    // 绑定事件
-    floorSelect.onchange = () => onFloorChange(index);  // 使用新函数
-    itemSelect.onchange = () => updateMineChestCondition(index);
-    row.querySelector('.btn-remove').onclick = () => removeMineChestCondition(index);
+
+    // 4. 初始化下拉框值
+    floorSelect.value = floorToSet;
+    populateMineItemOptions(floorToSet, itemSelect);
+    if (itemToSet) itemSelect.value = itemToSet;
+
+    // 5. 绑定联动逻辑
+    floorSelect.onchange = () => {
+        // 检查是否选择了其他行已经选过的层数（可选增加）
+        populateMineItemOptions(floorSelect.value, itemSelect);
+    };
+
+    // 6. 删除逻辑
+    row.querySelector('.btn-remove').onclick = () => {
+        row.remove();
+    };
     
     container.appendChild(clone);
-    updateMineChestCondition(index);
 }
 
-// 更新矿井宝箱条件
-function updateMineChestCondition(index) {
-    const row = document.querySelector(`.minechest-condition-row[data-index="${index}"]`);
-    if (!row) return;
-    
-    const floor = parseInt(row.querySelector('.minechest-floor').value);
-    const item = row.querySelector('.minechest-item').value;
-    
-    mineChestConditions[index] = { Floor: floor, ItemName: item };
-}
-
-// 删除矿井宝箱条件
-function removeMineChestCondition(index) {
-    const row = document.querySelector(`.minechest-condition-row[data-index="${index}"]`);
-    if (row) {
-        row.remove();
-        delete mineChestConditions[index];
-    }
-}
-
-// 根据楼层填充物品选项
-function populateItemOptions(selectElement, floor) {
-    selectElement.innerHTML = ''; // 清空现有选项
+// 辅助函数：根据层数填充下拉框
+function populateMineItemOptions(floor, selectElement) {
     const items = MINE_CHEST_ITEMS[floor] || [];
-    
-    items.forEach(item => {
-        const option = document.createElement('option');
-        option.value = item;
-        option.textContent = item;
-        selectElement.appendChild(option);
-    });
-}
-
-// 检查重复条件
-function hasMineChestDuplicate(newCondition, excludeIndex) {
-    const validConditions = mineChestConditions.filter((c, i) => c && i !== excludeIndex);
-    
-    for (let condition of validConditions) {
-        if (condition.floor === newCondition.floor && 
-            condition.ItemName === newCondition.ItemName) {
-            return true;
-        }
-    }
-    return false;
-}
-
-// 处理楼层变化
-function onFloorChange(index) {
-    const row = document.querySelector(`.minechest-condition-row[data-index="${index}"]`);
-    if (!row) return;
-    
-    const floorSelect = row.querySelector('.minechest-floor');
-    const itemSelect = row.querySelector('.minechest-item');
-    const floor = parseInt(floorSelect.value);
-    
-    // 更新物品列表
-    populateItemOptions(itemSelect, floor);
-    
-    // 更新条件
-    updateMineChestCondition(index);
+    selectElement.innerHTML = items.map(item => `<option value="${item}">${item}</option>`).join('');
 }
 
 // 怪物层相关函数
@@ -615,36 +587,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 天气条件初始化
     addWeatherCondition(); 
-    // const weatherContainer = document.getElementById('conditionsContainer');
-    // if (weatherContainer) {
-    //     // 直接调用你写好的 addCondition 函数，它会自动使用模板生成第一行并绑定好删除事件
-    //     addCondition(); 
-    // }
 
     // 仙子条件初始化
-    addFairyCondition(); // 添加第一个条件行
+    addFairyCondition(); 
 
     // 矿井宝箱条件初始化
-    const firstMineChestRow = document.querySelector('.minechest-condition-row[data-index="0"]');
-    if (firstMineChestRow) {
-        const floorSelect = firstMineChestRow.querySelector('.minechest-floor');
-        const itemSelect = firstMineChestRow.querySelector('.minechest-item');
-        
-        // 设置默认楼层为 110
-        floorSelect.value = '110';
-        
-        // 填充 110 层的物品列表
-        populateItemOptions(itemSelect, 110);
-        
-        // 设置默认物品为"巨锤"
-        itemSelect.value = '巨锤';
-        
-        // 绑定楼层变化事件
-        floorSelect.onchange = () => onFloorChange(0);
-        
-        // 初始化条件
-        updateMineChestCondition(0);
-    }
+    addMineChestCondition("110", "巨锤"); 
 
     // 怪物层条件初始化
     updateMonsterLevelCondition(0);
@@ -798,15 +746,26 @@ elements.form.addEventListener('submit', async (e) => {
     currentSearchUseLegacy = useLegacy;  // 保存当前搜索模式
     const outputLimit = parseInt(document.getElementById('outputLimit').value); // 读取输出数量
 
+    // 天气
     const weatherEnabled = elements.weatherEnabled.checked;
     let weatherConditionsData = [];
 
+    // 仙子
+    const fairyEnabled = elements.fairyEnabled.checked;
+    let fairyConditionsData = []; 
+
+    // 矿井宝箱
     const mineChestEnabled = elements.mineChestEnabled.checked;
+    let mineChestConditionsData = [];
+
+    // 沙漠节
     const desertFestivalEnabled = elements.desertFestivalEnabled.checked;
     const desertFestivalCondition = desertFestivalEnabled ? {
         requireJas: elements.requireJas.checked,
         requireLeah: elements.requireLeah.checked
     } : null;
+
+    // 猪车
     const cartEnabled = elements.cartEnabled.checked;
     const validCartConditions = cartConditions.filter(c => c);
 
@@ -875,9 +834,6 @@ elements.form.addEventListener('submit', async (e) => {
     }
 
     // 仙子条件验证
-    const fairyEnabled = elements.fairyEnabled.checked;
-    let fairyConditionsData = []; 
-
     if (fairyEnabled) {
         const fairyRows = document.querySelectorAll('.fairy-condition-row');
         
@@ -915,21 +871,28 @@ elements.form.addEventListener('submit', async (e) => {
     
     // 矿井宝箱验证
     if (mineChestEnabled) {
-        const validMineChestConditions = mineChestConditions.filter(c => c);
-        
-        if (validMineChestConditions.length === 0) {
+        const mineRows = document.querySelectorAll('.minechest-condition-row');
+        const usedFloors = new Set(); // 用于检查重复
+
+        if (mineRows.length === 0) {
             alert('请至少添加一个矿井宝箱条件！');
             return;
         }
-        
-        for (let i = 0; i < mineChestConditions.length; i++) {
-            const condition = mineChestConditions[i];
-            if (!condition) continue;
-            
-            if (hasMineChestDuplicate(condition, i)) {
-                alert(`矿井宝箱条件 ${i + 1}: 与其他条件重复`);
-                return;
+
+        for (let row of mineRows) {
+            const floor = parseInt(row.querySelector('.minechest-floor').value);
+            const itemName = row.querySelector('.minechest-item').value;
+
+            if (usedFloors.has(floor)) {
+                alert(`错误：矿井第 ${floor} 层被重复设置了！`);
+                return; // 终止搜索
             }
+
+            usedFloors.add(floor);
+            mineChestConditionsData.push({
+                floor: floor,
+                itemName: itemName
+            });
         }
     }
 
@@ -997,11 +960,6 @@ elements.form.addEventListener('submit', async (e) => {
 
     // 发送搜索请求
     try {
-
-        const mineChestConditionsData = mineChestEnabled ? mineChestConditions.filter(c => c).map(c => ({
-            Floor: c.Floor,
-            ItemName: c.ItemName
-        })) : [];
 
         const monsterLevelConditionsData = monsterLevelEnabled ? monsterLevelConditions.filter(c => c).map(c => ({
             startDay: c.startDay,
