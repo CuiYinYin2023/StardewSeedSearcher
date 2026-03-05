@@ -170,7 +170,7 @@ namespace StardewSeedSearcher
                 var weatherDetailsCache = new ConcurrentDictionary<int, WeatherDetailResult>();
                 var results = new List<int>();
                 var stopwatch = Stopwatch.StartNew();
-                int totalSeeds = request.EndSeed - request.StartSeed + 1;
+                int totalSeeds = (int)request.EndSeed - request.StartSeed + 1;
                 int checkedCount = 0;
 
                 // 配置所有搜种功能
@@ -244,7 +244,7 @@ namespace StardewSeedSearcher
                     {
                         Parallel.ForEach(rangePartitioner, parallelOptions, (range, state) =>
                         {
-                            for (int seed = range.Item1; seed < range.Item2; seed++)
+                            for (int seed = (int)range.Item1; seed < range.Item2; seed++)
                             {
                                 // 提前终止
                                 if (linkedCts.Token.IsCancellationRequested) break;
@@ -585,7 +585,7 @@ namespace StardewSeedSearcher
         public int StartSeed { get; set; }
 
         [JsonPropertyName("endSeed")]
-        public int EndSeed { get; set; }
+        public long EndSeed { get; set; }
 
         [JsonPropertyName("useLegacyRandom")]
         public bool UseLegacyRandom { get; set; }
