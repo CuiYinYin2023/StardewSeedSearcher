@@ -23,11 +23,6 @@ namespace StardewSeedSearcher.Features
 
         public string Name => "仙子预测";
 
-        public string GetConfigDescription()
-        {
-            return $"{Conditions.Count} 个条件";
-        }
-
         public bool Check(int seed, bool useLegacyRandom)
         {
             if (Conditions.Count == 0)

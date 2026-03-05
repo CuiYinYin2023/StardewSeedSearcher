@@ -117,20 +117,19 @@
             background: #64b867;
         }
 
-        .conditions-container {
+        .weather-conditions-container {
             margin-bottom: 15px;
         }
 
         .weather-condition-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+            display: flex;
             gap: 10px;
             align-items: center;
             margin-bottom: 10px;
+            padding: 12px;
             background-color: #f9f9f9;
             border-radius: 6px;
             border: 1px solid #e0e0e0;
-            padding: 12px;
         }
 
         .weather-condition-row select,
@@ -139,23 +138,14 @@
             border: 1px solid #ddd;
             border-radius: 4px;
             font-size: 14px;
-            text-align: center; 
         }
 
         .weather-condition-row select {
-            flex: 0 0 100px;
+            width: 60px;
         }
 
         .weather-condition-row input {
-            flex: 1;
-            min-width: 80px;
-        }
-
-        .condition-grid {
-            padding: 8px;
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-            gap: 10px;
+            min-width: 60px;
         }
 
         .btn-remove {

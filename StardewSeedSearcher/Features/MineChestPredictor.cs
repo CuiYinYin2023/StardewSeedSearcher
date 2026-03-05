@@ -94,19 +94,5 @@ namespace StardewSeedSearcher.Features
             }
             return results;
         }
-        
-        /// <summary>
-        /// 获取配置描述（用于显示当前设置）
-        /// </summary>
-        public string GetConfigDescription()
-        {
-            if (!IsEnabled || Conditions.Count == 0)
-            {
-                return "未启用";
-            }
-            
-            var descriptions = Conditions.Select(c => $"{c.Floor}层:{c.ItemName}");
-            return string.Join(", ", descriptions);
-        }
     }
 }

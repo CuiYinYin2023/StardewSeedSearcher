@@ -618,7 +618,7 @@ namespace StardewSeedSearcher
     public class WeatherConditionDto
     {
         [JsonPropertyName("season")]
-        public Season Season { get; set; }
+        public int Season { get; set; }
 
         [JsonPropertyName("startDay")]
         public int StartDay { get; set; }

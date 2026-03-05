@@ -22,10 +22,5 @@ namespace StardewSeedSearcher.Features
 
         /// <summary>估算最坏情况的随机数调用次数，用于动态成本计算</summary>
         int EstimateCost(bool useLegacyRandom);
-
-        /// <summary>
-        /// 获取功能的配置说明
-        /// </summary>
-        string GetConfigDescription();
     }
 }

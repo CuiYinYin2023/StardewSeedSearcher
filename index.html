@@ -121,33 +121,38 @@
                 <!-- <div class="condition-config" id="weatherConfig" style="display: none;"> -->
                     <h4 style="margin-bottom: 15px;">天气筛选条件</h4>
                     
-                    <div class="conditions-container" id="conditionsContainer">  
-                        <!-- 字段标签 -->
-                        <div class="condition-grid" style="margin-bottom: 5px;">
-                            <div style="font-size: 13px; color: #000000; text-align: center;">季节</div>
-                            <div style="font-size: 13px; color: #000000; text-align: center;">起始日期</div>
-                            <div style="font-size: 13px; color: #000000; text-align: center;">结束日期</div>
-                            <div style="font-size: 13px; color: #000000; text-align: center;">最小雨天数量</div>
-                            <div style="font-size: 13px; color: #000000; text-align: center;"></div>
-                        </div>                  
-                        <!-- 第一个编辑框(初始存在) -->
-                        <div class="weather-condition-row">                          
-                            <select>
-                                <option>春</option>
-                                <option>夏</option>
-                                <option>秋</option>
-                            </select>
-                            <input type="number" min="1" max="28" value="1">
-                            <input type="number" min="1" max="28" value="28">
-                            <input type="number" min="1" value="10">
-                            <button type="button" class="btn-remove">删除</button>
-                        </div>
-                    </div>
-                    
-                    <button type="button" class="btn-add-condition" onclick="addCondition()">添加条件</button>
-                    
+                    <!-- 初始不放内容，由 JavaScript 动态添加，或者在页面加载时调用 addCondition() -->
+                    <div class="weather-conditions-container" id="conditionsContainer"></div>
+
+                    <button type="button" class="btn-add-condition" onclick="addWeatherCondition()" style="margin-top: 10px;">添加条件</button>
+
                     <div class="error-message" id="conditionError"></div>
                 </div>
+
+                <!-- 天气条件行模板 -->
+                <template id="weatherConditionTemplate">
+                    <div class="weather-condition-row">
+
+                        <span>第一年</span>
+                        <select class="weather-season-select">
+                            <option>春</option>
+                            <option>夏</option>
+                            <option>秋</option>
+                            <option>冬</option>
+                        </select>
+                        
+                        <input type="number" class="weather-start-day" min="1" max="28" step="1" value="1">
+                        <span style="font-size: 14px;">日 - </span>
+                        <input type="number" class="weather-end-day" min="1" max="28" step="1" value="28">
+                        <span style="font-size: 14px;">日</span>
+
+                        <span style="margin-left: 10px; font-size: 14px;">至少下雨:</span>
+                        <input type="number" class="weather-min-rain" min="1" max="28" step="1" value="10">
+                        <span style="font-size: 14px;">天</span>
+
+                        <button type="button" class="btn-remove">删除</button>
+                    </div>
+                </template>       
                 <br>
 
                 <!-- 仙子功能 -->
@@ -174,7 +179,7 @@
                     <div class="fairy-condition-row">
 
                         <span>第</span>
-                        <input type="number" step="1" min="1" max="10" value="1" class="fairy-start-year" style="width: 60px;">
+                        <input type="number" step="1" min="1" max="10" value="1" class="fairy-start-year">
                         <span>年</span>
                         <select class="fairy-start-season" style="width: 60px;">
                             <option>春</option>

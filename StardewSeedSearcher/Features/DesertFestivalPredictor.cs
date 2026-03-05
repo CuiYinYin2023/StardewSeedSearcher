@@ -65,26 +65,6 @@ namespace StardewSeedSearcher.Features
         }
 
         /// <summary>
-        /// 获取配置说明
-        /// </summary>
-        public string GetConfigDescription()
-        {
-            if (!IsEnabled)
-                return "未启用";
-
-            var requirements = new List<string>();
-            if (RequireJas)
-                requirements.Add("贾斯");
-            if (RequireLeah)
-                requirements.Add("莉亚");
-
-            if (requirements.Count == 0)
-                return "无筛选条件";
-
-            return $"第一年沙漠节需要: {string.Join("、", requirements)}";
-        }
-
-        /// <summary>
         /// 预测第一年沙漠节三天的商人
         /// </summary>
         /// <param name="gameID">游戏种子</param>

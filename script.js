@@ -1,7 +1,6 @@
 let ws = null;
 let isSearching = false;
 let foundSeeds = [];
-let conditions = [];
 let currentSearchUseLegacy = false;
 let seedDetailsCache = {};
 let nextStartSeed = 0;
@@ -141,39 +140,21 @@ elements.cartEnabled.addEventListener('change', (e) => {
     elements.cartConfig.style.display = e.target.checked ? 'block' : 'none';
 });
 
-// 添加条件
-function addCondition() {
+// 添加天气条件
+function addWeatherCondition() {
     const container = document.getElementById('conditionsContainer');
+    const template = document.getElementById('weatherConditionTemplate');
     
-    const newRow = document.createElement('div');
-    newRow.className = 'weather-condition-row';
-    newRow.innerHTML = `
-        <select>
-            <option>春</option>
-            <option>夏</option>
-            <option>秋</option>
-        </select>
-        <input type="number" min="1" max="28" value="1">
-        <input type="number" min="1" max="28" value="28">
-        <input type="number" min="1" value="10">
-        <button type="button" class="btn-remove">删除</button>
-    `;
+    const clone = template.content.cloneNode(true);
+    const row = clone.querySelector('.weather-condition-row');
+
+    // 删除逻辑：点击时直接移除 DOM 元素
+    row.querySelector('.btn-remove').onclick = () => {
+        row.remove();
+    };
     
-    container.appendChild(newRow);
-    
-    // 添加删除事件
-    newRow.querySelector('.btn-remove').addEventListener('click', function() {
-        newRow.remove();
-        syncConditions();
-    });
-    
-    // 添加输入变化事件
-    newRow.querySelectorAll('select, input').forEach(el => {
-        el.addEventListener('change', syncConditions);
-    });
-    
-    syncConditions();
-    hideError();
+    container.appendChild(clone);
+    hideError(); // 添加时尝试清理错误提示
 }
 
 // 同步条件数据（从DOM读取）
@@ -191,45 +172,33 @@ function syncConditions() {
 }
 
 // 验证单个条件
-function validateCondition(condition) {
-    if (!condition) return { valid: false, error: '条件数据缺失' };
-    
-    const { startDay, endDay, minRain } = condition;
-    
-    if (startDay < 1 || startDay > 28 || endDay < 1 || endDay > 28) {
-        return { valid: false, error: '日期必须在 1-28 之间' };
-    }
+function validateWeatherCondition(condition) {
+    const { startDay, endDay, minRainDays } = condition;
     
     if (startDay > endDay) {
-        return { valid: false, error: '起始日期必须小于等于结束日期' };
+        return { valid: false, error: '起始日期不能大于结束日期' };
     }
     
     const dayCount = endDay - startDay + 1;
-    if (minRain < 1 || minRain > dayCount) {
-        return { valid: false, error: `最少雨天数必须在 1-${dayCount} 之间` };
+    if (minRainDays < 1 || minRainDays > dayCount) {
+        return { valid: false, error: `要求雨天数(${minRainDays})不能超过范围总天数(${dayCount})` };
     }
     
     return { valid: true };
 }
 
-// 检查条件重叠
-function hasOverlap(newCondition, excludeIndex) {
-    const seasonOffset = { 'Spring': 0, 'Summer': 28, 'Fall': 56 };
-    const newStart = seasonOffset[newCondition.season] + newCondition.startDay;
-    const newEnd = seasonOffset[newCondition.season] + newCondition.endDay;
+// 检查天气重叠 (基于绝对天数)
+function hasWeatherOverlap(newCond, allConfigs) {
+    // 计算当前条件的绝对范围 (第一年)
+    const newStart = dateToAbsoluteDay(1, newCond.season, newCond.startDay);
+    const newEnd = dateToAbsoluteDay(1, newCond.season, newCond.endDay);
 
-    for (let i = 0; i < conditions.length; i++) {
-        if (i === excludeIndex) continue;
-        
-        const cond = conditions[i];
-        const start = seasonOffset[cond.season] + cond.startDay;
-        const end = seasonOffset[cond.season] + cond.endDay;
-
-        if (!(newEnd < start || end < newStart)) {
-            return true;
-        }
-    }
-    return false;
+    return allConfigs.some(config => {
+        const start = dateToAbsoluteDay(1, config.season, config.startDay);
+        const end = dateToAbsoluteDay(1, config.season, config.endDay);
+        // 判断两个区间是否有交集
+        return (newStart <= end && newEnd >= start);
+    });
 }
 
 // 显示错误
@@ -643,22 +612,14 @@ function updateOutputLimitMax() {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+
     // 天气条件初始化
-    const firstRow = document.querySelector('.weather-condition-row');
-    if (firstRow) {
-        // 为第一行添加删除事件
-        firstRow.querySelector('.btn-remove').addEventListener('click', function() {
-            firstRow.remove();
-            syncConditions();
-        });
-        
-        // 为第一行添加输入变化事件
-        firstRow.querySelectorAll('select, input').forEach(el => {
-            el.addEventListener('change', syncConditions);
-        });
-        
-        syncConditions();
-    }
+    addWeatherCondition(); 
+    // const weatherContainer = document.getElementById('conditionsContainer');
+    // if (weatherContainer) {
+    //     // 直接调用你写好的 addCondition 函数，它会自动使用模板生成第一行并绑定好删除事件
+    //     addCondition(); 
+    // }
 
     // 仙子条件初始化
     addFairyCondition(); // 添加第一个条件行
@@ -838,6 +799,8 @@ elements.form.addEventListener('submit', async (e) => {
     const outputLimit = parseInt(document.getElementById('outputLimit').value); // 读取输出数量
 
     const weatherEnabled = elements.weatherEnabled.checked;
+    let weatherConditionsData = [];
+
     const mineChestEnabled = elements.mineChestEnabled.checked;
     const desertFestivalEnabled = elements.desertFestivalEnabled.checked;
     const desertFestivalCondition = desertFestivalEnabled ? {
@@ -872,30 +835,42 @@ elements.form.addEventListener('submit', async (e) => {
 
     // 天气条件验证
     if (weatherEnabled) {
-        hideError();
+        const weatherRows = document.querySelectorAll('.weather-condition-row');
         
-        const validConditions = conditions.filter(c => c);
-        
-        if (validConditions.length === 0) {
-            showError('请至少添加一个条件');
+        if (weatherRows.length === 0) {
+            alert('请至少添加一个天气条件！');
             return;
         }
         
         // 验证所有条件
-        for (let i = 0; i < conditions.length; i++) {
-            const condition = conditions[i];
-            if (!condition) continue;
-            
-            const validation = validateCondition(condition);
+        for (let row of weatherRows) {
+            // 读取界面值
+            const seasonName = row.querySelector('.weather-season-select').value;
+            const startDay = parseInt(row.querySelector('.weather-start-day').value);
+            const endDay = parseInt(row.querySelector('.weather-end-day').value);
+            const minRain = parseInt(row.querySelector('.weather-min-rain').value);
+
+            const condition = {
+                season: SeasonNameToIndex[seasonName],
+                startDay: startDay,
+                endDay: endDay,
+                minRainDays: minRain
+            };
+
+            // 验证合法性
+            const validation = validateWeatherCondition(condition);
             if (!validation.valid) {
-                showError(`条件 ${i + 1}: ${validation.error}`);
+                alert(`天气错误: ${validation.error}`);
                 return;
             }
-            
-            if (hasOverlap(condition, i)) {
-                showError(`条件 ${i + 1}: 与其他条件的日期范围重叠`);
+
+            // 检查重叠 (利用绝对天数)
+            if (hasWeatherOverlap(condition, weatherConditionsData)) {
+                alert(`天气错误: [${seasonName}] 季日期范围存在重叠`);
                 return;
             }
+
+            weatherConditionsData.push(condition);
         }
     }
 
@@ -1022,12 +997,6 @@ elements.form.addEventListener('submit', async (e) => {
 
     // 发送搜索请求
     try {
-        const weatherConditions = weatherEnabled ? conditions.map(c => ({
-            season: c.season,
-            startDay: c.startDay,
-            endDay: c.endDay,
-            minRainDays: c.minRain
-        })) : [];
 
         const mineChestConditionsData = mineChestEnabled ? mineChestConditions.filter(c => c).map(c => ({
             Floor: c.Floor,
@@ -1062,7 +1031,7 @@ elements.form.addEventListener('submit', async (e) => {
                 startSeed,
                 endSeed,
                 useLegacyRandom: useLegacy,
-                weatherConditions,
+                weatherConditions: weatherConditionsData,
                 fairyConditions: fairyConditionsData,
                 MineChestConditions: mineChestConditionsData, 
                 monsterLevelConditions: monsterLevelConditionsData, 

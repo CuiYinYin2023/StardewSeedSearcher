@@ -2,40 +2,19 @@ using StardewSeedSearcher.Core;
 
 namespace StardewSeedSearcher.Features
 {
-    /// <summary>
-    /// 季节枚举
-    /// </summary>
-    public enum Season
-    {
-        Spring = 0,
-        Summer = 1,
-        Fall = 2
-    }
     
     /// <summary>
     /// 天气筛选条件
     /// </summary>
     public class WeatherCondition
     {
-        public Season Season { get; set; }
+        public int Season { get; set; }
         public int StartDay { get; set; }
         public int EndDay { get; set; }
         public int MinRainDays { get; set; }
 
-        public int AbsoluteStartDay => (int)Season * 28 + StartDay;
-        public int AbsoluteEndDay => (int)Season * 28 + EndDay;
-
-        public override string ToString()
-        {
-            string seasonName = Season switch
-            {
-                Season.Spring => "春",
-                Season.Summer => "夏",
-                Season.Fall => "秋",
-                _ => "?"
-            };
-            return $"{seasonName}{StartDay}-{seasonName}{EndDay}: 最少{MinRainDays}个雨天";
-        }
+        public int AbsoluteStartDay => TimeHelper.DateToAbsoluteDay(1, Season, StartDay);
+        public int AbsoluteEndDay => TimeHelper.DateToAbsoluteDay(1, Season, EndDay);
     }
 
     /// <summary>
@@ -190,17 +169,6 @@ namespace StardewSeedSearcher.Features
             }
             // 绿雨计算56次 + 每天1次天气判断
             return 56 + totalDays;
-        }
-
-        /// <summary>
-        /// 获取配置说明
-        /// </summary>
-        public string GetConfigDescription()
-        {
-            if (Conditions.Count == 0)
-                return "无筛选条件";
-
-            return string.Join("; ", Conditions.Select(c => c.ToString()));
         }
         
         /// <summary>

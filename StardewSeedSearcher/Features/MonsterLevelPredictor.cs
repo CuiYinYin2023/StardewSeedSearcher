@@ -131,20 +131,6 @@ namespace StardewSeedSearcher.Features
         }
 
         /// <summary>
-        /// 获取配置描述（用于显示当前设置）
-        /// </summary>
-        public string GetConfigDescription()
-        {
-            if (!IsEnabled || Conditions.Count == 0)
-            {
-                return "未启用";
-            }
-            
-            var descriptions = Conditions.Select(c => FormatConditionDescription(c));
-            return string.Join(", ", descriptions);
-        }
-
-        /// <summary>
         /// 格式化单个条件的描述
         /// </summary>
         private string FormatConditionDescription(MonsterLevelCondition c)
