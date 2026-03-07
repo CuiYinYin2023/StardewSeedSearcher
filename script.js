@@ -26,6 +26,7 @@ const elements = {
     foundCount: document.getElementById('foundCount'),
     speed: document.getElementById('speed'),
     elapsed: document.getElementById('elapsed'),
+    eta: document.getElementById('eta'), //预估时长
     seedList: document.getElementById('seedList'),
     resultsSummary: document.getElementById('resultsSummary'),
     connectionStatus: document.getElementById('connectionStatus'),
@@ -92,6 +93,22 @@ function dateToAbsoluteDay(year, season, day) {
     const dayOffset = day;
 
     return yearOffset + seasonOffset + dayOffset;
+}
+
+//这是UI用的日期转换，区分一下
+function formatTime(seconds) {
+    if (!isFinite(seconds) || seconds < 0) return '--';
+    if (seconds < 60) return seconds.toFixed(1) + 's';
+    const d = Math.floor(seconds / 86400);
+    const h = Math.floor((seconds % 86400) / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    const s = Math.floor(seconds % 60);
+    let result = [];
+    if (d > 0) result.push(`${d}d`);
+    if (h > 0) result.push(`${h}h`);
+    if (m > 0) result.push(`${m}m`);
+    if (s > 0 || result.length === 0) result.push(`${s}s`);
+    return result.join(' ');
 }
 
 /**
@@ -553,7 +570,15 @@ function handleWebSocketMessage(data) {
         case 'progress':
             elements.checkedCount.textContent = data.checkedCount.toLocaleString();
             elements.speed.textContent = data.speed.toLocaleString();
-            elements.elapsed.textContent = data.elapsed + 's';
+            //把这两个时间改为了新的格式化时间
+            elements.elapsed.textContent = formatTime(data.elapsed);
+            if (data.speed > 0 && data.total) {
+                const remainingSeeds = data.total - data.checkedCount;
+                const remainingSeconds = remainingSeeds / data.speed;
+                elements.eta.textContent = formatTime(remainingSeconds);
+            } else {
+                elements.eta.textContent = '∞';
+            }
             const progressInt = Math.floor(data.progress);
             elements.progressBar.style.width = progressInt + '%';
             elements.progressBar.textContent = progressInt + '%';
@@ -598,16 +623,13 @@ function handleWebSocketMessage(data) {
             isSearching = false;
 
             const loopSearch = document.getElementById('loopSearch').checked;
-            if (loopSearch) {
+            if (!data.cancelled && loopSearch) {
                 const searchRange = parseInt(document.getElementById('searchRange').value);
                 nextStartSeed += searchRange;
                 
-                if (nextStartSeed > 2147483647) {
-                    document.getElementById('loopSearch').checked = false;
-                    alert('已搜索完所有种子范围');
-                }
+                //顺手将计算好的新起点更新到输入框里
+                document.getElementById('startSeed').value = nextStartSeed;
             }
-
             updateResultsSummary();
             break;
     }
@@ -875,6 +897,7 @@ elements.form.addEventListener('submit', async (e) => {
     elements.foundCount.textContent = '0';
     elements.speed.textContent = '0';
     elements.elapsed.textContent = '0.0s';
+    if (elements.eta) elements.eta.textContent = '-.-';
 
     // 发送搜索请求
     try {
@@ -1134,5 +1157,39 @@ function showCopyToast() {
         toast.classList.remove('show');
     }, 2000);
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    const INT_MAX = 2147483647;
+    const INT_MIN = -2147483648;
+
+    const startSeedInput = document.getElementById('startSeed');
+    const searchRangeInput = document.getElementById('searchRange');
+    const btnZeroSeed = document.getElementById('btnZeroSeed');
+    const btnMaxRange = document.getElementById('btnMaxRange');
+
+    function enforceIntLimits(inputElement) {
+        let val = parseInt(inputElement.value);
+        if (isNaN(val)) return;
+        if (val > INT_MAX) inputElement.value = INT_MAX;
+        else if (val < INT_MIN) inputElement.value = INT_MIN;
+    }
+
+    if (startSeedInput) startSeedInput.addEventListener('blur', function() { enforceIntLimits(this); });
+    if (searchRangeInput) searchRangeInput.addEventListener('blur', function() { enforceIntLimits(this); });
+
+    if (btnZeroSeed) {
+        btnZeroSeed.addEventListener('click', function() {
+            startSeedInput.value = 1; //变1
+            startSeedInput.dispatchEvent(new Event('input'));
+        });
+    }
+
+    if (btnMaxRange) {
+        btnMaxRange.addEventListener('click', function() {
+            searchRangeInput.value = INT_MAX; //变最大
+            searchRangeInput.dispatchEvent(new Event('blur')); 
+        });
+    }
+});
 
 connectWebSocket();
