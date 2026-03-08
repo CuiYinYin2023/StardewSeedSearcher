@@ -92,12 +92,18 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label for="startSeed">起始种子</label>
-                        <input type="number" id="startSeed" value="1" required>
+                        <div class="input-with-button">
+                            <input type="number" id="startSeed" value="1" required>
+                            <button type="button" class="btn-quick-set" id="btnZeroSeed">最小</button>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="searchRange">搜索范围（建议第一次不要太高）</label>
-                        <input type="number" id="searchRange" value="100000" min="1" max="21474836487" required>
-                    </div>                    
+                        <div class="input-with-button">
+                            <input type="number" id="searchRange" value="100000" required>
+                            <button type="button" class="btn-quick-set" id="btnMaxRange">最大</button>
+                        </div>
+                    </div>                   
                     <div class="checkbox-group">
                         <input type="checkbox" id="loopSearch" checked>
                         <label for="loopSearch">搜索后自动更新起始值</label>
@@ -454,6 +460,10 @@
                     <div class="stat-item">
                         <div class="stat-value" id="elapsed">0.0s</div>
                         <div class="stat-label">已用时</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="eta">--</div>
+                        <div class="stat-label">预估剩余时长</div>
                     </div>
                 </div>
             </div>
