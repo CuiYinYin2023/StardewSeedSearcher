@@ -940,24 +940,36 @@ input[type="number"] {
 }
 
 .input-with-button input {
-    padding: 12px 55px 12px 12px !important;
+    padding: 12px 95px 12px 12px !important; 
+}
+
+.button-group {
+    position: absolute;
+    right: 6px;
+    display: flex;
+    gap: 4px; /* 两个按钮之间的间距 */
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none; /* 隐藏时不可点击 */
+}
+
+.input-with-button:hover .button-group {
+    opacity: 1;
+    pointer-events: auto; /* 显示时可点击 */
 }
 
 .btn-quick-set {
-    position: absolute;
-    right: 6px;
-    opacity: 0;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
     border: none;
     border-radius: 6px;
-    padding: 4px 10px;
-    font-size: 12px;
+    padding: 4px 8px;
+    font-size: 11px; /* 稍微缩小一点字号更精致 */
     font-weight: 600;
     cursor: pointer;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     transition: all 0.3s ease;
-    transform: scale(0.95);
+    white-space: nowrap; /* 禁止换行 */
 }
 
 .input-with-button:hover .btn-quick-set {

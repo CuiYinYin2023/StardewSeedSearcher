@@ -94,20 +94,21 @@
                         <label for="startSeed">起始种子</label>
                         <div class="input-with-button">
                             <input type="number" id="startSeed" value="1" required>
-                            <button type="button" class="btn-quick-set" id="btnZeroSeed">最小</button>
-                            <!-- 新增随机按钮 -->
-                            <button type="button" class="btn-quick-set" id="btnRandomSeed">随机</button>
+                            <div class="button-group">
+                                <button type="button" class="btn-quick-set" id="btnZeroSeed">最小</button>
+                                <button type="button" class="btn-quick-set" id="btnRandomSeed">随机</button>
+                            </div>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="searchRange">搜索范围</label>
+                        <label for="searchRange">搜索范围（第一次不建议太高）</label>
                         <div class="input-with-button">
                             <!-- 修改为下拉菜单 -->
                             <select id="searchRange">
                                 <option value="100000" selected>10万</option>
                                 <option value="1000000">100万</option>
                                 <option value="10000000">1000万</option>
-                                <option value="100000000">一亿</option>
+                                <option value="100000000">1亿</option>
                                 <option value="max">最大</option>
                             </select>
                         </div>
@@ -441,7 +442,7 @@
                 <hr class="form-separator">
                 <div class="form-group form-group--inline">
                     <label for="outputLimit">最大种子数量 (达到数量后将提前停止搜索，不建议太高)</label>
-                    <input type="number" id="outputLimit" value="10" min="1" required>
+                    <input type="number" id="outputLimit" value="10" min="1" step="1" required>
                 </div>
 
                 <button type="submit" class="btn-search" id="searchBtn">🔍 开始搜索</button>
@@ -481,6 +482,7 @@
             <div class="results-header">
                 <h3>搜索结果</h3>
                 <span id="resultsSummary"></span>
+                <button type="button" class="btn-quick-set" onclick="exportResultsToTxt()" style="opacity: 1; transform: scale(1); position: static;">导出所有种子号</button>
             </div>
             <div class="seed-list" id="seedList">
                 <div class="empty-state">暂无结果</div>

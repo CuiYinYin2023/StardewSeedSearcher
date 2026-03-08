@@ -654,6 +654,140 @@ function updateResultsSummary() {
     elements.resultsSummary.textContent = `共找到 ${total} 个 (显示前 ${shown} 个)`;
 }
 
+/**
+ * 导出结果到 TXT 文件
+ */
+function exportResultsToTxt() {
+    if (foundSeeds.length === 0) {
+        alert("没有可导出的种子结果！");
+        return;
+    }
+
+    // 1. 生成文件名：脆音音种子搜索器_日期_时间
+    const now = new Date();
+    const dateStr = now.getFullYear() + 
+                    String(now.getMonth() + 1).padStart(2, '0') + 
+                    String(now.getDate()).padStart(2, '0');
+    const timeStr = String(now.getHours()).padStart(2, '0') + 
+                    String(now.getMinutes()).padStart(2, '0') + 
+                    String(now.getSeconds()).padStart(2, '0');
+    const fileName = `脆音音种子搜索器_${dateStr}_${timeStr}.txt`;
+
+    // 2. 生成条件总结头部
+    let content = "========================================\n";
+    content += "脆音音星露谷种子搜索结果\n";
+    content += "========================================\n\n";
+    content += "BUG反馈、新功能建议请联系作者：\n";
+    content += "https://space.bilibili.com/349111916\n\n";
+    content += `生成时间：${now.toLocaleString()}\n`;
+    content += `搜索范围：${document.getElementById('startSeed').value} - ${Math.min(parseInt(document.getElementById('startSeed').value) + (document.getElementById('searchRange').value === 'max' ? 2147483647 : parseInt(document.getElementById('searchRange').value)) - 1, 2147483647)}\n`;
+    content += `随机模式：${document.getElementById('useLegacy').checked ? "旧随机" : "新随机 "}\n`;
+    content += `共找到种子：${foundSeeds.length} 个\n\n`;
+    content += "----------- 筛选条件清单 -----------\n";
+
+    // 提取各项条件
+    content += getConditionsSummaryText();
+
+    content += "\n----------- 种子列表 -----------\n";
+    content += foundSeeds.join('\n');
+    content += "\n\n========================================\n";
+
+    // 3. 执行下载
+    const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+}
+
+/**
+ * 格式化输出当前启用的所有条件
+ */
+function getConditionsSummaryText() {
+    let summary = "";
+    const seasonNames = ["春", "夏", "秋", "冬"];
+
+    // 天气
+    if (document.getElementById('weatherEnabled').checked) {
+        summary += "[天气]：\n";
+        document.querySelectorAll('.weather-condition-row').forEach(row => {
+            const s = row.querySelector('.weather-season-select').value;
+            const start = row.querySelector('.weather-start-day').value;
+            const end = row.querySelector('.weather-end-day').value;
+            const rain = row.querySelector('.weather-min-rain').value;
+            summary += `  - ${s}季${start}日 - ${end}日：至少 ${rain} 天下雨\n`;
+        });
+    }
+
+    // 仙子
+    if (document.getElementById('fairyEnabled').checked) {
+        summary += "[仙子]：\n";
+        document.querySelectorAll('.fairy-condition-row').forEach(row => {
+            const sy = row.querySelector('.fairy-start-year').value;
+            const ss = row.querySelector('.fairy-start-season').value;
+            const sd = row.querySelector('.fairy-start-day').value;
+            const ey = row.querySelector('.fairy-end-year').value;
+            const es = row.querySelector('.fairy-end-season').value;
+            const ed = row.querySelector('.fairy-end-day').value;
+            summary += `  - 第${sy}年${ss}${sd}日 - 第${ey}年${es}${ed}日：范围内至少出现1次\n`;
+        });
+    }
+
+    // 矿井宝箱
+    if (document.getElementById('mineChestEnabled').checked) {
+        summary += "[矿井混合宝箱]：\n";
+        document.querySelectorAll('.minechest-condition-row').forEach(row => {
+            const floor = row.querySelector('.minechest-floor').value;
+            const item = row.querySelector('.minechest-item').value;
+            summary += `  - 第 ${floor} 层宝箱物品：${item}\n`;
+        });
+    }
+
+    // 怪物层
+    if (document.getElementById('monsterLevelEnabled').checked) {
+        summary += "[怪物层]：\n";
+        document.querySelectorAll('.monsterlevel-condition-row').forEach(row => {
+            const ss = row.querySelector('.monsterlevel-start-season').value;
+            const sd = row.querySelector('.monsterlevel-start-day').value;
+            const sLevel = row.querySelector('.monsterlevel-start-level').value;
+            const eLevel = row.querySelector('.monsterlevel-end-level').value;
+            summary += `  - ${ss}${sd}日：第 ${sLevel}-${eLevel} 层无怪物层\n`;
+        });
+    }
+
+    // 沙漠节
+    if (document.getElementById('desertFestivalEnabled').checked) {
+        summary += "[沙漠节]：\n";
+        if (document.getElementById('requireJas').checked) summary += "  - 必须出现：贾斯（魔法糖冰棍）\n";
+        if (document.getElementById('requireLeah').checked) summary += "  - 必须出现：莉亚（100硬木）\n";
+    }
+
+    // 猪车
+    if (document.getElementById('cartEnabled').checked) {
+        summary += "[猪车]：\n";
+        document.querySelectorAll('.cart-condition-row').forEach(row => {
+            const sy = row.querySelector('.cart-start-year').value;
+            const ss = row.querySelector('.cart-start-season').value;
+            const sd = row.querySelector('.cart-start-day').value;
+            const ey = row.querySelector('.cart-end-year').value;
+            const es = row.querySelector('.cart-end-season').value;
+            const ed = row.querySelector('.cart-end-day').value;
+            const item = row.querySelector('.cart-item-select').value;
+            const multi = row.querySelector('.cart-multi-check').checked;
+            const count = row.querySelector('.cart-min-occurrences').value;
+            const qty5 = row.querySelector('.cart-require-qty5').checked;
+            summary += `  - 第${sy}年${ss}${sd}日 - 第${ey}年${es}${ed}日：${item}${qty5 ? '(5个)' : ''}，至少出售 ${multi ? count : 1} 次\n`;
+        });
+    }
+
+    if (summary === "") summary = "未开启任何特定筛选条件（全随机搜索）\n";
+    return summary;
+}
+
 elements.form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
