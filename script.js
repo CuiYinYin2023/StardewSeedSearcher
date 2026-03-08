@@ -475,11 +475,20 @@ function initializeCartItemList() {
 
 // 最大输出种子数量
 function updateOutputLimitMax() {
-    const searchRangeInput = document.getElementById('searchRange');
+    const rangeSelect = document.getElementById('searchRange');
     const outputLimitInput = document.getElementById('outputLimit');
+    const startSeedInput = document.getElementById('startSeed');
 
-    const range = parseInt(searchRangeInput.value) || 0;
-    const limit = parseInt(outputLimitInput.value) || 0;
+    // 当种子范围为“最大”，计算范围
+    let range;
+    if (rangeSelect.value === "max") {
+        const startSeed = parseInt(startSeedInput.value) || 1;
+        range = 2147483647 - startSeed + 1;
+    } else {
+        range = parseInt(rangeSelect.value);
+    }
+
+    const limit = parseInt(outputLimitInput.value) || 10; // 默认10个结果
 
     if (range <= limit) {
         // 如果当前值超过了新的最大值，就把它降下来
@@ -514,8 +523,12 @@ document.getElementById('startSeed').addEventListener('change', function() {
 
 // 监听搜索范围修改,重置循环
 document.getElementById('searchRange').addEventListener('change', function() {
+    // 1. 重置循环逻辑：让下一次搜索从当前输入的起始种子开始
     const startSeed = parseInt(document.getElementById('startSeed').value) || 0;
     nextStartSeed = startSeed;
+
+    // 2. 更新输出上限逻辑：确保输出种子数不会比搜索范围还大
+    updateOutputLimitMax(); 
 });
 
 // 监听循环搜索复选框
@@ -649,10 +662,10 @@ elements.form.addEventListener('submit', async (e) => {
         await fetch('http://localhost:5000/api/stop', { method: 'POST' });
         return;
     }
+
     const loopSearch = document.getElementById('loopSearch').checked;
-    const searchRange = parseInt(document.getElementById('searchRange').value);
     const useLegacy = document.getElementById('useLegacy').checked;
-    currentSearchUseLegacy = useLegacy;  // 保存当前搜索模式
+    currentSearchUseLegacy = useLegacy; // 保存当前搜索模式
     const outputLimit = parseInt(document.getElementById('outputLimit').value); // 读取输出数量
 
     // 天气
@@ -687,23 +700,22 @@ elements.form.addEventListener('submit', async (e) => {
         ? nextStartSeed 
         : parseInt(document.getElementById('startSeed').value);
 
-    // 更新输入框显示
     document.getElementById('startSeed').value = startSeed;
+
+    // --- 核心修改：处理搜索范围的数值计算 ---
+    let searchRange;
+    const rangeValue = document.getElementById('searchRange').value;
+    const INT_MAX = 2147483647;
+
+    if (rangeValue === "max") {
+        // 如果选了最大，范围就是从当前起点到 INT_MAX 的距离
+        searchRange = INT_MAX - startSeed + 1;
+    } else {
+        searchRange = parseInt(rangeValue);
+    }
     
     // 计算结束种子,不超过最大值
-    const endSeed = Math.min(startSeed + searchRange - 1, 2147483647);
-    
-    // 检查是否已到最大值
-    if (startSeed >= 2147483647) {
-        alert('已达到最大种子值,无法继续搜索');
-        return;
-    }
-
-    // 检查搜索范围是否有效
-    if (searchRange < 1) {
-        alert('搜索范围必须大于0!');
-        return;
-    }
+    const endSeed = Math.min(startSeed + searchRange - 1, INT_MAX);
 
     // 天气条件验证
     if (weatherEnabled) {
@@ -1159,13 +1171,13 @@ function showCopyToast() {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+    const INT_MIN = 1;
     const INT_MAX = 2147483647;
-    const INT_MIN = -2147483648;
+    const RANDOM_MAX = 2000000000;
 
     const startSeedInput = document.getElementById('startSeed');
-    const searchRangeInput = document.getElementById('searchRange');
     const btnZeroSeed = document.getElementById('btnZeroSeed');
-    const btnMaxRange = document.getElementById('btnMaxRange');
+    const btnRandomSeed = document.getElementById('btnRandomSeed'); // 随机起始种子
 
     function enforceIntLimits(inputElement) {
         let val = parseInt(inputElement.value);
@@ -1175,19 +1187,23 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     if (startSeedInput) startSeedInput.addEventListener('blur', function() { enforceIntLimits(this); });
-    if (searchRangeInput) searchRangeInput.addEventListener('blur', function() { enforceIntLimits(this); });
 
+    // 一键最小起始种子
     if (btnZeroSeed) {
         btnZeroSeed.addEventListener('click', function() {
-            startSeedInput.value = 1; //变1
-            startSeedInput.dispatchEvent(new Event('input'));
+            startSeedInput.value = 1;
+            // 触发 change 事件以同步 nextStartSeed
+            startSeedInput.dispatchEvent(new Event('change'));
         });
     }
 
-    if (btnMaxRange) {
-        btnMaxRange.addEventListener('click', function() {
-            searchRangeInput.value = INT_MAX; //变最大
-            searchRangeInput.dispatchEvent(new Event('blur')); 
+    // 一键随机起始种子
+    if (btnRandomSeed) {
+        btnRandomSeed.addEventListener('click', function() {
+            // 生成 1 到 20e 的随机数
+            const randomSeed = Math.floor(Math.random() * RANDOM_MAX) + 1;
+            startSeedInput.value = randomSeed;
+            startSeedInput.dispatchEvent(new Event('change'));
         });
     }
 });

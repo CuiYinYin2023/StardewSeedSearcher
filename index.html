@@ -95,13 +95,21 @@
                         <div class="input-with-button">
                             <input type="number" id="startSeed" value="1" required>
                             <button type="button" class="btn-quick-set" id="btnZeroSeed">最小</button>
+                            <!-- 新增随机按钮 -->
+                            <button type="button" class="btn-quick-set" id="btnRandomSeed">随机</button>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="searchRange">搜索范围（建议第一次不要太高）</label>
+                        <label for="searchRange">搜索范围</label>
                         <div class="input-with-button">
-                            <input type="number" id="searchRange" value="100000" required>
-                            <button type="button" class="btn-quick-set" id="btnMaxRange">最大</button>
+                            <!-- 修改为下拉菜单 -->
+                            <select id="searchRange">
+                                <option value="100000" selected>10万</option>
+                                <option value="1000000">100万</option>
+                                <option value="10000000">1000万</option>
+                                <option value="100000000">一亿</option>
+                                <option value="max">最大</option>
+                            </select>
                         </div>
                     </div>                   
                     <div class="checkbox-group">
@@ -433,7 +441,7 @@
                 <hr class="form-separator">
                 <div class="form-group form-group--inline">
                     <label for="outputLimit">最大种子数量 (达到数量后将提前停止搜索，不建议太高)</label>
-                    <input type="number" id="outputLimit" value="5" min="1" required>
+                    <input type="number" id="outputLimit" value="10" min="1" required>
                 </div>
 
                 <button type="submit" class="btn-search" id="searchBtn">🔍 开始搜索</button>
