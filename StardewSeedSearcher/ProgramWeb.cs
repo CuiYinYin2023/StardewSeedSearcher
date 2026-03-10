@@ -182,6 +182,13 @@ namespace StardewSeedSearcher
                  * [Worker 线程 N] ──┘
                  */
                 var channel = Channel.CreateUnbounded<SearchMessage>(new UnboundedChannelOptions { SingleReader = true });
+                foreach (var f in features)
+                {
+                    if (f is WeatherPredictor wp)
+                    {
+                        wp.OnMaxUpdate = msg => channel.Writer.TryWrite(new SearchMessage("weather_max", msg));
+                    }
+                }
 
                 // userStopCts：由 /api/stop 触发，即用户主动停止
                 _currentSearchCts?.Cancel();

@@ -167,11 +167,11 @@ function addWeatherCondition() {
     const template = document.getElementById('weatherConditionTemplate');
     
     const clone = template.content.cloneNode(true);
-    const row = clone.querySelector('.weather-condition-row');
+    const wrapper = clone.querySelector('.weather-condition-wrapper');
 
-    // 删除逻辑：点击时直接移除 DOM 元素
-    row.querySelector('.btn-remove').onclick = () => {
-        row.remove();
+    // 删除逻辑：点击时直接移除整个大区块
+    wrapper.querySelector('.btn-remove').onclick = () => {
+        wrapper.remove();
     };
     
     container.appendChild(clone);
@@ -578,8 +578,20 @@ function handleWebSocketMessage(data) {
             foundSeeds = [];
             elements.seedList.innerHTML = '';
             elements.resultsSection.style.display = 'block';
-            break;
 
+            //重置具体的天数显示面板
+            document.querySelectorAll('.weather-max-details').forEach(el => {
+                el.style.display = 'none';
+                el.querySelector('.max-rain-num').textContent = '0';
+                el.querySelector('.weather-max-list').innerHTML = '暂无数据';
+                el.removeAttribute('open');
+            });
+
+            break;
+        //专门用来更新天气最大连续雨天数    
+        case 'weather_max':
+            updateWeatherMax(data);
+            break;
         case 'progress':
             elements.checkedCount.textContent = data.checkedCount.toLocaleString();
             elements.speed.textContent = data.speed.toLocaleString();
@@ -1341,5 +1353,47 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+// 把五个最先满足最大值的种子推上去
+function updateWeatherMax(data) {
+    const { conditionIndex, maxRain, seeds } = data;
+    const wrappers = document.querySelectorAll('.weather-condition-wrapper');
+    if (conditionIndex >= wrappers.length) return;
+    
+    const wrapper = wrappers[conditionIndex];
+    const detailsEl = wrapper.querySelector('.weather-max-details');
+    const numEl = wrapper.querySelector('.max-rain-num');
+    const listEl = wrapper.querySelector('.weather-max-list');
+    
+    detailsEl.style.display = 'block';
+    numEl.textContent = maxRain;
+    
+    let html = '';
+    const allRows = document.querySelectorAll('.weather-condition-row');
+    
+    seeds.forEach(s => {
+        html += `<div style="margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px dashed #eee;">`;
+        html += `<div style="font-weight: bold; color: #333; margin-bottom: 4px;">种子: ${s.seed} <button class="btn-copy" style="padding: 2px 8px; font-size: 11px; margin-left: 10px; background-color: #4caf50; color: white; border: none; border-radius: 4px; cursor: pointer;" onclick="copySeed(${s.seed})">复制</button></div>`;
+        
+        let countsHtml = '';
+        s.counts.forEach((c, i) => {
+            const r = allRows[i];
+            if (r) {
+                const season = r.querySelector('.weather-season-select').value;
+                const start = r.querySelector('.weather-start-day').value;
+                const end = r.querySelector('.weather-end-day').value;
+                if (i === conditionIndex) {
+                    countsHtml += `<span style="color: #e74c3c; font-weight: bold; margin-right: 12px;">[本条件] ${c}天</span>`;
+                } else {
+                    countsHtml += `<span style="margin-right: 12px; color: #666;">${season}${start}-${end}日: ${c}天</span>`;
+                }
+            }
+        });
+        html += `<div>${countsHtml}</div>`;
+        html += `</div>`;
+    });
+    
+    listEl.innerHTML = html;
+}
 
 connectWebSocket();

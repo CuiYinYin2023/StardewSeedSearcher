@@ -146,28 +146,38 @@
 
                 <!-- 天气条件行模板 -->
                 <template id="weatherConditionTemplate">
-                    <div class="weather-condition-row">
+                    <div class="weather-condition-wrapper" style="margin-bottom: 10px; padding: 12px; background-color: #f9f9f9; border-radius: 6px; border: 1px solid #e0e0e0;">
+                        <div class="weather-condition-row" style="display: flex; gap: 10px; align-items: center; padding: 0; border: none; background: transparent; margin-bottom: 0;">
+                            <span>第一年</span>
+                            <select class="weather-season-select">
+                                <option>春</option>
+                                <option>夏</option>
+                                <option>秋</option>
+                                <option>冬</option>
+                            </select>
+                            
+                            <input type="number" class="weather-start-day" min="1" max="28" step="1" value="1">
+                            <span style="font-size: 14px;">日 - </span>
+                            <input type="number" class="weather-end-day" min="1" max="28" step="1" value="28">
+                            <span style="font-size: 14px;">日</span>
 
-                        <span>第一年</span>
-                        <select class="weather-season-select">
-                            <option>春</option>
-                            <option>夏</option>
-                            <option>秋</option>
-                            <option>冬</option>
-                        </select>
+                            <span style="margin-left: 10px; font-size: 14px;">至少下雨:</span>
+                            <input type="number" class="weather-min-rain" min="1" max="28" step="1" value="10">
+                            <span style="font-size: 14px;">天</span>
+
+                            <button type="button" class="btn-remove">删除</button>
+                        </div>
                         
-                        <input type="number" class="weather-start-day" min="1" max="28" step="1" value="1">
-                        <span style="font-size: 14px;">日 - </span>
-                        <input type="number" class="weather-end-day" min="1" max="28" step="1" value="28">
-                        <span style="font-size: 14px;">日</span>
-
-                        <span style="margin-left: 10px; font-size: 14px;">至少下雨:</span>
-                        <input type="number" class="weather-min-rain" min="1" max="28" step="1" value="10">
-                        <span style="font-size: 14px;">天</span>
-
-                        <button type="button" class="btn-remove">删除</button>
+                        <details class="weather-max-details" style="margin-top: 10px; display: none;">
+                            <summary class="weather-max-summary" style="cursor: pointer; font-size: 14px; color: #667eea; font-weight: bold; outline: none; list-style: none;">
+                                ▶ 当前搜寻最大雨天数：<span class="max-rain-num" style="color:#e74c3c;">0</span> 天 <span style="font-size:12px;color:#999;font-weight:normal;">(点击展开查看前5个种子)</span>
+                            </summary>
+                            <div class="weather-max-list" style="margin-top: 8px; font-size: 13px; color: #333; background: #fff; padding: 10px; border-radius: 4px; border: 1px dashed #ccc;">
+                                暂无数据
+                            </div>
+                        </details>
                     </div>
-                </template>       
+                </template>      
                 <br>
 
                 <!-- 仙子功能 -->
