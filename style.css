@@ -6,7 +6,10 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    /* background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); */
+    background-image: url('./20260201165031_1.jpg');
+    background-size: cover;
+    background-attachment: fixed;
     min-height: 100vh;
     padding: 20px;
     padding-bottom: 80px;
@@ -857,7 +860,6 @@ body {
     margin-bottom: 10px;
 }
 
-/* 每一行横向排布 */
 .row-time,
 .row-item,
 .row-multi {
@@ -867,13 +869,11 @@ body {
     flex-wrap: wrap;
 }
 
-/* 删除按钮单独一行 */
 .row-delete {
     display: flex;
     justify-content: flex-start;
 }
 
-/* 勾选多次前 次数为灰色 */
 .cart-min-occurrences:disabled {
     background-color: #eee;
     color: #999;
@@ -947,15 +947,15 @@ input[type="number"] {
     position: absolute;
     right: 6px;
     display: flex;
-    gap: 4px; /* 两个按钮之间的间距 */
+    gap: 4px;
     opacity: 0;
     transition: opacity 0.3s ease;
-    pointer-events: none; /* 隐藏时不可点击 */
+    pointer-events: none;
 }
 
 .input-with-button:hover .button-group {
     opacity: 1;
-    pointer-events: auto; /* 显示时可点击 */
+    pointer-events: auto;
 }
 
 .btn-quick-set {
@@ -964,12 +964,12 @@ input[type="number"] {
     border: none;
     border-radius: 6px;
     padding: 4px 8px;
-    font-size: 11px; /* 稍微缩小一点字号更精致 */
+    font-size: 11px;
     font-weight: 600;
     cursor: pointer;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     transition: all 0.3s ease;
-    white-space: nowrap; /* 禁止换行 */
+    white-space: nowrap;
 }
 
 .input-with-button:hover .btn-quick-set {
@@ -987,6 +987,105 @@ input[type="number"] {
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
-.weather-max-summary::-webkit-details-marker {
-    display: none;
+.search-range-badge {
+    padding: 2px 14px;
+    font-size: 18.72px;
+    font-weight: bold;
+    background: transparent;
+}
+
+.analysis-details {
+    margin-top: 20px;
+    border: 2px solid #e0e7ff;
+    border-radius: 8px;
+    padding: 15px 20px;
+    background-color: #fcfdff;
+    transition: all 0.3s;
+}
+
+.analysis-summary {
+    font-weight: 600;
+    color: #96558B;
+    cursor: pointer;
+    outline: none;
+    list-style: none;
+    font-size: 16px;
+}
+
+.analysis-summary::-webkit-details-marker { display: none; }
+
+.analysis-summary::before {
+    content: '▶';
+    display: inline-block;
+    font-size: 0.8em;
+    margin-right: 8px;
+    transition: transform 0.2s;
+}
+
+.analysis-details[open] > .analysis-summary::before {
+    transform: rotate(90deg);
+}
+
+.analysis-header-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 1.5fr 1.0fr;
+    align-items: end;
+    margin-top: 15px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #e5e7eb;
+    font-weight: bold;
+    font-size: 14px;
+    color: #111827;
+}
+
+.analysis-tree-container {
+    margin-top: 15px;
+    padding-bottom: 10px;
+}
+
+.analysis-row {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+    padding-left: 10px; 
+}
+
+.analysis-item-name {
+    width: 150px;
+    font-weight: 600;
+    color: #374151;
+    font-size: 15px;
+}
+
+.analysis-item-count {
+    flex: 1;
+    text-align: right;
+    padding-right: 180px;
+    color: #111827;
+    font-weight: 600;
+    font-size: 15px;
+}
+
+.analysis-rate-box {
+    width: 140px;
+    background: white;
+    padding: 8px 12px;
+    border-left: 4px solid #10b981;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    font-weight: bold;
+    color: #374151;
+    font-size: 14px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.analysis-notes {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px dashed #d1d5db;
+    font-size: 13px;
+    color: #6b7280;
+    line-height: 1.8;
 }

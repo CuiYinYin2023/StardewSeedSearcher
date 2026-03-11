@@ -176,19 +176,15 @@ namespace StardewSeedSearcher
                 // 配置所有搜种功能
                 var features = InitializeFeatures(request);
 
+                var featurePassCounts = new ConcurrentDictionary<string, int>();
+                foreach (var f in features) featurePassCounts[f.Name] = 0;
+
                 /* 各 Worker 线程为 Channel 的生产者，负责暴力搜索并将结果传递给 Channel，Channel 消费者则负责广播结果（发送给前端更新进度）和提前终止搜索
                  * [Worker 线程 1] ──┐
                  * [Worker 线程 2] ──┤──► Channel<消息> ──► [单一消费者] ──► BroadcastMessage (async)
                  * [Worker 线程 N] ──┘
                  */
                 var channel = Channel.CreateUnbounded<SearchMessage>(new UnboundedChannelOptions { SingleReader = true });
-                foreach (var f in features)
-                {
-                    if (f is WeatherPredictor wp)
-                    {
-                        wp.OnMaxUpdate = msg => channel.Writer.TryWrite(new SearchMessage("weather_max", msg));
-                    }
-                }
 
                 // userStopCts：由 /api/stop 触发，即用户主动停止
                 _currentSearchCts?.Cancel();
@@ -223,10 +219,9 @@ namespace StardewSeedSearcher
                     catch (Exception ex) { Console.WriteLine($"Consumer Error: {ex.Message}"); }
                 });
 
-
                 // 发送开始消息
                 await BroadcastMessage(new { type = "start", total = totalSeeds });
-
+            
                 // 多线程暴力搜索 （同时是 Channel 的生产者）
                 await Task.Run(() =>
                 {
@@ -265,6 +260,7 @@ namespace StardewSeedSearcher
                                         allMatch = false;
                                         break;
                                     }
+                                    featurePassCounts.AddOrUpdate(feature.Name, 1, (key, val) => val + 1);//++
                                 }
 
                                 int localChecked = Interlocked.Increment(ref checkedCount);
@@ -289,9 +285,14 @@ namespace StardewSeedSearcher
                                     }
                                 }
 
-                                // 每 500 个种子更新一次进度（避免过于频繁）
+                                // 每1000(为啥之前写了个500?)个种子更新一次进度（避免过于频繁）
                                 if (localChecked % 1000 == 0 || localChecked == totalSeeds)
                                 {
+                                    var stats = sortedFeatures.Select(f => new {
+                                        name = f.Name,
+                                        passCount = featurePassCounts[f.Name]
+                                    }).ToList();
+
                                     double progress = (double)localChecked / totalSeeds * 100;
                                     double speed = localChecked / stopwatch.Elapsed.TotalSeconds;
 
@@ -302,7 +303,8 @@ namespace StardewSeedSearcher
                                         total = totalSeeds,
                                         progress = Math.Round(progress, 2),
                                         speed = Math.Round(speed, 0),
-                                        elapsed = Math.Round(stopwatch.Elapsed.TotalSeconds, 1)
+                                        elapsed = Math.Round(stopwatch.Elapsed.TotalSeconds, 1),
+                                        featureStats = stats
                                     }));
                                 }
                             }

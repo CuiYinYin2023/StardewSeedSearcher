@@ -4,6 +4,8 @@ let foundSeeds = [];
 let currentSearchUseLegacy = false;
 let seedDetailsCache = {};
 let nextStartSeed = 0;
+let currentStartSeedDisplay;
+let currentEndSeedDisplay;
 
 let nextFairyIndex = 0;
 
@@ -167,11 +169,11 @@ function addWeatherCondition() {
     const template = document.getElementById('weatherConditionTemplate');
     
     const clone = template.content.cloneNode(true);
-    const wrapper = clone.querySelector('.weather-condition-wrapper');
+    const row = clone.querySelector('.weather-condition-row');
 
-    // 删除逻辑：点击时直接移除整个大区块
-    wrapper.querySelector('.btn-remove').onclick = () => {
-        wrapper.remove();
+    // 删除逻辑：点击时直接移除 DOM 元素
+    row.querySelector('.btn-remove').onclick = () => {
+        row.remove();
     };
     
     container.appendChild(clone);
@@ -579,19 +581,13 @@ function handleWebSocketMessage(data) {
             elements.seedList.innerHTML = '';
             elements.resultsSection.style.display = 'block';
 
-            //重置具体的天数显示面板
-            document.querySelectorAll('.weather-max-details').forEach(el => {
-                el.style.display = 'none';
-                el.querySelector('.max-rain-num').textContent = '0';
-                el.querySelector('.weather-max-list').innerHTML = '暂无数据';
-                el.removeAttribute('open');
-            });
+            document.getElementById('searchRangeBadge').textContent = `种子范围: ${currentStartSeedDisplay.toLocaleString()}-${currentEndSeedDisplay.toLocaleString()}`;
+            document.getElementById('searchRangeBadge').style.display = 'inline-block';
+            document.getElementById('analysisDetails').style.display = 'block';
+            document.getElementById('analysisStoppedEarly').textContent = '?';
+            document.getElementById('analysisStoppedEarly').style.color = '#999';
+            break;
 
-            break;
-        //专门用来更新天气最大连续雨天数    
-        case 'weather_max':
-            updateWeatherMax(data);
-            break;
         case 'progress':
             elements.checkedCount.textContent = data.checkedCount.toLocaleString();
             elements.speed.textContent = data.speed.toLocaleString();
@@ -607,6 +603,10 @@ function handleWebSocketMessage(data) {
             const progressInt = Math.floor(data.progress);
             elements.progressBar.style.width = progressInt + '%';
             elements.progressBar.textContent = progressInt + '%';
+            //把统计更新掉
+            if (data.featureStats && data.featureStats.length > 0) {
+                updateAnalysisUI(data.featureStats, data.checkedCount, foundSeeds.length);
+            }
             break;
 
         case 'found':
@@ -651,10 +651,16 @@ function handleWebSocketMessage(data) {
             if (!data.cancelled && loopSearch) {
                 const searchRange = parseInt(document.getElementById('searchRange').value);
                 nextStartSeed += searchRange;
-                
-                //顺手将计算好的新起点更新到输入框里
                 document.getElementById('startSeed').value = nextStartSeed;
             }
+            
+            //判断有没有提前停止
+            const maxOutputLimit = parseInt(document.getElementById('outputLimit').value) || 0;
+            const hitLimit = (!data.cancelled && foundSeeds.length >= maxOutputLimit);
+            const stopEl = document.getElementById('analysisStoppedEarly');
+            stopEl.textContent = hitLimit ? '否' : '是'; //好像逻辑写反了，直接反向，嘿嘿
+            stopEl.style.color = hitLimit ? '#d32f2f' : '#333';
+
             updateResultsSummary();
             break;
     }
@@ -862,6 +868,9 @@ elements.form.addEventListener('submit', async (e) => {
     
     // 计算结束种子,不超过最大值
     const endSeed = Math.min(startSeed + searchRange - 1, INT_MAX);
+
+    currentStartSeedDisplay = startSeed;
+    currentEndSeedDisplay = endSeed;
 
     // 天气条件验证
     if (weatherEnabled) {
@@ -1354,46 +1363,38 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// 把五个最先满足最大值的种子推上去
-function updateWeatherMax(data) {
-    const { conditionIndex, maxRain, seeds } = data;
-    const wrappers = document.querySelectorAll('.weather-condition-wrapper');
-    if (conditionIndex >= wrappers.length) return;
+function updateAnalysisUI(stats, currentChecked, totalFound) {
+    document.getElementById('analysisTotalRange').textContent = currentChecked.toLocaleString();
+    document.getElementById('analysisTotalFound').textContent = totalFound.toLocaleString();
     
-    const wrapper = wrappers[conditionIndex];
-    const detailsEl = wrapper.querySelector('.weather-max-details');
-    const numEl = wrapper.querySelector('.max-rain-num');
-    const listEl = wrapper.querySelector('.weather-max-list');
-    
-    detailsEl.style.display = 'block';
-    numEl.textContent = maxRain;
-    
+    const container = document.getElementById('filterStatsList');
+    if (!container || !stats) return;
+
     let html = '';
-    const allRows = document.querySelectorAll('.weather-condition-row');
-    
-    seeds.forEach(s => {
-        html += `<div style="margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px dashed #eee;">`;
-        html += `<div style="font-weight: bold; color: #333; margin-bottom: 4px;">种子: ${s.seed} <button class="btn-copy" style="padding: 2px 8px; font-size: 11px; margin-left: 10px; background-color: #4caf50; color: white; border: none; border-radius: 4px; cursor: pointer;" onclick="copySeed(${s.seed})">复制</button></div>`;
+    let prevCount = currentChecked;
+
+    stats.forEach(stat => {
+        let rawRate = prevCount > 0 ? (stat.passCount / prevCount * 100) : 0; //这是展示在通过第前关的基础上的种子，在当前关卡的通过率
+        // let rawRate = currentChecked > 0 ? (stat.passCount / currentChecked * 100) : 0;  音师傅如果想改成总体的通过率就用这行，我之前写的通过/总数得到零点几，展示出来我觉得没意义了
+        let displayRate = rawRate % 1 === 0 ? rawRate.toFixed(0) : rawRate.toFixed(1);
         
-        let countsHtml = '';
-        s.counts.forEach((c, i) => {
-            const r = allRows[i];
-            if (r) {
-                const season = r.querySelector('.weather-season-select').value;
-                const start = r.querySelector('.weather-start-day').value;
-                const end = r.querySelector('.weather-end-day').value;
-                if (i === conditionIndex) {
-                    countsHtml += `<span style="color: #e74c3c; font-weight: bold; margin-right: 12px;">[本条件] ${c}天</span>`;
-                } else {
-                    countsHtml += `<span style="margin-right: 12px; color: #666;">${season}${start}-${end}日: ${c}天</span>`;
-                }
-            }
-        });
-        html += `<div>${countsHtml}</div>`;
-        html += `</div>`;
+        const hue = Math.min(rawRate * 1.2, 120); 
+
+       html += `
+            <div class="analysis-row">
+                <div class="analysis-item-name">${stat.name}</div>
+                <div class="analysis-item-count">${stat.passCount.toLocaleString()}个种子</div>
+                <div class="analysis-rate-box" style="border-left-color: hsl(${hue}, 70%, 50%);">
+                    <span>通过率:</span>
+                    <span>${displayRate}%</span>
+                </div>
+            </div>
+        `;
+        //下一关的起点是本关留存的种子
+        prevCount = stat.passCount;
     });
-    
-    listEl.innerHTML = html;
+
+    container.innerHTML = html;
 }
 
 connectWebSocket();
