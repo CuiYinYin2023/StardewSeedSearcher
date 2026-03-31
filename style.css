@@ -22,9 +22,68 @@ body {
 }
 
 .header {
-    text-align: center;
+    display: flex;
+    align-items: center;        /* 垂直居中 */
+    justify-content: center;   /* 水平居中 */
+    gap: 20px;                 /* 图片与文字之间的间距 */
+    margin-bottom: 30px;       /* 与下方内容的间距 */
+}
+
+.header-title-box {
+    text-align: center;        /* 标题文字居中 */
     color: white;
-    margin-bottom: 30px;
+}
+
+/* 统一设置两个图片的样式 */
+.header-icon {
+    width: 90px;               /* 根据需要调整尺寸 */
+    height: 90px;              /* 宽高必须相等 */
+    border-radius: 12px;       /* 圆角方形，数值可根据需要调整 */
+    object-fit: cover;         /* 确保图片不会被拉伸变形 */
+    border: 2px solid #fff;    /* 可选：给圆形加一个白边，看起来更精致 */
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15); /* 可选：增加轻微阴影 */
+}
+/* 链接容器：垂直排列 */
+.header-links {
+    display: flex;
+    flex-direction: column; /* 纵向排列 */
+    gap: 5px;               /* 链接块之间的间距 */
+    margin-left: 10px;      /* 与左边头像的间距 */
+}
+
+/* 单个链接块：长方形 3:1 */
+.platform-link {
+    display: block;
+    width: 75px;            /* 宽度 */
+    height: 25px;           /* 高度 (3:1 比例) */
+    background: rgba(255, 255, 255, 0.1); /* 默认背景，方便没图时预览 */
+    border-radius: 4px;     /* 微圆角 */
+    overflow: hidden;       /* 超出部分隐藏 */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* 链接块内的图片 */
+.platform-link img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;      /* 填充整个长方形 */
+    display: block;
+}
+
+/* 悬停效果 */
+.platform-link:hover {
+    transform: scale(1.05);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    border-color: #fff;
+}
+
+/* 响应式调整：如果屏幕太小，隐藏链接栏或缩小 */
+@media (max-width: 768px) {
+    .platform-link {
+        width: 60px;
+        height: 20px;
+    }
 }
 
 .header h1 {
