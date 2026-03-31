@@ -63,7 +63,7 @@ const elements = {
 };
 
 // 混合宝箱数据
-const MINE_CHEST_ITEMS = { 
+const MINE_CHEST_ITEMS = {
     10: ["皮靴", "工作靴", "木剑", "铁制短剑", "疾风利剑", "股骨"],
     20: ["钢制轻剑", "木棒", "精灵之刃", "光辉戒指", "磁铁戒指"],
     50: ["冻土靴", "热能靴", "战靴", "镀银军刀", "海盗剑"],
@@ -167,7 +167,7 @@ elements.cartEnabled.addEventListener('change', (e) => {
 function addWeatherCondition() {
     const container = document.getElementById('conditionsContainer');
     const template = document.getElementById('weatherConditionTemplate');
-    
+
     const clone = template.content.cloneNode(true);
     const row = clone.querySelector('.weather-condition-row');
 
@@ -175,7 +175,7 @@ function addWeatherCondition() {
     row.querySelector('.btn-remove').onclick = () => {
         row.remove();
     };
-    
+
     container.appendChild(clone);
     hideError(); // 添加时尝试清理错误提示
 }
@@ -197,16 +197,16 @@ function syncConditions() {
 // 验证单个条件
 function validateWeatherCondition(condition) {
     const { startDay, endDay, minRainDays } = condition;
-    
+
     if (startDay > endDay) {
         return { valid: false, error: '起始日期不能大于结束日期' };
     }
-    
+
     const dayCount = endDay - startDay + 1;
     if (minRainDays < 1 || minRainDays > dayCount) {
         return { valid: false, error: `要求雨天数(${minRainDays})不能超过范围总天数(${dayCount})` };
     }
-    
+
     return { valid: true };
 }
 
@@ -229,7 +229,7 @@ function showError(message) {
     const errorDiv = document.getElementById('conditionError');
     errorDiv.textContent = message;
     errorDiv.classList.add('show');
-    errorDiv.style.display = 'block'; 
+    errorDiv.style.display = 'block';
 }
 
 // 隐藏错误
@@ -238,14 +238,14 @@ function hideError() {
     if (errorDiv) {
         errorDiv.textContent = '';
         errorDiv.classList.remove('show');
-        errorDiv.style.display = 'none';  
+        errorDiv.style.display = 'none';
     }
 }
 
 function addFairyCondition() {
     const container = document.getElementById('fairyConditionsContainer');
     const template = document.getElementById('fairyConditionTemplate');
-    
+
     // 克隆模板
     const clone = template.content.cloneNode(true);
     const row = clone.querySelector('.fairy-condition-row');
@@ -254,13 +254,13 @@ function addFairyCondition() {
     row.querySelector('.btn-remove').onclick = () => {
         row.remove();
     };
-    
+
     container.appendChild(clone);
 }
 
 function validateFairyCondition(condition) {
     const { startYear, startSeason, startDay, endYear, endSeason, endDay } = condition;
-    
+
     // 绝对天数验证逻辑 (1年112天, 1季28天)
     const startAbs = dateToAbsoluteDay(startYear, startSeason, startDay);
     const endAbs = dateToAbsoluteDay(endYear, endSeason, endDay);
@@ -273,12 +273,12 @@ function validateFairyCondition(condition) {
 }
 
 function isFairyDuplicate(currentCondition, allConditions) {
-    return allConditions.some(c => 
-        c.startYear === currentCondition.startYear && 
-        c.startSeason === currentCondition.startSeason && 
+    return allConditions.some(c =>
+        c.startYear === currentCondition.startYear &&
+        c.startSeason === currentCondition.startSeason &&
         c.startDay === currentCondition.startDay &&
-        c.endYear === currentCondition.endYear && 
-        c.endSeason === currentCondition.endSeason && 
+        c.endYear === currentCondition.endYear &&
+        c.endSeason === currentCondition.endSeason &&
         c.endDay === currentCondition.endDay
     );
 }
@@ -287,10 +287,10 @@ function isFairyDuplicate(currentCondition, allConditions) {
 function addMineChestCondition(targetFloor = null, targetItem = null) {
     const container = document.getElementById('mineChestConditionsContainer');
     const template = document.getElementById('mineChestConditionTemplate');
-    
+
     // 1. 获取当前页面已有的所有层数
     const existingFloors = Array.from(document.querySelectorAll('.minechest-floor'))
-                                .map(select => parseInt(select.value));
+        .map(select => parseInt(select.value));
 
     let floorToSet = targetFloor;
     let itemToSet = targetItem;
@@ -298,7 +298,7 @@ function addMineChestCondition(targetFloor = null, targetItem = null) {
     // 2. 如果没指定层数（点击“添加条件”按钮时），寻找下一个可用层数
     if (floorToSet === null) {
         const availableFloors = ALL_MINE_FLOORS.filter(f => !existingFloors.includes(f));
-        
+
         if (availableFloors.length === 0) {
             alert("所有矿井层数已设置完毕，无法继续添加。");
             return;
@@ -330,7 +330,7 @@ function addMineChestCondition(targetFloor = null, targetItem = null) {
     row.querySelector('.btn-remove').onclick = () => {
         row.remove();
     };
-    
+
     container.appendChild(clone);
 }
 
@@ -344,7 +344,7 @@ function populateMineItemOptions(floor, selectElement) {
 function addMonsterLevelCondition() {
     const container = document.getElementById('monsterLevelConditionsContainer');
     const template = document.getElementById('monsterLevelConditionTemplate');
-    
+
     const clone = template.content.cloneNode(true);
     const row = clone.querySelector('.monsterlevel-condition-row');
 
@@ -352,7 +352,7 @@ function addMonsterLevelCondition() {
     row.querySelector('.btn-remove').onclick = () => {
         row.remove();
     };
-    
+
     container.appendChild(clone);
 }
 
@@ -391,20 +391,20 @@ async function loadCartItems() {
 function addCartCondition() {
     const container = elements.cartConditionsContainer;
     const template = document.getElementById('cartConditionTemplate');
-    
+
     const clone = template.content.cloneNode(true);
     const row = clone.querySelector('.cart-condition-row');
-    
+
     const filterInput = row.querySelector('.cart-item-filter-input');
     const itemSelect = row.querySelector('.cart-item-select');
-    
+
     filterInput.addEventListener('input', (e) => {
         const keyword = e.target.value.trim().toLowerCase();
         // 过滤全局物品列表
-        const filtered = ALL_CART_ITEM_NAMES.filter(name => 
+        const filtered = ALL_CART_ITEM_NAMES.filter(name =>
             name.toLowerCase().includes(keyword)
         );
-        
+
         // 更新下拉框内容
         itemSelect.innerHTML = '<option value="">--请选择--</option>';
         filtered.forEach(name => {
@@ -413,7 +413,7 @@ function addCartCondition() {
             opt.textContent = name;
             itemSelect.appendChild(opt);
         });
-        
+
         // 如果过滤结果只有一个，自动选中它
         if (filtered.length === 1) {
             itemSelect.value = filtered[0];
@@ -436,18 +436,18 @@ function addCartCondition() {
     row.querySelector('.btn-remove').onclick = () => {
         row.remove();
     };
-    
+
     container.appendChild(clone);
 }
 
 // 验证猪车条件
 function validateCartCondition(condition) {
     const { startYear, startSeason, startDay, endYear, endSeason, endDay, itemName } = condition;
-    
+
     if (!itemName || itemName === "") {
         return { valid: false, error: '请在猪车下拉菜单中选择一个具体的物品' };
     }
-    
+
     // 跨年绝对日期验证 (利用绝对天数)
     const startAbs = dateToAbsoluteDay(startYear, startSeason, startDay);
     const endAbs = dateToAbsoluteDay(endYear, endSeason, endDay);
@@ -463,7 +463,7 @@ function validateCartCondition(condition) {
 function initializeCartItemList() {
     const datalist = document.getElementById('cartItemNamesList');
     if (!datalist) return;
-    
+
     // 清空旧选项，防止重复堆积
     datalist.innerHTML = '';
 
@@ -498,20 +498,20 @@ function updateOutputLimitMax() {
     }
 }
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
 
     // 天气条件初始化
-    addWeatherCondition(); 
+    addWeatherCondition();
 
     // 仙子条件初始化
-    addFairyCondition(); 
+    addFairyCondition();
 
     // 矿井宝箱条件初始化
-    addMineChestCondition("110", "巨锤"); 
+    addMineChestCondition("110", "巨锤");
 
     // 怪物层条件初始化
     addMonsterLevelCondition(0);
-    
+
     // 猪车条件初始化
     loadCartItems();
     initializeCartItemList(); // 初始化物品 datalist
@@ -519,22 +519,22 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // 监听起始种子修改,重置循环
-document.getElementById('startSeed').addEventListener('change', function() {
+document.getElementById('startSeed').addEventListener('change', function () {
     nextStartSeed = parseInt(this.value) || 0;
 });
 
 // 监听搜索范围修改,重置循环
-document.getElementById('searchRange').addEventListener('change', function() {
+document.getElementById('searchRange').addEventListener('change', function () {
     // 1. 重置循环逻辑：让下一次搜索从当前输入的起始种子开始
     const startSeed = parseInt(document.getElementById('startSeed').value) || 0;
     nextStartSeed = startSeed;
 
     // 2. 更新输出上限逻辑：确保输出种子数不会比搜索范围还大
-    updateOutputLimitMax(); 
+    updateOutputLimitMax();
 });
 
 // 监听循环搜索复选框
-document.getElementById('loopSearch').addEventListener('change', function() {
+document.getElementById('loopSearch').addEventListener('change', function () {
     if (!this.checked) {
         // 取消循环时重置
         const startSeed = parseInt(document.getElementById('startSeed').value) || 0;
@@ -586,6 +586,9 @@ function handleWebSocketMessage(data) {
             document.getElementById('analysisDetails').style.display = 'block';
             document.getElementById('analysisStoppedEarly').textContent = '?';
             document.getElementById('analysisStoppedEarly').style.color = '#999';
+
+            const filterStatsList = document.getElementById('filterstatsList');
+            if (filterStatsList) { filterStatsList.innerHTML = ''; }
             break;
 
         case 'progress':
@@ -612,7 +615,7 @@ function handleWebSocketMessage(data) {
         case 'found':
             foundSeeds.push(data.seed);
             elements.foundCount.textContent = foundSeeds.length;
-            
+
             // 缓存种子信息用于展示简介
             if (data.details) {
                 seedDetailsCache[data.seed] = {
@@ -633,7 +636,7 @@ function handleWebSocketMessage(data) {
                 `;
                 elements.seedList.appendChild(seedItem);
             }
-            
+
             updateResultsSummary();
             break;
 
@@ -653,7 +656,7 @@ function handleWebSocketMessage(data) {
                 nextStartSeed += searchRange;
                 document.getElementById('startSeed').value = nextStartSeed;
             }
-            
+
             //判断有没有提前停止
             const maxOutputLimit = parseInt(document.getElementById('outputLimit').value) || 0;
             const hitLimit = (!data.cancelled && foundSeeds.length >= maxOutputLimit);
@@ -683,12 +686,12 @@ function exportResultsToTxt() {
 
     // 1. 生成文件名：脆音音种子搜索器_日期_时间
     const now = new Date();
-    const dateStr = now.getFullYear() + 
-                    String(now.getMonth() + 1).padStart(2, '0') + 
-                    String(now.getDate()).padStart(2, '0');
-    const timeStr = String(now.getHours()).padStart(2, '0') + 
-                    String(now.getMinutes()).padStart(2, '0') + 
-                    String(now.getSeconds()).padStart(2, '0');
+    const dateStr = now.getFullYear() +
+        String(now.getMonth() + 1).padStart(2, '0') +
+        String(now.getDate()).padStart(2, '0');
+    const timeStr = String(now.getHours()).padStart(2, '0') +
+        String(now.getMinutes()).padStart(2, '0') +
+        String(now.getSeconds()).padStart(2, '0');
     const fileName = `脆音音种子搜索器_${dateStr}_${timeStr}.txt`;
 
     // 2. 生成条件总结头部
@@ -826,7 +829,7 @@ elements.form.addEventListener('submit', async (e) => {
 
     // 仙子
     const fairyEnabled = elements.fairyEnabled.checked;
-    let fairyConditionsData = []; 
+    let fairyConditionsData = [];
 
     // 矿井宝箱
     const mineChestEnabled = elements.mineChestEnabled.checked;
@@ -848,8 +851,8 @@ elements.form.addEventListener('submit', async (e) => {
     let cartConditionsData = [];
 
     // 计算起始种子
-    let startSeed = loopSearch && nextStartSeed > 0 
-        ? nextStartSeed 
+    let startSeed = loopSearch && nextStartSeed > 0
+        ? nextStartSeed
         : parseInt(document.getElementById('startSeed').value);
 
     document.getElementById('startSeed').value = startSeed;
@@ -865,7 +868,7 @@ elements.form.addEventListener('submit', async (e) => {
     } else {
         searchRange = parseInt(rangeValue);
     }
-    
+
     // 计算结束种子,不超过最大值
     const endSeed = Math.min(startSeed + searchRange - 1, INT_MAX);
 
@@ -875,12 +878,12 @@ elements.form.addEventListener('submit', async (e) => {
     // 天气条件验证
     if (weatherEnabled) {
         const weatherRows = document.querySelectorAll('.weather-condition-row');
-        
+
         if (weatherRows.length === 0) {
             alert('请至少添加一个天气条件！');
             return;
         }
-        
+
         // 验证所有条件
         for (let row of weatherRows) {
             // 读取界面值
@@ -916,12 +919,12 @@ elements.form.addEventListener('submit', async (e) => {
     // 仙子条件验证
     if (fairyEnabled) {
         const fairyRows = document.querySelectorAll('.fairy-condition-row');
-        
+
         if (fairyRows.length === 0) {
             alert('请至少添加一个仙子条件！');
             return;
         }
-        
+
         for (let row of fairyRows) {
             const condition = {
                 startYear: parseInt(row.querySelector('.fairy-start-year').value),
@@ -944,11 +947,11 @@ elements.form.addEventListener('submit', async (e) => {
                 alert(`仙子搜索存在重复范围！`);
                 return;
             }
-        
+
             fairyConditionsData.push(condition);
         }
-    } 
-    
+    }
+
     // 矿井宝箱验证
     if (mineChestEnabled) {
         const mineRows = document.querySelectorAll('.minechest-condition-row');
@@ -979,12 +982,12 @@ elements.form.addEventListener('submit', async (e) => {
     // 怪物层条件验证
     if (monsterLevelEnabled) {
         const monsterRows = document.querySelectorAll('.monsterlevel-condition-row');
-        
+
         if (monsterRows.length === 0) {
             alert('请至少添加一个怪物层筛选条件！');
             return;
         }
-        
+
         for (let row of monsterRows) {
             const condition = {
                 // 默认第一年
@@ -1016,10 +1019,10 @@ elements.form.addEventListener('submit', async (e) => {
             alert('请至少添加一个猪车条件！');
             return;
         }
-        
+
         for (let row of cartRows) {
             const multiCheck = row.querySelector('.cart-multi-check').checked;
-            
+
             const condition = {
                 startYear: parseInt(row.querySelector('.cart-start-year').value),
                 startSeason: SeasonNameToIndex[row.querySelector('.cart-start-season').value],
@@ -1028,7 +1031,7 @@ elements.form.addEventListener('submit', async (e) => {
                 endYear: parseInt(row.querySelector('.cart-end-year').value),
                 endSeason: SeasonNameToIndex[row.querySelector('.cart-end-season').value],
                 endDay: parseInt(row.querySelector('.cart-end-day').value),
-                
+
                 itemName: row.querySelector('.cart-item-select').value,
                 requireQty5: row.querySelector('.cart-require-qty5').checked,
                 minOccurrences: multiCheck ? parseInt(row.querySelector('.cart-min-occurrences').value) : 1
@@ -1052,7 +1055,7 @@ elements.form.addEventListener('submit', async (e) => {
     elements.searchBtn.textContent = '⏹ 停止搜索';
     elements.searchBtn.classList.add('btn-stop');
     isSearching = true;
-    
+
     // 更新状态消息(显示搜索范围)
     elements.statusMessage.textContent = `正在搜索: ${startSeed.toLocaleString()}-${endSeed.toLocaleString()}`;
 
@@ -1079,8 +1082,8 @@ elements.form.addEventListener('submit', async (e) => {
                 useLegacyRandom: useLegacy,
                 weatherConditions: weatherConditionsData,
                 fairyConditions: fairyConditionsData,
-                MineChestConditions: mineChestConditionsData, 
-                monsterLevelConditions: monsterLevelConditionsData, 
+                MineChestConditions: mineChestConditionsData,
+                monsterLevelConditions: monsterLevelConditionsData,
                 desertFestivalCondition: desertFestivalCondition,
                 cartConditions: cartConditionsData,
                 outputLimit // 将输出数量添加到请求中
@@ -1105,10 +1108,10 @@ elements.form.addEventListener('submit', async (e) => {
 function showSeedDetail(seed) {
     const cached = seedDetailsCache[seed];
     if (!cached) return;
-    
+
     const { details, enabled } = cached;
     const seasonNames = ["春", "夏", "秋", "冬"];
-    
+
     document.getElementById('sidebarMode').textContent = currentSearchUseLegacy ? '旧随机' : '新随机';
     document.getElementById('sidebarSeedNumber').textContent = seed;
 
@@ -1120,19 +1123,19 @@ function showSeedDetail(seed) {
             { name: seasonNames[1], days: details.weather.summerRain, greenRainDay: details.weather.greenRainDay },
             { name: seasonNames[2], days: details.weather.fallRain, greenRainDay: null }
         ];
-        
+
         let weatherHtml = '';  // 定义变量
         seasons.forEach(season => {
             const count = season.days.length;
             let daysText = '';
-            
+
             if (count > 0) {
                 daysText = season.days.map(day => {
                     const isGreenRain = season.greenRainDay === day;
                     return isGreenRain ? `<span class="green-rain">${day}（绿雨）</span>` : day;
                 }).join(', ');
             }
-            
+
             weatherHtml += `
                 <div class="weather-season">
                     <div class="weather-season-title">${season.name}（${count}个）：</div>
@@ -1140,20 +1143,20 @@ function showSeedDetail(seed) {
                 </div>
             `;
         });
-        
+
         document.getElementById('sidebarWeatherContent').innerHTML = weatherHtml;
         document.getElementById('weatherSection').style.display = 'block';
     } else {
         document.getElementById('weatherSection').style.display = 'none';
     }
-    
+
     // 只有启用了仙子功能才显示
     if (enabled.fairy && details.fairy && details.fairy.days) {
         const fairyText = details.fairy.days.map(f => {
             const prefix = f.year === 1 ? '' : `${f.year}年`;
             return `${prefix}${SeasonNames[f.season]}${f.day}`;
         }).join('、');
-        
+
         const fairyHtml = `
             <div class="weather-season">
                 <div class="weather-season-title">仙子（${details.fairy.days.length}个）：</div>
@@ -1192,7 +1195,7 @@ function showSeedDetail(seed) {
         const monsterLevelText = details.monsterLevel.map(m => {
             return m.description;
         }).join('<br>');
-        
+
         const monsterLevelHtml = `
             <div class="weather-season">
                 <div class="weather-days">${monsterLevelText}</div>
@@ -1207,7 +1210,7 @@ function showSeedDetail(seed) {
     // 只有启用了沙漠节功能才显示
     if (enabled.desertFestival && details.desertFestival) {
         const vendorNameMap = {
-            'Abigail': '阿比盖尔', 'Caroline': '卡洛琳', 'Clint': '克林特', 
+            'Abigail': '阿比盖尔', 'Caroline': '卡洛琳', 'Clint': '克林特',
             'Demetrius': '德米特里厄斯', 'Elliott': '艾利欧特', 'Emily': '艾米丽',
             'Evelyn': '艾芙琳', 'George': '乔治', 'Gus': '格斯',
             'Haley': '海莉', 'Harvey': '哈维', 'Jas': '贾斯',
@@ -1217,7 +1220,7 @@ function showSeedDetail(seed) {
             'Robin': '罗宾', 'Sam': '山姆', 'Sebastian': '塞巴斯蒂安',
             'Shane': '谢恩', 'Vincent': '文森特', 'Leo': '雷欧'
         };
-        
+
         // 在 map 转换中文名之后，再处理高亮
         const highlightVendor = (name) => {
             if (name === '贾斯') return `<span style="color: #9b59b6; font-weight: bold;">${name}</span>`;
@@ -1231,7 +1234,7 @@ function showSeedDetail(seed) {
             .map(v => highlightVendor(vendorNameMap[v] || v)).join('、');
         const day17Vendors = details.desertFestival.day17
             .map(v => highlightVendor(vendorNameMap[v] || v)).join('、');
-        
+
         const desertFestivalHtml = `
             <div class="weather-season">
                 <div class="weather-season-title">春15：</div>
@@ -1246,7 +1249,7 @@ function showSeedDetail(seed) {
                 <div class="weather-days">${day17Vendors}</div>
             </div>
         `;
-        
+
         document.getElementById('sidebarDesertFestivalContent').innerHTML = desertFestivalHtml;
         document.getElementById('desertFestivalSection').style.display = 'block';
     } else {
@@ -1268,7 +1271,7 @@ function showSeedDetail(seed) {
             const qtyDisplay = (match.Quantity === -1) ? "" : match.Quantity;
 
             // 拼接单行：第1年春7，电池组5，2000g
-            console.log("details:", details); 
+            console.log("details:", details);
             return `<div class="cart-result-line">
                 第${match.Year}年${seasonName}${match.Day}，${match.ItemName}${qtyDisplay}，${match.Price}g
     </div>`;
@@ -1289,7 +1292,7 @@ function showSeedDetail(seed) {
     } else {
         elements.cartSection.style.display = 'none';
     }
-    
+
     // 显示侧边栏
     document.getElementById('sidebarPanel').classList.add('active');
 }
@@ -1325,7 +1328,7 @@ function showCopyToast() {
     }, 2000);
 }
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const INT_MIN = 1;
     const INT_MAX = 2147483647;
     const RANDOM_MAX = 2000000000;
@@ -1341,11 +1344,11 @@ document.addEventListener('DOMContentLoaded', function() {
         else if (val < INT_MIN) inputElement.value = INT_MIN;
     }
 
-    if (startSeedInput) startSeedInput.addEventListener('blur', function() { enforceIntLimits(this); });
+    if (startSeedInput) startSeedInput.addEventListener('blur', function () { enforceIntLimits(this); });
 
     // 一键最小起始种子
     if (btnZeroSeed) {
-        btnZeroSeed.addEventListener('click', function() {
+        btnZeroSeed.addEventListener('click', function () {
             startSeedInput.value = 1;
             // 触发 change 事件以同步 nextStartSeed
             startSeedInput.dispatchEvent(new Event('change'));
@@ -1354,7 +1357,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 一键随机起始种子
     if (btnRandomSeed) {
-        btnRandomSeed.addEventListener('click', function() {
+        btnRandomSeed.addEventListener('click', function () {
             // 生成 1 到 20e 的随机数
             const randomSeed = Math.floor(Math.random() * RANDOM_MAX) + 1;
             startSeedInput.value = randomSeed;
@@ -1366,7 +1369,7 @@ document.addEventListener('DOMContentLoaded', function() {
 function updateAnalysisUI(stats, currentChecked, totalFound) {
     document.getElementById('analysisTotalRange').textContent = currentChecked.toLocaleString();
     document.getElementById('analysisTotalFound').textContent = totalFound.toLocaleString();
-    
+
     const container = document.getElementById('filterStatsList');
     if (!container || !stats) return;
 
@@ -1377,10 +1380,10 @@ function updateAnalysisUI(stats, currentChecked, totalFound) {
         let rawRate = prevCount > 0 ? (stat.passCount / prevCount * 100) : 0; //这是展示在通过第前关的基础上的种子，在当前关卡的通过率
         // let rawRate = currentChecked > 0 ? (stat.passCount / currentChecked * 100) : 0;  音师傅如果想改成总体的通过率就用这行，我之前写的通过/总数得到零点几，展示出来我觉得没意义了
         let displayRate = rawRate % 1 === 0 ? rawRate.toFixed(0) : rawRate.toFixed(1);
-        
-        const hue = Math.min(rawRate * 1.2, 120); 
 
-       html += `
+        const hue = Math.min(rawRate * 1.2, 120);
+
+        html += `
             <div class="analysis-row">
                 <div class="analysis-item-name">${stat.name}</div>
                 <div class="analysis-item-count">${stat.passCount.toLocaleString()}个种子</div>

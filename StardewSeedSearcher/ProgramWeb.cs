@@ -222,6 +222,8 @@ namespace StardewSeedSearcher
                 // 发送开始消息
                 await BroadcastMessage(new { type = "start", total = totalSeeds });
             
+                var sortedFeatures = features.Where(f => f.IsEnabled).OrderBy(f=>f.EstimateCost(request.UseLegacyRandom)).ToList();
+
                 // 多线程暴力搜索 （同时是 Channel 的生产者）
                 await Task.Run(() =>
                 {
@@ -323,6 +325,12 @@ namespace StardewSeedSearcher
                 stopwatch.Stop();
                 await consumerTask; // 等待所有广播发送完毕
                 
+                // 诶我靠发太快了
+                var finalStats = sortedFeatures.Select(f => new 
+                {
+                    name = f.Name,
+                    passCount = featurePassCounts[f.Name]
+                }).ToList();
 
                 // 发送完成消息
                 // 发送最后一次精确的进度更新。
@@ -335,9 +343,10 @@ namespace StardewSeedSearcher
                     checkedCount,
                     progress = Math.Floor(finalProgress), // 这里也取整
                     speed = Math.Round(checkedCount / stopwatch.Elapsed.TotalSeconds, 0),
-                    elapsed = Math.Round(stopwatch.Elapsed.TotalSeconds, 1)
+                    elapsed = Math.Round(stopwatch.Elapsed.TotalSeconds, 1),
+                    featureStats = finalStats // 最终统计数据及时返回
                 });
-
+                
                 // 广播"完成"消息
                 await BroadcastMessage(new
                 {
