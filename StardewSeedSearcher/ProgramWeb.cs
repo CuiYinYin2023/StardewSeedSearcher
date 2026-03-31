@@ -176,6 +176,9 @@ namespace StardewSeedSearcher
                 // 配置所有搜种功能
                 var features = InitializeFeatures(request);
 
+                var featurePassCounts = new ConcurrentDictionary<string, int>();
+                foreach (var f in features) featurePassCounts[f.Name] = 0;
+
                 /* 各 Worker 线程为 Channel 的生产者，负责暴力搜索并将结果传递给 Channel，Channel 消费者则负责广播结果（发送给前端更新进度）和提前终止搜索
                  * [Worker 线程 1] ──┐
                  * [Worker 线程 2] ──┤──► Channel<消息> ──► [单一消费者] ──► BroadcastMessage (async)
@@ -216,9 +219,10 @@ namespace StardewSeedSearcher
                     catch (Exception ex) { Console.WriteLine($"Consumer Error: {ex.Message}"); }
                 });
 
-
                 // 发送开始消息
                 await BroadcastMessage(new { type = "start", total = totalSeeds });
+            
+                var sortedFeatures = features.Where(f => f.IsEnabled).OrderBy(f=>f.EstimateCost(request.UseLegacyRandom)).ToList();
 
                 // 多线程暴力搜索 （同时是 Channel 的生产者）
                 await Task.Run(() =>
@@ -258,6 +262,7 @@ namespace StardewSeedSearcher
                                         allMatch = false;
                                         break;
                                     }
+                                    featurePassCounts.AddOrUpdate(feature.Name, 1, (key, val) => val + 1);
                                 }
 
                                 int localChecked = Interlocked.Increment(ref checkedCount);
@@ -282,9 +287,14 @@ namespace StardewSeedSearcher
                                     }
                                 }
 
-                                // 每 500 个种子更新一次进度（避免过于频繁）
+                                // 每1000个种子更新一次进度（避免过于频繁）
                                 if (localChecked % 1000 == 0 || localChecked == totalSeeds)
                                 {
+                                    var stats = sortedFeatures.Select(f => new {
+                                        name = f.Name,
+                                        passCount = featurePassCounts[f.Name]
+                                    }).ToList();
+
                                     double progress = (double)localChecked / totalSeeds * 100;
                                     double speed = localChecked / stopwatch.Elapsed.TotalSeconds;
 
@@ -295,7 +305,8 @@ namespace StardewSeedSearcher
                                         total = totalSeeds,
                                         progress = Math.Round(progress, 2),
                                         speed = Math.Round(speed, 0),
-                                        elapsed = Math.Round(stopwatch.Elapsed.TotalSeconds, 1)
+                                        elapsed = Math.Round(stopwatch.Elapsed.TotalSeconds, 1),
+                                        featureStats = stats
                                     }));
                                 }
                             }
@@ -314,6 +325,12 @@ namespace StardewSeedSearcher
                 stopwatch.Stop();
                 await consumerTask; // 等待所有广播发送完毕
                 
+                // 搜索完成过快会导致统计不精确
+                var finalStats = sortedFeatures.Select(f => new 
+                {
+                    name = f.Name,
+                    passCount = featurePassCounts[f.Name]
+                }).ToList();
 
                 // 发送完成消息
                 // 发送最后一次精确的进度更新。
@@ -326,9 +343,10 @@ namespace StardewSeedSearcher
                     checkedCount,
                     progress = Math.Floor(finalProgress), // 这里也取整
                     speed = Math.Round(checkedCount / stopwatch.Elapsed.TotalSeconds, 0),
-                    elapsed = Math.Round(stopwatch.Elapsed.TotalSeconds, 1)
+                    elapsed = Math.Round(stopwatch.Elapsed.TotalSeconds, 1),
+                    featureStats = finalStats // 最终统计数据及时返回
                 });
-
+                
                 // 广播"完成"消息
                 await BroadcastMessage(new
                 {

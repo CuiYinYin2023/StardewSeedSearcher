@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
     <link rel="stylesheet" href="style.css">
     <script src="script.js" defer></script>
 </head>
+
 <body>
     <div class="connection-status" id="connectionStatus">连接中...</div>
 
@@ -55,7 +57,7 @@
                         <h4 style="margin-bottom: 15px;">仙子筛选</h4>
                         <li>筛选特定天数范围有至少1个仙子出现的种子。</li>
                         <li>可多条件筛选，日期范围不可重叠。</li>
-                        <li>游戏中，仙子事件可能会被其他事件覆盖，或因没有合适地块而不发生。</li>
+                        <li>游戏中，仙子事件可能会被其他事件覆盖，或因没有合适地块而不发生。例：第一年春3固定下雨，所以第一年春2晚上的仙子实际无法到来。</li>
                         <br>
 
                         <h4 style="margin-bottom: 15px;">矿井混合宝箱筛选</h4>
@@ -112,7 +114,7 @@
                                 <option value="max">最大</option>
                             </select>
                         </div>
-                    </div>                   
+                    </div>
                     <div class="checkbox-group">
                         <input type="checkbox" id="loopSearch" checked>
                         <label for="loopSearch">搜索后自动更新起始值</label>
@@ -127,19 +129,20 @@
 
                 <!-- 天气功能 -->
                 <div class="checkbox-group">
-                    <!-- <input type="checkbox" id="weatherEnabled" checked> -->
-                    <input type="checkbox" id="weatherEnabled">
+                    <input type="checkbox" id="weatherEnabled" checked>
+                    <!-- <input type="checkbox" id="weatherEnabled"> -->
                     <label for="weatherEnabled">启用天气筛选</label>
                     <span style="font-size: 14px; color: #a6a6a6">目前只支持第一年，雨天包含绿雨和雷雨。</span>
                 </div>
-                <!-- <div class="condition-config" id="weatherConfig"> -->
-                <div class="condition-config" id="weatherConfig" style="display: none;">
+                <div class="condition-config" id="weatherConfig">
+                <!-- <div class="condition-config" id="weatherConfig" style="display: none;"> -->
                     <h4 style="margin-bottom: 15px;">天气筛选条件</h4>
-                    
+
                     <!-- 初始不放内容，由 JavaScript 动态添加，或者在页面加载时调用 addCondition() -->
                     <div class="weather-conditions-container" id="conditionsContainer"></div>
 
-                    <button type="button" class="btn-add-condition" onclick="addWeatherCondition()" style="margin-top: 10px;">添加条件</button>
+                    <button type="button" class="btn-add-condition" onclick="addWeatherCondition()"
+                        style="margin-top: 10px;">添加条件</button>
 
                     <div class="error-message" id="conditionError"></div>
                 </div>
@@ -155,7 +158,7 @@
                             <option>秋</option>
                             <option>冬</option>
                         </select>
-                        
+
                         <input type="number" class="weather-start-day" min="1" max="28" step="1" value="1">
                         <span style="font-size: 14px;">日 - </span>
                         <input type="number" class="weather-end-day" min="1" max="28" step="1" value="28">
@@ -167,7 +170,7 @@
 
                         <button type="button" class="btn-remove">删除</button>
                     </div>
-                </template>       
+                </template>
                 <br>
 
                 <!-- 仙子功能 -->
@@ -181,12 +184,12 @@
                 <!-- <div class="condition-config" id="fairyConfig"> -->
                 <div class="condition-config" id="fairyConfig" style="display: none;">
                     <h4 style="margin-bottom: 15px;">仙子筛选条件</h4>
-                    
+
                     <!-- 初始不放内容，由 JavaScript 动态添加，或者在页面加载时调用 addCondition() -->
                     <div class="fairy-conditions-container" id="fairyConditionsContainer"></div>
 
                     <button type="button" class="btn-add-condition" onclick="addFairyCondition()">添加条件</button>
-                    
+
                     <div class="error-message" id="fairyConditionError"></div>
                 </div>
 
@@ -195,32 +198,36 @@
                     <div class="fairy-condition-row">
 
                         <span>第</span>
-                        <input type="number" step="1" min="1" max="10" value="1" class="fairy-start-year" style="width: 60px;">
+                        <input type="number" step="1" min="1" max="10" value="1" class="fairy-start-year"
+                            style="width: 60px;">
                         <span>年</span>
                         <select class="fairy-start-season" style="width: 60px;">
                             <option>春</option>
                             <option>夏</option>
                             <option>秋</option>
                         </select>
-                        <input type="number" step="1" min="1" max="28" value="1" class="fairy-start-day" style="width: 60px;">
+                        <input type="number" step="1" min="1" max="28" value="1" class="fairy-start-day"
+                            style="width: 60px;">
                         <span>日</span>
 
                         <span> - 第</span>
-                        <input type="number" step="1" min="1" max="10" value="1" class="fairy-end-year" style="width: 60px;">
+                        <input type="number" step="1" min="1" max="10" value="1" class="fairy-end-year"
+                            style="width: 60px;">
                         <span>年</span>
                         <select class="fairy-end-season" style="width: 60px;">
                             <option>春</option>
                             <option>夏</option>
                             <option>秋</option>
                         </select>
-                        <input type="number" step="1" min="1" max="28" value="28" class="fairy-end-day" style="width: 60px;">
+                        <input type="number" step="1" min="1" max="28" value="28" class="fairy-end-day"
+                            style="width: 60px;">
                         <span>日</span>
 
                         <button type="button" class="btn-remove">删除</button>
 
                     </div>
                 </template>
-                    
+
                 <br>
 
                 <!-- 矿井宝箱 -->
@@ -228,16 +235,16 @@
                     <input type="checkbox" id="mineChestEnabled">
                     <!-- <input type="checkbox" id="mineChestEnabled" checked> -->
                     <label for="mineChestEnabled">启用矿井混合宝箱筛选</label>
-                    <span style="font-size: 14px; color: #a6a6a6">必须在创建存档时选择<strong>矿洞掉落-重新混合</strong>，否则为默认物品。</span>
+                    <span style="font-size: 14px; color: #a6a6a6">必须在创建存档时选择<span style="color: rgba(255, 0, 0, 0.579);"><strong>矿洞掉落-重新混合</strong></span>，否则为默认物品。</span>
                 </div>
 
                 <!-- <div class="condition-config" id="mineChestConfig"> -->
                 <div class="condition-config" id="mineChestConfig" style="display: none;">
                     <h4 style="margin-bottom: 15px;">矿井混合宝箱筛选条件</h4>
-                    
+
                     <!-- 初始不放内容，由 JavaScript 动态添加，或者在页面加载时调用 addCondition() -->
                     <div class="minechest-conditions-container" id="mineChestConditionsContainer"></div>
-                        
+
                     <button type="button" class="btn-add-condition" onclick="addMineChestCondition()">添加条件</button>
                     <div class="error-message" id="mineChestConditionError"></div>
                 </div>
@@ -255,7 +262,7 @@
                             <option value="110">110层</option>
                         </select>
                         <span>层  宝箱物品</span>
-                        
+
                         <select class="minechest-item" style="width: 160px;">
                             <option value=""></option>
                         </select>
@@ -274,11 +281,11 @@
                 </div>
 
                 <div class="condition-config" id="monsterLevelConfig" style="display: none;">
-                <!-- <div class="condition-config" id="monsterLevelConfig"> -->
+                    <!-- <div class="condition-config" id="monsterLevelConfig"> -->
                     <h4 style="margin-bottom: 15px;">怪物层筛选条件（第一年）</h4>
-                    
+
                     <div class="monsterlevel-conditions-container" id="monsterLevelConditionsContainer"></div>
-                    
+
                     <button type="button" class="btn-add-condition" onclick="addMonsterLevelCondition()">添加条件</button>
                     <div class="error-message" id="monsterLevelConditionError"></div>
                 </div>
@@ -295,7 +302,8 @@
                                 <option>秋</option>
                                 <option>冬</option>
                             </select>
-                            <input type="number" class="monsterlevel-start-day" min="1" max="28" value="5" step="1" style="width: 60px;">
+                            <input type="number" class="monsterlevel-start-day" min="1" max="28" value="5" step="1"
+                                style="width: 60px;">
                             <span>日 - </span>
                             <select class="monsterlevel-end-season" style="width: 60px;">
                                 <option>春</option>
@@ -303,18 +311,21 @@
                                 <option>秋</option>
                                 <option>冬</option>
                             </select>
-                            <input type="number" class="monsterlevel-end-day" min="1" max="28" value="5" step="1" style="width: 60px;">
+                            <input type="number" class="monsterlevel-end-day" min="1" max="28" value="5" step="1"
+                                style="width: 60px;">
                             <span>日</span>
                         </div>
 
                         <!-- 第二行：层数范围 + 删除按钮 -->
                         <div style="display: flex; align-items: center; gap: 5px;">
-                            <span>  矿井</span>
-                            <input type="number" class="monsterlevel-start-level" min="1" max="120" value="1" style="width: 60px;">
+                            <span> 矿井</span>
+                            <input type="number" class="monsterlevel-start-level" min="1" max="120" value="1"
+                                style="width: 60px;">
                             <span>层 - </span>
-                            <input type="number" class="monsterlevel-end-level" min="1" max="120" value="40" style="width: 60px;">
+                            <input type="number" class="monsterlevel-end-level" min="1" max="120" value="40"
+                                style="width: 60px;">
                             <span>层</span>
-                            
+
                             <button type="button" class="btn-remove">删除</button>
                         </div>
                     </div>
@@ -327,20 +338,20 @@
                     <!-- <input type="checkbox" id="desertFestivalEnabled" checked> -->
                     <input type="checkbox" id="desertFestivalEnabled">
                     <label for="desertFestivalEnabled">启用沙漠节筛选</label>
-                    <span style="font-size: 14px; color: #a6a6a6">第一年沙漠节（春15-17）摆摊商人</span>
+                    <span style="font-size: 14px; color: #a6a6a6">第一年沙漠节（春15-17）的摆摊商人</span>
                 </div>
                 <!-- <div class="condition-config" id="desertFestivalConfig"> -->
-                <div class="condition-config" id="desertFestivalConfig" style="display: none;">   
+                <div class="condition-config" id="desertFestivalConfig" style="display: none;">
                     <div class="checkbox-group" style="margin-left: 20px;">
                         <input type="checkbox" id="requireJas">
                         <label for="requireJas">贾斯（出售魔法糖冰棍）</label>
                     </div>
-                    
+
                     <div class="checkbox-group" style="margin-left: 20px;">
                         <input type="checkbox" id="requireLeah">
                         <label for="requireLeah">莉亚（出售100硬木用于开姜岛）</label>
                     </div>
-                    
+
                     <div class="info-text" style="margin-top: 10px; margin-left: 20px; color: #666; font-size: 0.9em;">
                         如同时勾选，则两人必须都出现。
                         <br>
@@ -356,21 +367,22 @@
 
                 <!-- 猪车部分 -->
                 <div class="checkbox-group">
-                    <!-- <input type="checkbox" id="cartEnabled"> -->
-                    <input type="checkbox" id="cartEnabled" checked>
+                    <input type="checkbox" id="cartEnabled">
+                    <!-- <input type="checkbox" id="cartEnabled" checked> -->
                     <label for="cartEnabled">启用猪车预测</label>
-                    <span style="font-size: 14px; color: #a6a6a6">不包含家具、稀有种子、家具目录等，只包含基础物品和技能书。默认游戏中不勾选“第一年必出红叶卷心菜”。</span>
+                    <span
+                        style="font-size: 14px; color: #a6a6a6">只包含基础物品和技能书，不包含家具、稀有种子、家具目录等。创建存档时<span style="color: rgba(255, 0, 0, 0.579);"><strong>不勾选</strong></span>“第一年必出红叶卷心菜”。</span>
 
                 </div>
-                
-                <div class="condition-config" id="cartConfig">
-                <!-- <div class="condition-config" id="cartConfig" style="display: none;"> -->
+
+                <!-- <div class="condition-config" id="cartConfig"> -->
+                    <div class="condition-config" id="cartConfig" style="display: none;">
                     <h4 style="margin-bottom: 15px;">猪车筛选条件</h4>
-                    
+
                     <div class="cart-conditions-container" id="cartConditionsContainer"></div>
-                    
+
                     <button type="button" class="btn-add-condition" onclick="addCartCondition()">添加条件</button>
-                    
+
                     <div class="error-message" id="cartConditionError"></div>
                 </div>
 
@@ -380,7 +392,8 @@
                         <!-- 第一行：时间范围 -->
                         <div class="row-time">
                             <span>第</span>
-                            <input type="number" class="cart-start-year" min="1" max="20" value="1" style="width: 60px;">
+                            <input type="number" class="cart-start-year" min="1" max="20" value="1"
+                                style="width: 60px;">
                             <span>年</span>
                             <select class="cart-start-season" style="width: 60px;">
                                 <option>春</option>
@@ -406,7 +419,8 @@
                         <!-- 第二行：物品选择 + 数量5 -->
                         <div class="row-item">
                             <div class="item-search-container">
-                                <input type="text" class="cart-item-filter-input" placeholder="搜索物品..." style="width: 80px;">
+                                <input type="text" class="cart-item-filter-input" placeholder="搜索物品..."
+                                    style="width: 80px;">
                                 <select class="cart-item-select" style="width: 120px;">
                                     <option value="">--请选择--</option>
                                 </select>
@@ -425,7 +439,8 @@
 
                             <span class="cart-multi-count-wrap">
                                 （至少
-                                <input type="number" class="cart-min-occurrences" min="1" max="99" value="1" step="1" disabled style="width: 60px;">
+                                <input type="number" class="cart-min-occurrences" min="1" max="99" value="1" step="1"
+                                    disabled style="width: 60px;">
                                 次）
                             </span>
                             <span style="font-size: 14px; color: #a6a6a6">*例：春1-28至少出售2次电池组。同一天内不会重复出售相同物品。</span>
@@ -480,13 +495,41 @@
 
         <div class="card results-section" id="resultsSection" style="display: none;">
             <div class="results-header">
-                <h3>搜索结果</h3>
-                <span id="resultsSummary"></span>
-                <button type="button" class="btn-quick-set" onclick="exportResultsToTxt()" style="opacity: 1; transform: scale(1); position: static;">导出所有种子号</button>
+                <div style="display: flex; align-items: center; gap: 20px;">
+                    <h3 style="margin: 0;">搜索结果</h3>
+                    <!-- 初始为空，等待JS动态填充 -->
+                    <div id="searchRangeBadge" class="search-range-badge" style="display:none;"></div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <span id="resultsSummary"></span>
+                    <button type="button" class="btn-quick-set" onclick="exportResultsToTxt()"
+                        style="opacity: 1; transform: scale(1); position: static;">导出所有种子号</button>
+                </div>
             </div>
+
             <div class="seed-list" id="seedList">
                 <div class="empty-state">暂无结果</div>
             </div>
+
+            <details class="analysis-details" id="analysisDetails" style="display: none;">
+                <summary class="analysis-summary">搜索分析</summary>
+
+                <div class="analysis-header-grid">
+                    <div>筛选功能 (<span id="analysisTotalRange">0</span>个种子)</div>
+                    <div style="text-align: center;">过筛<span id="analysisTotalFound">0</span>个种子</div>
+                    <div style="text-align: right;"><br>是否提前停止了搜索：<span id="analysisStoppedEarly"
+                            style="font-weight: 800;">?</span></div>
+                </div>
+
+                <div class="analysis-tree-container" id="filterStatsList">
+                </div>
+
+                <div class="analysis-notes">
+                    * 为达成最快的搜索效率，搜索顺序按每项功能的成本动态排序。<br>
+                    * 根据游戏内部随机原理，偶尔会有条件互斥情况，可以尝试微调条件，放宽限制。<br>
+                    * 有时候搜索结束得太快，列表来不及更新！不要在意这些细节。(^_−)☆
+                </div>
+            </details>
         </div>
 
         <div class="card footer">
@@ -533,7 +576,7 @@
             <h4>怪物层</h4>
             <div id="sidebarMonsterLevelContent"></div>
         </div>
-        
+
         <!-- 添加沙漠节部分 -->
         <div class="sidebar-section" id="desertFestivalSection" style="display: none;">
             <h4>沙漠节商人</h4>
@@ -552,16 +595,19 @@
 
     <a href="https://space.bilibili.com/349111916" target="_blank" class="bilibili-link">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858 0 17.347v-7.36c.036-1.511.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 0 1-.373-.906c0-.356.124-.658.373-.907l.027-.027c.267-.249.573-.373.92-.373.347 0 .653.124.92.373L9.653 4.44c.071.071.134.142.187.213h4.267a.836.836 0 0 1 .16-.213l2.853-2.747c.267-.249.573-.373.92-.373.347 0 .662.151.929.4.267.249.391.551.391.907 0 .355-.124.657-.373.906zM5.333 7.24c-.746.018-1.373.276-1.88.773-.506.498-.769 1.13-.786 1.894v7.52c.017.764.28 1.395.786 1.893.507.498 1.134.756 1.88.773h13.334c.746-.017 1.373-.275 1.88-.773.506-.498.769-1.129.786-1.893v-7.52c-.017-.765-.28-1.396-.786-1.894-.507-.497-1.134-.755-1.88-.773zM8 11.107c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c0-.373.129-.689.386-.947.258-.257.574-.386.947-.386zm8 0c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373Z"/>
+            <path
+                d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858 0 17.347v-7.36c.036-1.511.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 0 1-.373-.906c0-.356.124-.658.373-.907l.027-.027c.267-.249.573-.373.92-.373.347 0 .653.124.92.373L9.653 4.44c.071.071.134.142.187.213h4.267a.836.836 0 0 1 .16-.213l2.853-2.747c.267-.249.573-.373.92-.373.347 0 .662.151.929.4.267.249.391.551.391.907 0 .355-.124.657-.373.906zM5.333 7.24c-.746.018-1.373.276-1.88.773-.506.498-.769 1.13-.786 1.894v7.52c.017.764.28 1.395.786 1.893.507.498 1.134.756 1.88.773h13.334c.746-.017 1.373-.275 1.88-.773.506-.498.769-1.129.786-1.893v-7.52c-.017-.765-.28-1.396-.786-1.894-.507-.497-1.134-.755-1.88-.773zM8 11.107c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c0-.373.129-.689.386-.947.258-.257.574-.386.947-.386zm8 0c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373Z" />
         </svg>
         联系作者
     </a>
 
     <a href="https://b23.tv/LSj8aCw" target="_blank" class="bilibili-link-charge">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858 0 17.347v-7.36c.036-1.511.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 0 1-.373-.906c0-.356.124-.658.373-.907l.027-.027c.267-.249.573-.373.92-.373.347 0 .653.124.92.373L9.653 4.44c.071.071.134.142.187.213h4.267a.836.836 0 0 1 .16-.213l2.853-2.747c.267-.249.573-.373.92-.373.347 0 .662.151.929.4.267.249.391.551.391.907 0 .355-.124.657-.373.906zM5.333 7.24c-.746.018-1.373.276-1.88.773-.506.498-.769 1.13-.786 1.894v7.52c.017.764.28 1.395.786 1.893.507.498 1.134.756 1.88.773h13.334c.746-.017 1.373-.275 1.88-.773.506-.498.769-1.129.786-1.893v-7.52c-.017-.765-.28-1.396-.786-1.894-.507-.497-1.134-.755-1.88-.773zM8 11.107c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c0-.373.129-.689.386-.947.258-.257.574-.386.947-.386zm8 0c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373Z"/>
+            <path
+                d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858 0 17.347v-7.36c.036-1.511.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 0 1-.373-.906c0-.356.124-.658.373-.907l.027-.027c.267-.249.573-.373.92-.373.347 0 .653.124.92.373L9.653 4.44c.071.071.134.142.187.213h4.267a.836.836 0 0 1 .16-.213l2.853-2.747c.267-.249.573-.373.92-.373.347 0 .662.151.929.4.267.249.391.551.391.907 0 .355-.124.657-.373.906zM5.333 7.24c-.746.018-1.373.276-1.88.773-.506.498-.769 1.13-.786 1.894v7.52c.017.764.28 1.395.786 1.893.507.498 1.134.756 1.88.773h13.334c.746-.017 1.373-.275 1.88-.773.506-.498.769-1.129.786-1.893v-7.52c-.017-.765-.28-1.396-.786-1.894-.507-.497-1.134-.755-1.88-.773zM8 11.107c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c0-.373.129-.689.386-.947.258-.257.574-.386.947-.386zm8 0c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373Z" />
         </svg>
         支持作者
     </a>
 </body>
+
 </html>
