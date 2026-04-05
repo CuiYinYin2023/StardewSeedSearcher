@@ -1131,14 +1131,17 @@ function showSeedDetail(seed) {
 
     // 只有启用了天气功能才显示
     if (enabled.weather && details.weather) {
-        const seasonNames = ['春', '夏', '秋'];
-        const seasons = [
-            { name: seasonNames[0], days: details.weather.springRain, greenRainDay: null },
-            { name: seasonNames[1], days: details.weather.summerRain, greenRainDay: details.weather.greenRainDay },
-            { name: seasonNames[2], days: details.weather.fallRain, greenRainDay: null }
+        const allSeasons = [
+            { name: '春', index: 0, days: details.weather.springRain, greenRainDay: null },
+            { name: '夏', index: 1, days: details.weather.summerRain, greenRainDay: details.weather.greenRainDay },
+            { name: '秋', index: 2, days: details.weather.fallRain, greenRainDay: null }
         ];
 
-        let weatherHtml = '';  // 定义变量
+        // 只显示本次搜索条件中涉及的季节
+        const searchedSeasons = enabled.weatherSeasons || [0, 1, 2];
+        const seasons = allSeasons.filter(s => searchedSeasons.includes(s.index));
+
+        let weatherHtml = '';
         seasons.forEach(season => {
             const count = season.days.length;
             let daysText = '';

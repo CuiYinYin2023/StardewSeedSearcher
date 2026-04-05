@@ -590,6 +590,7 @@ namespace StardewSeedSearcher
         private static object GetEnabledFeatures(SearchRequest request) => new
         {
             weather = request.WeatherConditions?.Count > 0, // 如果为null则false，否则判断数量是否大于0
+            weatherSeasons = request.WeatherConditions?.Select(c => c.Season).Distinct().ToList() ?? [],
             fairy = request.FairyConditions?.Count > 0,
             mineChest = request.MineChestConditions?.Count > 0,
             monsterLevel = request.MonsterLevelConditions?.Count > 0,
