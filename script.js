@@ -4,6 +4,7 @@ let foundSeeds = [];
 let currentSearchUseLegacy = false;
 let seedDetailsCache = {};
 let nextStartSeed = 0;
+let savedStartSeed = 1;
 let currentStartSeedDisplay;
 let currentEndSeedDisplay;
 
@@ -651,10 +652,20 @@ function handleWebSocketMessage(data) {
             isSearching = false;
 
             const loopSearch = document.getElementById('loopSearch').checked;
-            if (!data.cancelled && loopSearch) {
-                const searchRange = parseInt(document.getElementById('searchRange').value);
+            const rangeValue = document.getElementById('searchRange').value;
+            if (rangeValue === "max") {
+                if (data.cancelled) {
+                    // 手动停止：恢复搜索前的起始种子
+                    document.getElementById('startSeed').value = savedStartSeed;
+                    nextStartSeed = savedStartSeed;
+                } else {
+                    // 正常结束：重置为 1
+                    document.getElementById('startSeed').value = 1;
+                    nextStartSeed = 1;
+                }
+            } else if (!data.cancelled && loopSearch) {
+                const searchRange = parseInt(rangeValue);
                 nextStartSeed += searchRange;
-
                 //顺手将计算好的新起点更新到输入框里
                 document.getElementById('startSeed').value = nextStartSeed;
             }
@@ -858,6 +869,7 @@ elements.form.addEventListener('submit', async (e) => {
         : parseInt(document.getElementById('startSeed').value);
 
     document.getElementById('startSeed').value = startSeed;
+    savedStartSeed = startSeed; // 保存搜索前的起始种子，用于停止时恢复
 
     // --- 核心修改：处理搜索范围的数值计算 ---
     let searchRange;
