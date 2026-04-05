@@ -1187,7 +1187,7 @@ function showSeedDetail(seed) {
     if (enabled.mineChest && details.mineChest) {
         let chestHtml = '<div class="weather-season">';
 
-        details.mineChest.forEach(item => {
+        [...details.mineChest].sort((a, b) => a.floor - b.floor).forEach(item => {
             const matchIcon = item.matched ? '✓' : '✗';
             const matchClass = item.matched ? 'matched' : 'unmatched';
             chestHtml += `
