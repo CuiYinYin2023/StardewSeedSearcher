@@ -1206,7 +1206,7 @@ function showSeedDetail(seed) {
     // 只有启用了怪物层功能才显示
     if (enabled.monsterLevel && details.monsterLevel) {
         const seasonMap = { Spring: '春', Summer: '夏', Fall: '秋', Winter: '冬' };
-        const monsterLevelText = details.monsterLevel.map(m => {
+        const monsterLevelText = [...details.monsterLevel].sort((a, b) => a.absoluteStartDay - b.absoluteStartDay).map(m => {
             return m.description;
         }).join('<br>');
 
