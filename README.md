@@ -1,5 +1,5 @@
 # 使用方法
-[搜种器下载](https://github.com/CuiYinYin2023/StardewSeedSearcher/releases) 当前版本V0.6.1
+[搜种器下载](https://github.com/CuiYinYin2023/StardewSeedSearcher/releases)
 
 点击`start.bat`运行
 
@@ -31,7 +31,7 @@
     - [ ] 混合宝箱按层数排序
     - [ ] 怪物层按日期排序
     - [ ] 天气只显示搜的季节
-- [ ] 仙子功能，范围内至少出现N次
+- [X] 仙子功能，范围内至少出现N次
 - [ ] 天气筛选去掉冬天
 - [ ] 前端优化：
     - [X] 预计用时
