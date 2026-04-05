@@ -13,6 +13,8 @@ namespace StardewSeedSearcher.Features
         public int EndSeason { get; set; }
         public int EndDay { get; set; }
 
+        public int MinOccurrences { get; set; } = 1; 
+
         public int AbsoluteStartDay => TimeHelper.DateToAbsoluteDay(StartYear, StartSeason, StartDay);
         public int AbsoluteEndDay => TimeHelper.DateToAbsoluteDay(EndYear, EndSeason, EndDay);
     }
@@ -35,7 +37,7 @@ namespace StardewSeedSearcher.Features
             // 所有条件都必须满足（AND）
             foreach (var condition in Conditions)
             {
-                bool foundInRange = false;
+                int foundCount = 0;
                 
                 // 在范围内寻找至少一个仙子
                 for (int day = condition.AbsoluteStartDay; day <= condition.AbsoluteEndDay; day++)
@@ -45,12 +47,16 @@ namespace StardewSeedSearcher.Features
 
                     if (HasFairy(seed, day, useLegacyRandom))
                     {
-                        foundInRange = true;
-                        break; // 只要找到一次，该范围条件即满足
+                        foundCount++;
+                        // 如果已经达到要求的数量，该范围条件满足，跳出当前范围的循环
+                        if (foundCount >= condition.MinOccurrences) 
+                            break;
                     }
                 }
 
-                if (!foundInRange) return false;
+                // 如果跑完整个范围都没达到要求的次数，则该种子不符合条件
+                if (foundCount < condition.MinOccurrences) 
+                    return false;
             }
 
             return true;
