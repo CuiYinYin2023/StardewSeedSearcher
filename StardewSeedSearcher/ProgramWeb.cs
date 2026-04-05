@@ -142,11 +142,12 @@ namespace StardewSeedSearcher
             // 猪车物品列表
             app.MapGet("/api/cart-items", () =>
             {
-                var items = TravelingCartData.Objects.Values
-                    .Where(item => !item.OffLimits && item.Price > 0)
+                var items = TravelingCartData.OptimizedItems
+                    .Where(item => item.IsEligible) // 所有已经预处理过的、合格的物品（归类为前10个基础物品）
                     .Select(item => item.Name)
-                    .Concat(TravelingCartData.SkillBooks)
+                    .Concat(TravelingCartData.SkillBooks) // 技能书
                     .Distinct()
+                    .OrderBy(name => name)
                     .ToList();
                 
                 return Results.Ok(items);

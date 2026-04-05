@@ -36,6 +36,8 @@ namespace StardewSeedSearcher.Features
 
         public int AbsoluteStartDay => TimeHelper.DateToAbsoluteDay(StartYear, StartSeason, StartDay);
         public int AbsoluteEndDay => TimeHelper.DateToAbsoluteDay(EndYear, EndSeason, EndDay);
+
+        public int totalCartDays => TravelingCartPredictor.CountCartDay(AbsoluteStartDay, AbsoluteEndDay);
     }
 
     // 猪车匹配结果（内部使用）
@@ -65,30 +67,42 @@ namespace StardewSeedSearcher.Features
             if (Conditions.Count == 0)
                 return true;
 
+            // --- 动态排序优化 ---
+            // 按照分数从小到大排序，优先执行最稀有、范围最小的条件
+            var sortedConditions = Conditions.OrderBy(EstimateCostPerCondition).ToList();
+
+            int guaranteeSeed = HashHelper.GetRandomSeed(12 * seed, 0, 0, 0, 0, useLegacyRandom);
+            int originalGuarantee = new Random(guaranteeSeed).Next(2, 31);
+
             // 所有条件都必须满足（AND）
-            foreach (var condition in Conditions)
+            foreach (var condition in sortedConditions)
             {
-
                 // 找到 minOccurrences 个匹配即可提前退出
-                var matches = FindAllMatches(
-                    seed, condition.AbsoluteStartDay, condition.AbsoluteEndDay,
-                    condition.ItemName, condition.RequireQty5, useLegacyRandom, 
-                    stopAt: condition.MinOccurrences);
+                int matches = 0;
 
-                if (matches.Count < condition.MinOccurrences)
+                for (int day = condition.AbsoluteStartDay; day <= condition.AbsoluteEndDay; day++)
+                {
+                    if (!IsCartDay(day)) 
+                        continue;
+
+                    // 调用高性能匹配
+                    if (InternalDayMatch(seed, day, originalGuarantee, condition, useLegacyRandom))
+                    {
+                        matches++;
+                        if (matches >= condition.MinOccurrences) 
+                            break;
+                    }
+                }
+                if (matches < condition.MinOccurrences) 
                     return false;
             }
 
             return true;
         }
 
-        public int EstimateCost(bool useLegacyRandom)
+        // 内部&外部动态排序使用
+        private double EstimateCostPerCondition(CartCondition c)
         {
-            if (Conditions.Count == 0) return 0;
-
-            // 估算每个条件的成本
-            int totalCost = 0;
-
             // 每个猪车日期的成本：
             // - 遍历所有objects (约700个): 700次 Next()
             // - 10个物品价格+数量: 30次调用
@@ -97,31 +111,41 @@ namespace StardewSeedSearcher.Features
             // - 季节特殊: 1次
             // - 技能书判断: 1次
             // 总计约：700 + 30 + 3 + 646 + 1 + 1 = 1381次
-            int callsPerDay = 1381;
+            int maxCalls = 1381;
+
+            // 概率因子：如果要搜的是技能书，只有5%的种子符合。基础物品需调用730次随机数
+            double calls = TravelingCartData.SkillBookSet.Contains(c.ItemName) ? 0.05 * maxCalls : 730;
+            
+            // 时间跨度（天数）
+            int totalDays = 0;
+            for (int day = c.AbsoluteStartDay; day <= c.AbsoluteEndDay; day++)
+                if (IsCartDay(day))
+                    totalDays ++;
+            
+            // 分数 = 跨度 * 概率
+            return totalDays * calls;
+        }
+
+
+        public int EstimateCost(bool useLegacyRandom)
+        {
+            if (Conditions.Count == 0) return 0;
+
+            // 估算每个条件的成本
+            double totalCost = 0;
 
             foreach (var condition in Conditions)
             {
-                // 计算范围内有多少个猪车日期
-                int cartDayCount = 0;
-                for (int day = condition.AbsoluteStartDay; day <= condition.AbsoluteEndDay; day++)
-                {
-                    if (IsCartDay(day))
-                    {
-                        cartDayCount++;
-                    }
-                }
-
-                // 最坏情况：遍历整个范围
-                totalCost += cartDayCount * callsPerDay;
+                totalCost += EstimateCostPerCondition(condition);
             }
 
-            return totalCost;
+            return (int)totalCost;
         }
 
         /// <summary>
         /// 判断指定天是否有猪车
         /// </summary>
-        private bool IsCartDay(int day)
+        public static bool IsCartDay(int day)
         {
             int dayOfWeek = day % 7;  
             int dayOfYear = day % 112;
@@ -137,6 +161,22 @@ namespace StardewSeedSearcher.Features
 
             return false;
         }
+
+        public static int CountCartDay(int absoluteStartDay, int absoluteEndDay)
+        {
+            int totalCartDays = 0;
+
+            for (int day = absoluteStartDay; day <= absoluteEndDay; day++)
+            {
+                if (IsCartDay(day))
+                {
+                    totalCartDays++;
+                }
+            }
+
+            return totalCartDays;
+        }
+
 
         /// <summary>
         /// 获取种子简介信息（返回所有匹配项）
@@ -175,43 +215,36 @@ namespace StardewSeedSearcher.Features
             {
                 if (!IsCartDay(day)) continue;
 
-                // 预测这天的猪车
-                var result = PredictCartDay(gameID, day, originalGuarantee, useLegacyRandom);
+                // 获取该天全量数据（包含价格和数量）
+                var result = PredictCartDay(seed, day, originalGuarantee, useLegacyRandom);
 
-                // 检查是否匹配
                 foreach (var item in result.Items)
-                {   
-                    // 跳过非物品项（如"还需X次访问"）                
-                    if (item.Quantity == 0) continue;
-                    
-                    // 检查数量要求
-                    // 技能书的数量是-1，不能要求数量为5
-                    if (requireQty5 && item.Quantity != 5) continue;
+                {
+                    if (item.Name != itemName) 
+                        continue;
 
-                    // 检查物品名称
-                    if (item.Name != itemName) continue;
+                    if (requireQty5 && item.Quantity != 5) 
+                        continue;
                     
-                    // 找到匹配！
                     var dateInfo = TimeHelper.AbsoluteDaytoDate(day);
+
                     matches.Add(new CartDayMatch
                     {
-                        Year = dateInfo.year,
-                        Season = dateInfo.season,
+                        Year = dateInfo.year, 
+                        Season = dateInfo.season, 
                         Day = dateInfo.day,
-                        AbsoluteDay = day, // 用于前端排序
-                        ItemName = item.Name,
-                        Quantity = item.Quantity,
+                        AbsoluteDay = day, 
+                        ItemName = item.Name, 
+                        Quantity = item.Quantity, 
                         Price = item.Price
                     });
 
-                    // 每天最多记录一次匹配，找到后跳出内层循环，查找下一天
-                    break;
+                    break; 
                 }
 
-                if (matches.Count >= stopAt)
+                if (matches.Count >= stopAt) 
                     break;
             }
-
             return matches;
         }
         
@@ -230,13 +263,14 @@ namespace StardewSeedSearcher.Features
             Random rng = new Random(seed);
             
             // 2. 获取10个基础物品
-            List<string> selectedItemKeys = GetRandomItems(rng);
+            List<int> selectedItemKeys = GetRandomItems(rng);
             
             bool seenRareSeed = false;
             
             for (int i = 0; i < selectedItemKeys.Count; i++)
             {
-                ItemInfo item = TravelingCartData.Objects[selectedItemKeys[i]];
+                var item = TravelingCartData.OptimizedItems[selectedItemKeys[i]];
+                
                 int price = Math.Max(rng.Next(1, 11) * 100, rng.Next(3, 6) * item.Price);
                 int qty = (rng.NextDouble() < 0.1) ? 5 : 1;
                 
@@ -307,38 +341,152 @@ namespace StardewSeedSearcher.Features
             
             return result;
         }
-        
+
+        /// <summary>
+        /// 优化版搜索逻辑
+        /// </summary>
+        private bool InternalDayMatch(int seed, int day, int originalGuarantee, CartCondition cond, bool useLegacyRandom)
+        {
+            // 1. 如果搜的是技能书，先判定当日是否会出现技能书（5%概率）。如果不出现，直接排除当日
+            bool isBookSearch = TravelingCartData.SkillBookSet.Contains(cond.ItemName);
+            if (isBookSearch)
+            {
+                int skillHash = HashHelper.GetHashFromString("travelerSkillBook");
+                int skillSeed = HashHelper.GetRandomSeed(skillHash, seed, day, 0, 0, useLegacyRandom);
+                if (new Random(skillSeed).NextDouble() >= 0.05) return false; // 直接退出
+            }
+
+            // 2. 果不是技能书/当日有技能书，再开始创建主RNG
+            int mainSeed = HashHelper.GetRandomSeed(day, seed / 2, 0, 0, 0, useLegacyRandom);
+            Random rng = new Random(mainSeed);
+
+            // 3. 基础物品生成
+            // 猪车洗牌算法：先把所有物品赋予一个随机key，再将排序前10的物品放入出售列表
+            // 这里使用topKeys维护，避免排序整个大列表
+            var allItems = TravelingCartData.OptimizedItems;
+            Span<int> topKeys = stackalloc int[10];
+            Span<int> topIndices = stackalloc int[10];
+            topKeys.Fill(int.MaxValue);
+
+            for (int i = 0; i < allItems.Length; i++)
+            {
+                int randomKey = rng.Next(); // 必须调用，保证同步
+                if (!allItems[i].IsEligible) 
+                    continue; // 不符合资格的，不入选
+
+                if (randomKey < topKeys[9]) // 手动维护前10名
+                {
+                    int j = 8;
+                    while (j >= 0 && topKeys[j] > randomKey) { topKeys[j + 1] = topKeys[j]; topIndices[j + 1] = topIndices[j]; j--; }
+                    topKeys[j + 1] = randomKey; topIndices[j + 1] = i;
+                }
+            }
+
+            // 3. 结果判定
+            bool seenRareSeed = false;
+            if (!isBookSearch)
+            {
+                for (int i = 0; i < 10; i++)
+                {
+                    var item = allItems[topIndices[i]];
+                    if (item.Name == "Rare Seed") seenRareSeed = true;
+
+                    if (item.Name == cond.ItemName)
+                    {
+                        // 仅在名字匹配时计算数量
+                        for (int k = 0; k < i; k++) 
+                        { 
+                            rng.Next(1, 11); 
+                            rng.Next(3, 6); 
+                            rng.NextDouble(); 
+                        } // 消耗前 i-1 个
+
+                        rng.Next(1, 11); 
+                        rng.Next(3, 6); // 当前价格
+
+                        int qty = (rng.NextDouble() < 0.1) ? 5 : 1; // 当前数量
+                        
+                        if (!cond.RequireQty5 || qty == 5) 
+                            return true;
+
+                        return false; 
+                    }
+                }
+                return false; // 基础物品没中
+            }
+
+            // 4. 只有搜书且通过了5%概率，才跑后面最重的同步逻辑和家具循环
+            for (int i = 0; i < 10; i++) { 
+                if (allItems[topIndices[i]].Name == "Rare Seed") 
+                    seenRareSeed = true;
+                rng.Next(1, 11); rng.Next(3, 6); rng.NextDouble(); 
+            }
+
+            if (CalculateVisitsRemaining(day, originalGuarantee) == 0) 
+            { 
+                rng.Next(1, 11); 
+                rng.Next(3, 6); 
+                rng.NextDouble(); 
+            }
+
+            for (int i = 0; i < 645; i++) 
+                rng.Next(); // 645次家具消耗
+
+            rng.Next(1, 11);
+
+            if ((day - 1) / 28 < 2 && !seenRareSeed) 
+                rng.NextDouble();
+            
+            string bookName = TravelingCartData.SkillBooks[rng.Next(TravelingCartData.SkillBooks.Length)];
+            return bookName == cond.ItemName;
+        }
+                
         /// <summary>
         /// 获取随机物品（核心算法）
         /// </summary>
-        private List<string> GetRandomItems(Random rng)
+        private List<int> GetRandomItems(Random rng)
         {
-            // 步骤1: 给每个物品生成随机key
-            var itemsWithRandomKey = new List<(int randomKey, string objectKey)>();
+            // 使用预处理好的 OptimizedItems 数组
+            var allItems = TravelingCartData.OptimizedItems;
             
-            foreach (var kvp in TravelingCartData.Objects)
+            // 手动维护前 10 个最小 Key 的物品索引
+            Span<int> topKeys = stackalloc int[10];
+            Span<int> topIndices = stackalloc int[10];
+            topKeys.Fill(int.MaxValue);
+
+            for (int i = 0; i < allItems.Length; i++)
             {
-                // 关键：每个物品都要消耗一次RNG
+                // 【关键】每一件物品都必须消耗一次 RNG，以保证与游戏同步
                 int randomKey = rng.Next();
-                
-                ItemInfo item = kvp.Value;
-                
-                // 过滤条件（这里才判断是否加入列表）
-                if (!int.TryParse(item.Id, out int itemID)) continue;
-                if (itemID < 2 || itemID > 789) continue;
-                if (item.Price <= 0) continue;
-                if (item.OffLimits) continue;
-                if (item.Category >= 0 || item.Category == -999) continue;
-                if (item.Type == "Arch" || item.Type == "Minerals" || item.Type == "Quest") continue;
-                
-                itemsWithRandomKey.Add((randomKey, kvp.Key));
+
+                // 只有 eligible 的物品才参与 Top 10 竞争
+                if (!allItems[i].IsEligible) 
+                    continue;
+
+                // 手动插入排序：如果当前随机 Key 比 Top-10 里的最大值还小
+                if (randomKey < topKeys[9])
+                {
+                    int j = 8;
+                    // 找到它在 Top-10 中的位置
+                    while (j >= 0 && topKeys[j] > randomKey)
+                    {
+                        topKeys[j + 1] = topKeys[j];
+                        topIndices[j + 1] = topIndices[j];
+                        j--;
+                    }
+                    topKeys[j + 1] = randomKey;
+                    topIndices[j + 1] = i;
+                }
+            }
+
+            // 将前 10 名的物品名称提取出来
+            var result = new List<int>(10);
+            for (int i = 0; i < 10; i++)
+            {
+                result.Add(topIndices[i]);
             }
             
-            // 步骤2: 按随机key排序
-            var sortedItems = itemsWithRandomKey.OrderBy(x => x.randomKey).ToList();
-            
-            // 步骤3: 取前10个
-            return sortedItems.Take(10).Select(x => x.objectKey).ToList();
+            return result;            
         }
         
         private int CalculateVisitsRemaining(int day, int originalGuarantee)
