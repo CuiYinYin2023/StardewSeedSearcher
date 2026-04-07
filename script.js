@@ -503,10 +503,11 @@ function updateOutputLimitMax() {
 
     const limit = parseInt(outputLimitInput.value) || 10; // 默认10个结果
 
-    if (range <= limit) {
+   if (range <= limit && range > 0) {
         // 如果当前值超过了新的最大值，就把它降下来
         outputLimitInput.value = range;
     }
+
 }
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -555,7 +556,7 @@ document.getElementById('loopSearch').addEventListener('change', function () {
 
 // 让页面加载后，以及每次修改种子范围时，都更新这个最大值
 document.addEventListener('DOMContentLoaded', updateOutputLimitMax);
-document.getElementById('startSeed').addEventListener('input', updateOutputLimitMax);
+document.getElementById('startSeed').addEventListener('change', updateOutputLimitMax);
 
 function connectWebSocket() {
     elements.connectionStatus.textContent = '连接中...';
@@ -875,17 +876,30 @@ elements.form.addEventListener('submit', async (e) => {
     let cartConditionsData = [];
 
     // 计算起始种子
-    let startSeed = loopSearch && nextStartSeed > 0
-        ? nextStartSeed
-        : parseInt(document.getElementById('startSeed').value);
+    const INT_MAX = Math.pow(2, 31) - 1; // 2147483647
+    //获取起始种子
+    let startSeedInput = document.getElementById('startSeed');
+    let rawStartSeed = parseInt(startSeedInput.value);
 
-    document.getElementById('startSeed').value = startSeed;
-    savedStartSeed = startSeed; // 保存搜索前的起始种子，用于停止时恢复
+    // 必须是数字
+    if (Number.isNaN(rawStartSeed)) {
+        alert("起始种子必须是数字");
+        return;
+    }
+    // 范围校验
+    if (rawStartSeed < 1 || rawStartSeed > INT_MAX) {
+    alert(`起始种子必须在 1 ~ ${INT_MAX} 之间`);
+    return;
+    }
 
-    // --- 核心修改：处理搜索范围的数值计算 ---
+    // 将绝对安全的值写回输入框，并同步清理后台的脏缓存
+    let startSeed = rawStartSeed;
+    nextStartSeed = rawStartSeed; 
+    savedStartSeed = rawStartSeed; // 保存搜索前的起始种子，用于停止时恢复
+
+    // --- 处理搜索范围的数值计算 ---
     let searchRange;
     const rangeValue = document.getElementById('searchRange').value;
-    const INT_MAX = 2147483647;
 
     if (rangeValue === "max") {
         // 如果选了最大，范围就是从当前起点到 INT_MAX 的距离
@@ -894,8 +908,8 @@ elements.form.addEventListener('submit', async (e) => {
         searchRange = parseInt(rangeValue);
     }
 
-    // 计算结束种子,不超过最大值
-    const endSeed = Math.min(startSeed + searchRange - 1, INT_MAX);
+    // 计算结束种子, 不超过最大值 (前端 JS 数字上限很大，加减绝对不会变成负数)
+    const endSeed = Math.min(startSeed - 1 + searchRange, INT_MAX);
 
     currentStartSeedDisplay = startSeed;
     currentEndSeedDisplay = endSeed;
