@@ -78,6 +78,7 @@ namespace StardewSeedSearcher
                 desertFestival = desertFestivalDetails,
                 cart = cartMatches != null ? new { matches = cartMatches } : null
                 // 未来：
+                // dwarf = dwarfDetail,
             };
         }
 
@@ -170,7 +171,7 @@ namespace StardewSeedSearcher
                 var weatherDetailsCache = new ConcurrentDictionary<int, WeatherDetailResult>();
                 var results = new List<int>();
                 var stopwatch = Stopwatch.StartNew();
-                long totalSeeds = request.EndSeed - request.StartSeed + 1;
+                int totalSeeds = (int)request.EndSeed - request.StartSeed + 1;
                 int checkedCount = 0;
 
                 // 配置所有搜种功能
@@ -248,12 +249,10 @@ namespace StardewSeedSearcher
                     {
                         Parallel.ForEach(rangePartitioner, parallelOptions, (range, state) =>
                         {
-                            for (long seedL = range.Item1; seedL < range.Item2; seedL++)
+                            for (int seed = (int)range.Item1; seed < range.Item2; seed++)
                             {
                                 // 提前终止
                                 if (linkedCts.Token.IsCancellationRequested) break;
-
-                                int seed = (int)seedL;
 
                                 // 检查是否符合所有启用的功能条件
                                 bool allMatch = true;
