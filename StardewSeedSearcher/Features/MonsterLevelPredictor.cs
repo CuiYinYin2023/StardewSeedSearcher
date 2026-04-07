@@ -109,7 +109,8 @@ namespace StardewSeedSearcher.Features
             return Conditions.Select(c => new
             {
                 description = FormatConditionDescription(c),
-                satisfied = true
+                satisfied = true,
+                absoluteStartDay = c.AbsoluteStartDay
             }).ToList<object>();
         }
 

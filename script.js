@@ -4,6 +4,7 @@ let foundSeeds = [];
 let currentSearchUseLegacy = false;
 let seedDetailsCache = {};
 let nextStartSeed = 0;
+let savedStartSeed = 1;
 let currentStartSeedDisplay;
 let currentEndSeedDisplay;
 
@@ -661,10 +662,20 @@ function handleWebSocketMessage(data) {
             isSearching = false;
 
             const loopSearch = document.getElementById('loopSearch').checked;
-            if (!data.cancelled && loopSearch) {
-                const searchRange = parseInt(document.getElementById('searchRange').value);
+            const rangeValue = document.getElementById('searchRange').value;
+            if (rangeValue === "max") {
+                if (data.cancelled) {
+                    // 手动停止：恢复搜索前的起始种子
+                    document.getElementById('startSeed').value = savedStartSeed;
+                    nextStartSeed = savedStartSeed;
+                } else {
+                    // 正常结束：重置为 1
+                    document.getElementById('startSeed').value = 1;
+                    nextStartSeed = 1;
+                }
+            } else if (!data.cancelled && loopSearch) {
+                const searchRange = parseInt(rangeValue);
                 nextStartSeed += searchRange;
-
                 //顺手将计算好的新起点更新到输入框里
                 document.getElementById('startSeed').value = nextStartSeed;
             }
@@ -869,6 +880,7 @@ elements.form.addEventListener('submit', async (e) => {
         : parseInt(document.getElementById('startSeed').value);
 
     document.getElementById('startSeed').value = startSeed;
+    savedStartSeed = startSeed; // 保存搜索前的起始种子，用于停止时恢复
 
     // --- 核心修改：处理搜索范围的数值计算 ---
     let searchRange;
@@ -1131,14 +1143,17 @@ function showSeedDetail(seed) {
 
     // 只有启用了天气功能才显示
     if (enabled.weather && details.weather) {
-        const seasonNames = ['春', '夏', '秋'];
-        const seasons = [
-            { name: seasonNames[0], days: details.weather.springRain, greenRainDay: null },
-            { name: seasonNames[1], days: details.weather.summerRain, greenRainDay: details.weather.greenRainDay },
-            { name: seasonNames[2], days: details.weather.fallRain, greenRainDay: null }
+        const allSeasons = [
+            { name: '春', index: 0, days: details.weather.springRain, greenRainDay: null },
+            { name: '夏', index: 1, days: details.weather.summerRain, greenRainDay: details.weather.greenRainDay },
+            { name: '秋', index: 2, days: details.weather.fallRain, greenRainDay: null }
         ];
 
-        let weatherHtml = '';  // 定义变量
+        // 只显示本次搜索条件中涉及的季节
+        const searchedSeasons = enabled.weatherSeasons || [0, 1, 2];
+        const seasons = allSeasons.filter(s => searchedSeasons.includes(s.index));
+
+        let weatherHtml = '';
         seasons.forEach(season => {
             const count = season.days.length;
             let daysText = '';
@@ -1187,7 +1202,7 @@ function showSeedDetail(seed) {
     if (enabled.mineChest && details.mineChest) {
         let chestHtml = '<div class="weather-season">';
 
-        details.mineChest.forEach(item => {
+        [...details.mineChest].sort((a, b) => a.floor - b.floor).forEach(item => {
             const matchIcon = item.matched ? '✓' : '✗';
             const matchClass = item.matched ? 'matched' : 'unmatched';
             chestHtml += `
@@ -1206,7 +1221,7 @@ function showSeedDetail(seed) {
     // 只有启用了怪物层功能才显示
     if (enabled.monsterLevel && details.monsterLevel) {
         const seasonMap = { Spring: '春', Summer: '夏', Fall: '秋', Winter: '冬' };
-        const monsterLevelText = details.monsterLevel.map(m => {
+        const monsterLevelText = [...details.monsterLevel].sort((a, b) => a.absoluteStartDay - b.absoluteStartDay).map(m => {
             return m.description;
         }).join('<br>');
 
@@ -1276,25 +1291,28 @@ function showSeedDetail(seed) {
         // 1. 按AbsoluteDay升序排序，确保展示顺序正确
         const sortedMatches = [...details.cart.matches].sort((a, b) => a.AbsoluteDay - b.AbsoluteDay);
 
-        // 2. 格式化每一行数据
-        const cartRowsHtml = sortedMatches.map(match => {
-            // 获取季节名
-            const seasonName = seasonNames[match.Season] || "未知";
+        // 2. 按物品名分组（保持首次出现顺序）
+        const groupMap = new Map();
+        for (const match of sortedMatches) {
+            if (!groupMap.has(match.ItemName)) groupMap.set(match.ItemName, []);
+            groupMap.get(match.ItemName).push(match);
+        }
 
-            // 如果数量为 -1（技能书），显示为空；否则显示数字
-            const qtyDisplay = (match.Quantity === -1) ? "" : match.Quantity;
-
-            // 拼接单行：第1年春7，电池组5，2000g
-            console.log("details:", details);
-            return `<div class="cart-result-line">
+        // 3. 按分组渲染，每组前加物品名小标题
+        const cartRowsHtml = [...groupMap.entries()].map(([itemName, matches]) => {
+            const rowsHtml = matches.map(match => {
+                const seasonName = seasonNames[match.Season] || "未知";
+                const qtyDisplay = (match.Quantity === -1) ? "" : match.Quantity;
+                return `<div class="cart-result-line">
                 第${match.Year}年${seasonName}${match.Day}，${match.ItemName}${qtyDisplay}，${match.Price}g
     </div>`;
+            }).join('');
+            return `<div class="weather-season-title" style="margin-top: 8px;">${itemName}</div>${rowsHtml}`;
         }).join('');
 
-        // 3. 构建整体 HTML 结构
+        // 4. 构建整体 HTML 结构
         const cartHtml = `
             <div class="weather-season">
-                <div class="weather-season-title">猪车匹配结果：</div>
                 <div class="cart-results-list" style="margin-top: 8px; font-size: 16px; line-height: 1.6;">
                     ${cartRowsHtml}
                 </div>
