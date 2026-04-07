@@ -34,8 +34,13 @@ namespace StardewSeedSearcher.Features
             if (Conditions.Count == 0)
                 return true;
 
+            // 动态排序
+            // 仙子概率极低（1%），所以范围越窄的条件越容易在极短时间内证明“失败”
+            // 优先检查预计耗时最短且最容易失败的范围
+            var sortedConditions = Conditions.OrderBy(EstimateCostPerCondition).ToList();
+
             // 所有条件都必须满足（AND）
-            foreach (var condition in Conditions)
+            foreach (var condition in sortedConditions)
             {
                 int foundCount = 0;
                 
@@ -81,25 +86,26 @@ namespace StardewSeedSearcher.Features
             // 判断概率
             return rng.NextDouble() < 0.01;
         }
-        
+
+        private int EstimateCostPerCondition(FairyCondition c)
+        {
+            return c.AbsoluteEndDay - c.AbsoluteStartDay + 1;
+        }
+
         public int EstimateCost(bool useLegacyRandom)
         {
-            if (Conditions.Count == 0) return 0;
+            if (Conditions.Count == 0) 
+                return 0;
             
             // 旧随机:1次随机判断
             // 新随机:10次跳过 + 1次判断 = 11次
             int callsPerDay = useLegacyRandom ? 1 : 11;
 
-            int totalDays = 0;
+            // 找到范围最窄的条件
+            var bestCondition = Conditions.OrderBy(EstimateCostPerCondition).First();
             
-            // 所有条件天数总和
-            foreach (var condition in Conditions)
-            {
-                totalDays += condition.AbsoluteEndDay - condition.AbsoluteStartDay + 1;
-            }
-
-            // 总计算次数
-            return totalDays * callsPerDay;
+            // 期望开销 = 预期检查天数 * 单日成本
+            return EstimateCostPerCondition(bestCondition) * callsPerDay;
         }
 
         /// <summary>

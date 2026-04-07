@@ -187,14 +187,11 @@ namespace StardewSeedSearcher.Features
         {
             if (Conditions.Count == 0) return 0;
             
-            int totalDays = 0;
-            foreach (var condition in Conditions)
-            {
-                totalDays += EstimateCostPerCondition(condition);
-            }
+            // 找到最容易失败（最便宜）的那个条件
+            var bestCondition = Conditions.OrderBy(EstimateCostPerCondition).First();
             
-            // 绿雨计算56次 + 每天1次天气判断
-            return 56 + totalDays;
+            // 基础开销(绿雨56次) + 第一个条件的预期天数
+            return 56 + EstimateCostPerCondition(bestCondition);
         }
         
         /// <summary>

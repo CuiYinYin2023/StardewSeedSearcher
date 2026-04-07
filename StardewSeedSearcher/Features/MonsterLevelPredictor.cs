@@ -32,8 +32,11 @@ namespace StardewSeedSearcher.Features
         {
             if (!IsEnabled) return true;
 
+            // 动态排序
+            var sortedConditions = Conditions.OrderBy(EstimateCostPerCondition).ToList();
+
             // 遍历每个条件
-            foreach (var condition in Conditions)
+            foreach (var condition in sortedConditions)
             {
                 // 检查指定日期和层数范围内是否有感染层
                 for (int day = condition.AbsoluteStartDay; day <= condition.AbsoluteEndDay; day++)
@@ -80,25 +83,31 @@ namespace StardewSeedSearcher.Features
             return true;
         }
         
+        private int EstimateCostPerCondition(MonsterLevelCondition c)
+        {
+            int days = c.AbsoluteEndDay - c.AbsoluteStartDay + 1;
+            int levels = c.EndLevel - c.StartLevel + 1;
+            // 减去电梯层数量
+            int elevatorCount = 0;
+            for (int level = c.StartLevel; level <= c.EndLevel; level++)
+            {
+                if (level % 5 == 0) elevatorCount++;
+            }
+            return days * (levels - elevatorCount);
+        }
+
         /// <summary>
         /// 估算搜索成本
         /// </summary>
         public int EstimateCost(bool useLegacyRandom)
         {
-            int totalCost = 0;
-            foreach (var condition in Conditions)
-            {
-                int days = condition.AbsoluteEndDay - condition.AbsoluteStartDay + 1;
-                int levels = condition.EndLevel - condition.StartLevel + 1;
-                // 减去电梯层数量
-                int elevatorCount = 0;
-                for (int level = condition.StartLevel; level <= condition.EndLevel; level++)
-                {
-                    if (level % 5 == 0) elevatorCount++;
-                }
-                totalCost += days * (levels - elevatorCount);
-            }
-            return totalCost;
+            if (!IsEnabled || Conditions.Count == 0) return 0;
+            
+            // 找到范围最小（检查次数最少）的条件
+            var bestCondition = Conditions.OrderBy(EstimateCostPerCondition).First();
+            
+            // 返回该条件的 RNG 总调用次数
+            return EstimateCostPerCondition(bestCondition);
         }
         
         /// <summary>

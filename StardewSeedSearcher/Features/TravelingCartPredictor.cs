@@ -130,16 +130,11 @@ namespace StardewSeedSearcher.Features
         public int EstimateCost(bool useLegacyRandom)
         {
             if (Conditions.Count == 0) return 0;
-
-            // 估算每个条件的成本
-            double totalCost = 0;
-
-            foreach (var condition in Conditions)
-            {
-                totalCost += EstimateCostPerCondition(condition);
-            }
-
-            return (int)totalCost;
+            
+            // 取排序后第一个条件的期望开销
+            var bestCondition = Conditions.OrderBy(EstimateCostPerCondition).First();
+                
+            return (int)EstimateCostPerCondition(bestCondition);
         }
 
         /// <summary>
