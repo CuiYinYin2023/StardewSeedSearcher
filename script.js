@@ -260,7 +260,7 @@ function addFairyCondition() {
 }
 
 function validateFairyCondition(condition) {
-    const { startYear, startSeason, startDay, endYear, endSeason, endDay } = condition;
+    const { startYear, startSeason, startDay, endYear, endSeason, endDay, minOccurrences } = condition;
 
     // 绝对天数验证逻辑 (1年112天, 1季28天)
     const startAbs = dateToAbsoluteDay(startYear, startSeason, startDay);
@@ -270,18 +270,28 @@ function validateFairyCondition(condition) {
         return { valid: false, error: '仙子搜索结束日期不能早于开始日期' };
     }
 
+    // 验证仙子出现次数
+    const totalDays = endAbs - startAbs + 1;
+    if (minOccurrences > totalDays) {
+        return { valid: false, error: `范围内总共只有 ${totalDays} 天，不可能出现 ${minOccurrences} 次仙子` };
+    }
+    
     return { valid: true };
 }
 
-function isFairyDuplicate(currentCondition, allConditions) {
-    return allConditions.some(c =>
-        c.startYear === currentCondition.startYear &&
-        c.startSeason === currentCondition.startSeason &&
-        c.startDay === currentCondition.startDay &&
-        c.endYear === currentCondition.endYear &&
-        c.endSeason === currentCondition.endSeason &&
-        c.endDay === currentCondition.endDay
-    );
+function isFairyOverlap(currentCondition, allConditions) {
+    // 将当前要添加的条件转为绝对日期
+    const curStart = dateToAbsoluteDay(currentCondition.startYear, currentCondition.startSeason, currentCondition.startDay);
+    const curEnd = dateToAbsoluteDay(currentCondition.endYear, currentCondition.endSeason, currentCondition.endDay);
+
+    return allConditions.some(c => {
+        // 将已存在的条件转为绝对日期
+        const existStart = dateToAbsoluteDay(c.startYear, c.startSeason, c.startDay);
+        const existEnd = dateToAbsoluteDay(c.endYear, c.endSeason, c.endDay);
+
+        // 判断区间重叠的万能公式
+        return (curStart <= existEnd && curEnd >= existStart);
+    });
 }
 
 // 添加矿井宝箱条件
@@ -494,6 +504,7 @@ function updateOutputLimitMax() {
     const limit = parseInt(outputLimitInput.value) || 10; // 默认10个结果
 
    if (range <= limit && range > 0) {
+        // 如果当前值超过了新的最大值，就把它降下来
         outputLimitInput.value = range;
     }
 
@@ -767,7 +778,8 @@ function getConditionsSummaryText() {
             const ey = row.querySelector('.fairy-end-year').value;
             const es = row.querySelector('.fairy-end-season').value;
             const ed = row.querySelector('.fairy-end-day').value;
-            summary += `  - 第${sy}年${ss}${sd}日 - 第${ey}年${es}${ed}日：范围内至少出现1次\n`;
+            const count = row.querySelector('.fairy-min-count').value;
+            summary += `  - 第${sy}年${ss}${sd}日 - 第${ey}年${es}${ed}日：范围内至少出现${count}次\n`;
         });
     }
 
@@ -864,16 +876,23 @@ elements.form.addEventListener('submit', async (e) => {
     let cartConditionsData = [];
 
     // 计算起始种子
-    const INT_MAX = 2147483647;
+    const INT_MAX = Math.pow(2, 31) - 1; // 2147483647
+    //获取起始种子
     let startSeedInput = document.getElementById('startSeed');
-    let rawStartSeed = parseInt(startSeedInput.value) || 1;
+    let rawStartSeed = parseInt(startSeedInput.value);
 
-    // 如果用户手动输入了超大数字或乱码，强行纠正为极限安全值
-    if (rawStartSeed > INT_MAX) rawStartSeed = INT_MAX;
-    else if (rawStartSeed < 1) rawStartSeed = 1;
+    // 必须是数字
+    if (Number.isNaN(rawStartSeed)) {
+        alert("起始种子必须是数字");
+        return;
+    }
+    // 范围校验
+    if (rawStartSeed < 1 || rawStartSeed > INT_MAX) {
+    alert(`起始种子必须在 1 ~ ${INT_MAX} 之间`);
+    return;
+    }
 
     // 将绝对安全的值写回输入框，并同步清理后台的脏缓存
-    startSeedInput.value = rawStartSeed;
     let startSeed = rawStartSeed;
     nextStartSeed = rawStartSeed; 
     savedStartSeed = rawStartSeed; // 保存搜索前的起始种子，用于停止时恢复
@@ -890,7 +909,7 @@ elements.form.addEventListener('submit', async (e) => {
     }
 
     // 计算结束种子, 不超过最大值 (前端 JS 数字上限很大，加减绝对不会变成负数)
-    const endSeed = Math.min(startSeed + searchRange - 1, INT_MAX);
+    const endSeed = Math.min(startSeed - 1 + searchRange, INT_MAX);
 
     currentStartSeedDisplay = startSeed;
     currentEndSeedDisplay = endSeed;
@@ -952,7 +971,8 @@ elements.form.addEventListener('submit', async (e) => {
                 startDay: parseInt(row.querySelector('.fairy-start-day').value),
                 endYear: parseInt(row.querySelector('.fairy-end-year').value),
                 endSeason: SeasonNameToIndex[row.querySelector('.fairy-end-season').value],
-                endDay: parseInt(row.querySelector('.fairy-end-day').value)
+                endDay: parseInt(row.querySelector('.fairy-end-day').value),
+                minOccurrences: parseInt(row.querySelector('.fairy-min-count').value)
             };
 
             // 1. 基础合法性验证
@@ -963,7 +983,7 @@ elements.form.addEventListener('submit', async (e) => {
             }
 
             // 2. 查重验证
-            if (isFairyDuplicate(condition, fairyConditionsData)) {
+            if (isFairyOverlap(condition, fairyConditionsData)) {
                 alert(`仙子搜索存在重复范围！`);
                 return;
             }

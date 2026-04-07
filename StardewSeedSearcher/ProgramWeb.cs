@@ -491,7 +491,8 @@ namespace StardewSeedSearcher
                         StartDay = conditionDto.StartDay,
                         EndYear = conditionDto.EndYear,
                         EndSeason = conditionDto.EndSeason,
-                        EndDay = conditionDto.EndDay
+                        EndDay = conditionDto.EndDay,
+                        MinOccurrences = conditionDto.MinOccurrences
                     };
                     fairyPredictor.Conditions.Add(condition);
                 }
@@ -674,6 +675,9 @@ namespace StardewSeedSearcher
 
         [JsonPropertyName("endDay")]
         public int EndDay { get; set; }
+
+        [JsonPropertyName("minOccurrences")]
+        public int MinOccurrences { get; set; }
     }
 
     public class MineChestConditionDto

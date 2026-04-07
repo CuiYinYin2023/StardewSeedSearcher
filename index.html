@@ -48,7 +48,10 @@
                 <details class="features-details">
                     <summary class="features-summary">功能说明</summary>
                     <ul class="features-list">
-                        仅支持1.6版本。
+                        最后更新日期：2026.4.5<br>
+                        适配最新星露谷版本：1.6.15<br>
+                        搜索结果支持游戏平台：PC/安卓/iOS
+
                         <br>
                         <br>
 
@@ -69,7 +72,7 @@
                         <br>
 
                         <h4 style="margin-bottom: 15px;">仙子筛选</h4>
-                        <li>筛选特定天数范围有至少1个仙子出现的种子。</li>
+                        <li>筛选特定天数范围有至少X个仙子出现的种子。</li>
                         <li>可多条件筛选，日期范围不可重叠。</li>
                         <li>游戏中，仙子事件可能会被其他事件覆盖，或因没有合适地块而不发生。例：第一年春3固定下雨，所以第一年春2晚上的仙子实际无法到来。</li>
                         <br>
@@ -143,13 +146,13 @@
 
                 <!-- 天气功能 -->
                 <div class="checkbox-group">
-                    <input type="checkbox" id="weatherEnabled" checked>
-                    <!-- <input type="checkbox" id="weatherEnabled"> -->
+                    <!-- <input type="checkbox" id="weatherEnabled" checked> -->
+                    <input type="checkbox" id="weatherEnabled">
                     <label for="weatherEnabled">启用天气筛选</label>
                     <span style="font-size: 14px; color: #a6a6a6">目前只支持第一年，雨天包含绿雨和雷雨。</span>
                 </div>
-                <div class="condition-config" id="weatherConfig">
-                <!-- <div class="condition-config" id="weatherConfig" style="display: none;"> -->
+                <!-- <div class="condition-config" id="weatherConfig"> -->
+                <div class="condition-config" id="weatherConfig" style="display: none;">
                     <h4 style="margin-bottom: 15px;">天气筛选条件</h4>
 
                     <!-- 初始不放内容，由 JavaScript 动态添加，或者在页面加载时调用 addCondition() -->
@@ -188,14 +191,14 @@
 
                 <!-- 仙子功能 -->
                 <div class="checkbox-group">
-                    <input type="checkbox" id="fairyEnabled">
-                    <!-- <input type="checkbox" id="fairyEnabled" checked> -->
+                    <!-- <input type="checkbox" id="fairyEnabled"> -->
+                    <input type="checkbox" id="fairyEnabled" checked>
                     <label for="fairyEnabled">启用仙子筛选</label>
                     <span style="font-size: 14px; color: #a6a6a6">仙子事件可能会被其他事件覆盖。例：春3下雨则春2仙子失效，夏3地震则夏2仙子失效等。</span>
 
                 </div>
-                <!-- <div class="condition-config" id="fairyConfig"> -->
-                <div class="condition-config" id="fairyConfig" style="display: none;">
+                <div class="condition-config" id="fairyConfig">
+                <!-- <div class="condition-config" id="fairyConfig" style="display: none;"> -->
                     <h4 style="margin-bottom: 15px;">仙子筛选条件</h4>
 
                     <!-- 初始不放内容，由 JavaScript 动态添加，或者在页面加载时调用 addCondition() -->
@@ -212,7 +215,7 @@
 
                         <span>第</span>
                         <input type="number" step="1" min="1" max="10" value="1" class="fairy-start-year"
-                            style="width: 60px;">
+                            style="width: 40px;">
                         <span>年</span>
                         <select class="fairy-start-season" style="width: 60px;">
                             <option>春</option>
@@ -220,12 +223,12 @@
                             <option>秋</option>
                         </select>
                         <input type="number" step="1" min="1" max="28" value="1" class="fairy-start-day"
-                            style="width: 60px;">
+                            style="width: 40px;">
                         <span>日</span>
 
                         <span> - 第</span>
                         <input type="number" step="1" min="1" max="10" value="1" class="fairy-end-year"
-                            style="width: 60px;">
+                            style="width: 40px;">
                         <span>年</span>
                         <select class="fairy-end-season" style="width: 60px;">
                             <option>春</option>
@@ -233,11 +236,14 @@
                             <option>秋</option>
                         </select>
                         <input type="number" step="1" min="1" max="28" value="28" class="fairy-end-day"
-                            style="width: 60px;">
+                            style="width: 40px;">
                         <span>日</span>
 
-                        <button type="button" class="btn-remove">删除</button>
+                        <span style="margin-left: 10px;">至少出现</span>
+                        <input type="number" step="1" min="1" value="1" class="fairy-min-count" style="width: 40px;">
+                        <span>次</span>
 
+                        <button type="button" class="btn-remove">删除</button>
                     </div>
                 </template>
 
