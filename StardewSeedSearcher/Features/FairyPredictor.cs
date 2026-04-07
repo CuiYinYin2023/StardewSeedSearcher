@@ -48,7 +48,7 @@ namespace StardewSeedSearcher.Features
                 for (int day = condition.AbsoluteStartDay; day <= condition.AbsoluteEndDay; day++)
                 {
                     // 如果剩余天数不足，直接跳过
-                    if (foundCount + condition.AbsoluteEndDay - day < condition.MinOccurrences)
+                    if (foundCount + condition.AbsoluteEndDay - day + 1 < condition.MinOccurrences)
                         return false;
 
                     var date = TimeHelper.AbsoluteDaytoDate(day);
