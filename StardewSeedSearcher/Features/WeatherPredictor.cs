@@ -35,19 +35,23 @@ namespace StardewSeedSearcher.Features
         {
             if (Conditions.Count == 0)
                 return true;
-            
+
             // 只计算一次绿雨
             int greenRainDay = GetGreenRainDay(gameID, useLegacyRandom);
 
+            // 动态排序，优先检查范围窄、要求高的条件
+            var sortedConditions = Conditions.OrderBy(EstimateCostPerCondition).ToList();
+            
             // 逐条件检查，失败立即返回
-            foreach (var condition in Conditions)
+            foreach (var condition in sortedConditions)
             {
                 int rainCount = 0;
+                int totalInRange = condition.AbsoluteEndDay - condition.AbsoluteStartDay + 1;
                 
                 // 每一天检查
                 for (int day = condition.AbsoluteStartDay; day <= condition.AbsoluteEndDay; day++)
                 {
-                    int season = (int)condition.Season;
+                    int season = condition.Season;
                     int dayOfMonth = ((day - 1) % 28) + 1;
                     
                     // 检查当天是否下雨
@@ -60,6 +64,11 @@ namespace StardewSeedSearcher.Features
                         if (rainCount >= condition.MinRainDays)
                             break;
                     }
+
+                    // 剩余天数不足以满足最小需求时，提前失败
+                    int remainingDays = condition.AbsoluteEndDay - day;
+                    if (rainCount + remainingDays < condition.MinRainDays)
+                        return false; 
                 }
                 
                 // 这个条件不满足，直接返回 false
@@ -155,6 +164,22 @@ namespace StardewSeedSearcher.Features
             return rainRng.NextDouble() < rainChance;
         }
 
+        private int EstimateCostPerCondition(WeatherCondition c)
+        {
+            // 计算该条件涉及的总天数
+            int totalDays = c.AbsoluteEndDay - c.AbsoluteStartDay + 1;
+
+            // 春秋雨天概率~18.3%，夏季雨天概率~23.5%
+            // 按概率推算最少需要检查天数
+            int theoreticalTotalDays = (int)(c.Season == 1 
+                ? c.MinRainDays / 0.235 
+                : c.MinRainDays / 0.183);
+
+            // 例，如果春1-28想搜3个雨天，理论上只需要搜16天
+            // 如果春15-18想搜3个雨天，也只需要搜3天
+            return Math.Min(totalDays, theoreticalTotalDays); 
+        }
+
         /// <summary>
         /// 计算搜索成本
         /// </summary>
@@ -165,8 +190,9 @@ namespace StardewSeedSearcher.Features
             int totalDays = 0;
             foreach (var condition in Conditions)
             {
-                totalDays += condition.AbsoluteEndDay - condition.AbsoluteStartDay + 1;
+                totalDays += EstimateCostPerCondition(condition);
             }
+            
             // 绿雨计算56次 + 每天1次天气判断
             return 56 + totalDays;
         }
