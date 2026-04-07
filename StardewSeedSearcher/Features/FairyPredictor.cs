@@ -44,9 +44,13 @@ namespace StardewSeedSearcher.Features
             {
                 int foundCount = 0;
                 
-                // 在范围内寻找至少一个仙子
+                // 在范围内寻找仙子
                 for (int day = condition.AbsoluteStartDay; day <= condition.AbsoluteEndDay; day++)
                 {
+                    // 如果剩余天数不足，直接跳过
+                    if (foundCount + condition.AbsoluteEndDay - day < condition.MinOccurrences)
+                        return false;
+
                     var date = TimeHelper.AbsoluteDaytoDate(day);
                     if (date.season >= 3) continue; // 跳过冬天
 
