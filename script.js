@@ -905,7 +905,7 @@ elements.form.addEventListener('submit', async (e) => {
         // 如果选了最大，范围就是从当前起点到 INT_MAX 的距离
         searchRange = INT_MAX - startSeed + 1;
     } else {
-        searchRange = parseInt(rangeValue);
+        searchRange = parseInt(rangeValue) || 100000;
     }
 
     // 计算结束种子, 不超过最大值 (前端 JS 数字上限很大，加减绝对不会变成负数)
