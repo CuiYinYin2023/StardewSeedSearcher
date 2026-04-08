@@ -34,6 +34,10 @@ namespace StardewSeedSearcher.Features
             if (Conditions.Count == 0)
                 return true;
 
+            // 实例化天气预测器并预计算绿雨日，用于次日天气判定
+            var wp = new WeatherPredictor();
+            int greenRainDay = wp.GetGreenRainDay(seed, useLegacyRandom);
+
             // 动态排序
             // 仙子概率极低（1%），所以范围越窄的条件越容易在极短时间内证明“失败”
             // 优先检查预计耗时最短且最容易失败的范围
@@ -54,12 +58,30 @@ namespace StardewSeedSearcher.Features
                     var date = TimeHelper.AbsoluteDaytoDate(day);
                     if (date.season >= 3) continue; // 跳过冬天
 
+                    // 判定当天是否产生仙子
                     if (HasFairy(seed, day, useLegacyRandom))
                     {
-                        foundCount++;
-                        // 如果已经达到要求的数量，该范围条件满足，跳出当前范围的循环
-                        if (foundCount >= condition.MinOccurrences) 
-                            break;
+                        // 判定次日(day + 1)是否下雨
+                        int nextDayAbs = day + 1;
+                        var nextDate = TimeHelper.AbsoluteDaytoDate(nextDayAbs);
+
+                        bool isNextDayRainy = wp.IsRainyDay(
+                            nextDate.season, 
+                            nextDate.day, 
+                            nextDayAbs, 
+                            seed, 
+                            useLegacyRandom, 
+                            greenRainDay
+                        );
+
+                        // 只有次日不下雨，仙子才会真正降临，才计入总数
+                        if (!isNextDayRainy)
+                        {
+                            foundCount++;
+                            // 如果已经达到要求的数量，该范围条件满足，跳出当前范围的循环
+                            if (foundCount >= condition.MinOccurrences) 
+                                break;
+                        }
                     }
                 }
 
@@ -119,6 +141,12 @@ namespace StardewSeedSearcher.Features
         {
             var fairyDays = new List<object>();
             
+            // 实例化天气预测器以使用其逻辑
+            var wp = new WeatherPredictor();
+            // 获取当年的绿雨日
+            int greenRainDay = wp.GetGreenRainDay(seed, useLegacyRandom);
+
+
             foreach (var condition in Conditions)
             {
                 for (int day = condition.AbsoluteStartDay; day <= condition.AbsoluteEndDay; day++)
@@ -128,11 +156,25 @@ namespace StardewSeedSearcher.Features
 
                     if (HasFairy(seed, day, useLegacyRandom))
                     {
+                        // 直接调用 WeatherPredictor 判定次日(day + 1)天气
+                        int nextDayAbs = day + 1;
+                        var nextDate = TimeHelper.AbsoluteDaytoDate(nextDayAbs);
+
+                        bool isBlocked = wp.IsRainyDay(
+                            nextDate.season, 
+                            nextDate.day, 
+                            nextDayAbs, 
+                            seed, 
+                            useLegacyRandom, 
+                            greenRainDay
+                        );
+
                         fairyDays.Add(new
                         {
                             date.year,
                             date.season,
-                            date.day
+                            date.day,
+                            isBlocked = isBlocked // 将“是否被雨天拦截”发送给前端
                         });
                     }
                 }

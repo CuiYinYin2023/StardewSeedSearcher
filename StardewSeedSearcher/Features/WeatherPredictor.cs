@@ -82,7 +82,7 @@ namespace StardewSeedSearcher.Features
         /// <summary>
         /// 判断某一天是否下雨
         /// </summary>
-        private bool IsRainyDay(int season, int dayOfMonth, int absoluteDay, int gameID, bool useLegacyRandom, int greenRainDay)
+        public bool IsRainyDay(int season, int dayOfMonth, int absoluteDay, int gameID, bool useLegacyRandom, int greenRainDay)
         {
             // 固定天气规则
             if (dayOfMonth == 1)
@@ -130,7 +130,7 @@ namespace StardewSeedSearcher.Features
         /// <summary>
         /// 计算绿雨日期
         /// </summary>
-        private int GetGreenRainDay(int gameID, bool useLegacyRandom)
+        public int GetGreenRainDay(int gameID, bool useLegacyRandom)
         {
             int greenRainSeed = HashHelper.GetRandomSeed(777, gameID, 0, 0, 0, useLegacyRandom);
             Random greenRainRng = new Random(greenRainSeed);
@@ -142,7 +142,7 @@ namespace StardewSeedSearcher.Features
         /// <summary>
         /// 按概率计算春秋雨天
         /// </summary>
-        private bool IsRainyDaySpringFall(int gameID, int absoluteDay, bool useLegacyRandom)
+        public bool IsRainyDaySpringFall(int gameID, int absoluteDay, bool useLegacyRandom)
         {
             int seed = HashHelper.GetRandomSeed(locationHash, gameID, absoluteDay - 1, 0, 0, useLegacyRandom);
             Random rng = new Random(seed);
@@ -153,7 +153,7 @@ namespace StardewSeedSearcher.Features
         /// <summary>
         /// 按概率计算夏季雨天
         /// </summary>
-        private bool IsRainyDaySummer(int gameID, int absoluteDay, bool useLegacyRandom, int dayOfMonth)
+        public bool IsRainyDaySummer(int gameID, int absoluteDay, bool useLegacyRandom, int dayOfMonth)
         {
             int rainSeed = HashHelper.GetRandomSeed(
                 absoluteDay - 1, 
