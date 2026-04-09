@@ -15,20 +15,21 @@
     <div class="container">
         <div class="header">
 
-        <!-- 左侧星露谷 Logo -->
-        <a href="https://wiki.biligame.com/stardewvalley/%E6%98%9F%E9%9C%B2%E8%B0%B7%E7%89%A9%E8%AF%AD%E7%BB%B4%E5%9F%BA" target="_blank">
-            <img src="logo.png" alt="SDV Logo" class="header-icon">
-        </a>
-        
-        <div class="header-title-box">
-            <h1>星露谷物语</h1>
-            <div class="subtitle">脆音音种子搜索器 V0.6.5</div>
-        </div>
+            <!-- 左侧星露谷 Logo -->
+            <a href="https://wiki.biligame.com/stardewvalley/%E6%98%9F%E9%9C%B2%E8%B0%B7%E7%89%A9%E8%AF%AD%E7%BB%B4%E5%9F%BA"
+                target="_blank">
+                <img src="logo.png" alt="SDV Logo" class="header-icon">
+            </a>
 
-        <!-- 右侧个人头像 -->
-        <a href="https://space.bilibili.com/349111916" target="_blank">
-            <img src="avatar.png" alt="Avatar" class="header-icon">
-        </a>
+            <div class="header-title-box">
+                <h1>星露谷物语</h1>
+                <div class="subtitle">脆音音种子搜索器 V0.6.5</div>
+            </div>
+
+            <!-- 右侧个人头像 -->
+            <a href="https://space.bilibili.com/349111916" target="_blank">
+                <img src="avatar.png" alt="Avatar" class="header-icon">
+            </a>
 
         </div>
 
@@ -198,7 +199,7 @@
 
                 </div>
                 <div class="condition-config" id="fairyConfig">
-                <!-- <div class="condition-config" id="fairyConfig" style="display: none;"> -->
+                    <!-- <div class="condition-config" id="fairyConfig" style="display: none;"> -->
                     <h4 style="margin-bottom: 15px;">仙子筛选条件</h4>
 
                     <!-- 初始不放内容，由 JavaScript 动态添加，或者在页面加载时调用 addCondition() -->
@@ -254,7 +255,8 @@
                     <input type="checkbox" id="mineChestEnabled">
                     <!-- <input type="checkbox" id="mineChestEnabled" checked> -->
                     <label for="mineChestEnabled">启用矿井混合宝箱筛选</label>
-                    <span style="font-size: 14px; color: #a6a6a6">必须在创建存档时选择<span style="color: rgba(255, 0, 0, 0.579);"><strong>矿洞掉落-重新混合</strong></span>，否则为默认物品。</span>
+                    <span style="font-size: 14px; color: #a6a6a6">必须在创建存档时选择<span
+                            style="color: rgba(255, 0, 0, 0.579);"><strong>矿洞掉落-重新混合</strong></span>，否则为默认物品。</span>
                 </div>
 
                 <!-- <div class="condition-config" id="mineChestConfig"> -->
@@ -280,7 +282,7 @@
                             <option value="90">90层</option>
                             <option value="110">110层</option>
                         </select>
-                        <span>层  宝箱物品</span>
+                        <span>层 宝箱物品</span>
 
                         <select class="minechest-item" style="width: 160px;">
                             <option value=""></option>
@@ -389,13 +391,13 @@
                     <input type="checkbox" id="cartEnabled">
                     <!-- <input type="checkbox" id="cartEnabled" checked> -->
                     <label for="cartEnabled">启用猪车预测</label>
-                    <span
-                        style="font-size: 14px; color: #a6a6a6">只包含基础物品和技能书，不包含家具、稀有种子、家具目录等。创建存档时<span style="color: rgba(255, 0, 0, 0.579);"><strong>不勾选</strong></span>“第一年必出红叶卷心菜”。</span>
+                    <span style="font-size: 14px; color: #a6a6a6">只包含基础物品和技能书，不包含家具、稀有种子、家具目录等。创建存档时<span
+                            style="color: rgba(255, 0, 0, 0.579);"><strong>不勾选</strong></span>“第一年必出红叶卷心菜”。</span>
 
                 </div>
 
                 <!-- <div class="condition-config" id="cartConfig"> -->
-                    <div class="condition-config" id="cartConfig" style="display: none;">
+                <div class="condition-config" id="cartConfig" style="display: none;">
                     <h4 style="margin-bottom: 15px;">猪车筛选条件</h4>
 
                     <div class="cart-conditions-container" id="cartConditionsContainer"></div>
@@ -473,6 +475,26 @@
                     </div>
                 </template>
 
+                <br>
+                <div class="checkbox-group">
+                    <input type="checkbox" id="trackerEnabled">
+                    <label for="trackerEnabled">开启次优解查询</label>
+                    <span style="font-size: 14px; color: #a6a6a6">若找不到完全满足的种子，看谁最接近指定条件（仅支持天气和仙子条件）。</span>
+                </div>
+
+                <div class="condition-config" id="trackerConfig"
+                    style="display: none; padding-top: 10px; padding-bottom: 10px;">
+                    <div
+                        style="padding: 10px; background-color: #fff3cd; border-left: 4px solid #ffc107; color: #856404; margin-bottom: 15px; font-size: 13px; border-radius: 4px;">
+                        ⚠️ <b>注意：</b>开启次优解查询后，程序会完整推演这些种子的所有特征。这会禁用底层的剪枝优化，<b>可能会导致搜索速度下降</b>。
+                    </div>
+                    <div style="font-size: 13px; color: #666; margin-bottom: 15px;">
+                        * 勾选的条件将在搜索分析中展示最接近该目标的10个种子。
+                    </div>
+                    <div id="trackerOptionsContainer" class="tracker-options">
+                        <div style="color: #999; font-size: 13px;">暂无启用的天气或仙子条件。</div>
+                    </div>
+                </div>
                 <hr class="form-separator">
                 <div class="form-group form-group--inline">
                     <label for="outputLimit">最大种子数量 (达到数量后将提前停止搜索，不建议太高)</label>
@@ -481,7 +503,6 @@
 
                 <button type="submit" class="btn-search" id="searchBtn">🔍 开始搜索</button>
             </form>
-
             <div class="progress-section" id="progressSection">
                 <div class="status-message status-searching" id="statusMessage">正在搜索中...</div>
                 <div class="progress-bar-container">
@@ -548,6 +569,8 @@
                     * 根据游戏内部随机原理，偶尔会有条件互斥情况，可以尝试微调条件，放宽限制。<br>
                     * 有时候搜索结束得太快，列表来不及更新！不要在意这些细节。(^_−)☆
                 </div>
+
+                <div id="trackerResultsContainer"></div>
             </details>
         </div>
 
