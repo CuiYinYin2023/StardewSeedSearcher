@@ -7,6 +7,10 @@ let nextStartSeed = 0;
 let savedStartSeed = 1;
 let currentStartSeedDisplay;
 let currentEndSeedDisplay;
+let lastFeatureStats = [];
+let currentCheckedCount = 0;
+
+let lastTrackerHash = "";
 
 let nextFairyIndex = 0;
 
@@ -141,10 +145,12 @@ function absoluteDayToDate(absoluteDay) {
 // 天气
 elements.weatherEnabled.addEventListener('change', (e) => {
     elements.weatherConfig.style.display = e.target.checked ? 'block' : 'none';
+    refreshMaxTracker(); //更新天气条件时刷新
 });
 // 仙子
 elements.fairyEnabled.addEventListener('change', (e) => {
     elements.fairyConfig.style.display = e.target.checked ? 'block' : 'none';
+    refreshMaxTracker(); //更新仙子条件时刷新
 });
 // 混合矿井宝箱
 elements.mineChestEnabled.addEventListener('change', (e) => {
@@ -164,6 +170,10 @@ elements.cartEnabled.addEventListener('change', (e) => {
     elements.cartConfig.style.display = e.target.checked ? 'block' : 'none';
 });
 
+document.getElementById('trackerEnabled').addEventListener('change', (e) => {
+    document.getElementById('trackerConfig').style.display = e.target.checked ? 'block' : 'none';
+});
+
 // 添加天气条件
 function addWeatherCondition() {
     const container = document.getElementById('conditionsContainer');
@@ -175,10 +185,18 @@ function addWeatherCondition() {
     // 删除逻辑：点击时直接移除 DOM 元素
     row.querySelector('.btn-remove').onclick = () => {
         row.remove();
+        refreshMaxTracker(); // 刷新
     };
+
+    //监听变动
+    row.querySelectorAll('select, input').forEach(el => {
+        el.addEventListener('change', refreshMaxTracker);
+        el.addEventListener('input', refreshMaxTracker);
+    });
 
     container.appendChild(clone);
     hideError(); // 添加时尝试清理错误提示
+    refreshMaxTracker();
 }
 
 // 同步条件数据（从DOM读取）
@@ -254,9 +272,16 @@ function addFairyCondition() {
     // 删除条件
     row.querySelector('.btn-remove').onclick = () => {
         row.remove();
+        refreshMaxTracker();
     };
 
+    row.querySelectorAll('select, input').forEach(el => {
+        el.addEventListener('change', refreshMaxTracker);
+        el.addEventListener('input', refreshMaxTracker);
+    });
+
     container.appendChild(clone);
+    refreshMaxTracker();
 }
 
 function validateFairyCondition(condition) {
@@ -528,6 +553,8 @@ document.addEventListener('DOMContentLoaded', function () {
     loadCartItems();
     initializeCartItemList(); // 初始化物品 datalist
     addCartCondition(); // 添加第一个条件行
+
+    refreshMaxTracker();
 });
 
 // 监听起始种子修改,重置循环
@@ -599,7 +626,12 @@ function handleWebSocketMessage(data) {
             document.getElementById('analysisStoppedEarly').textContent = '?';
             document.getElementById('analysisStoppedEarly').style.color = '#999';
 
-            const filterStatsList = document.getElementById('filterstatsList');
+            lastFeatureStats = [];
+            currentCheckedCount = 0;
+
+            lastTrackerHash = "";
+
+            const filterStatsList = document.getElementById('filterStatsList');
             if (filterStatsList) { filterStatsList.innerHTML = ''; }
             break;
 
@@ -619,9 +651,12 @@ function handleWebSocketMessage(data) {
             elements.progressBar.style.width = progressInt + '%';
             elements.progressBar.textContent = progressInt + '%';
             //把统计更新掉
+            currentCheckedCount = data.checkedCount;
             if (data.featureStats && data.featureStats.length > 0) {
-                updateAnalysisUI(data.featureStats, data.checkedCount, foundSeeds.length);
+                lastFeatureStats = data.featureStats;
             }
+            updateAnalysisUI(lastFeatureStats, currentCheckedCount, foundSeeds.length, data.trackerData);
+
             break;
 
         case 'found':
@@ -642,14 +677,18 @@ function handleWebSocketMessage(data) {
                 seedItem.innerHTML = `
                     <span>种子: ${data.seed}</span>
                     <div class="seed-item-actions">
-                        <button class="btn-detail" onclick="showSeedDetail(${data.seed})">简介</button>
-                        <button class="btn-copy" onclick="copySeed(${data.seed})">复制</button>
+                        <button type="button" class="btn-detail" onclick="showSeedDetail(${data.seed})">简介</button>
+                        <button type="button" class="btn-copy" onclick="copySeed(${data.seed})">复制</button>
                     </div>
                 `;
                 elements.seedList.appendChild(seedItem);
             }
 
             updateResultsSummary();
+            break;
+        
+        case 'best_record_update':
+            updateAnalysisUI(lastFeatureStats, currentCheckedCount, foundSeeds.length, data);
             break;
 
         case 'complete':
@@ -683,10 +722,13 @@ function handleWebSocketMessage(data) {
 
             //判断有没有提前停止
             const maxOutputLimit = parseInt(document.getElementById('outputLimit').value) || 0;
-            const hitLimit = (!data.cancelled && foundSeeds.length >= maxOutputLimit);
+            const isStoppedEarly = data.cancelled || (foundSeeds.length >= maxOutputLimit);
+            
             const stopEl = document.getElementById('analysisStoppedEarly');
-            stopEl.textContent = hitLimit ? '是' : '否';
-            stopEl.style.color = hitLimit ? '#d32f2f' : '#333';
+            if (stopEl) {
+                stopEl.textContent = isStoppedEarly ? '是' : '否';
+                stopEl.style.color = isStoppedEarly ? '#d32f2f' : '#333';
+            }
 
             updateResultsSummary();
             break;
@@ -1108,7 +1150,8 @@ elements.form.addEventListener('submit', async (e) => {
     elements.speed.textContent = '0';
     elements.elapsed.textContent = '0.0s';
     if (elements.eta) elements.eta.textContent = '-.-';
-
+    const trackerEnabled = document.getElementById('trackerEnabled').checked;
+    const trackedCondition = trackerEnabled ? (document.querySelector('input[name="maxTracker"]:checked')?.value || "") : "";
     // 发送搜索请求
     try {
         const response = await fetch('http://localhost:5000/api/search', {
@@ -1126,7 +1169,8 @@ elements.form.addEventListener('submit', async (e) => {
                 monsterLevelConditions: monsterLevelConditionsData,
                 desertFestivalCondition: desertFestivalCondition,
                 cartConditions: cartConditionsData,
-                outputLimit // 将输出数量添加到请求中
+                outputLimit, // 将输出数量添加到请求中
+                trackedCondition: trackedCondition
             })
         });
 
@@ -1429,37 +1473,183 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
-function updateAnalysisUI(stats, currentChecked, totalFound) {
-    document.getElementById('analysisTotalRange').textContent = currentChecked.toLocaleString();
-    document.getElementById('analysisTotalFound').textContent = totalFound.toLocaleString();
+function updateAnalysisUI(stats, currentChecked, totalFound, trackerData) {
+    const rangeEl = document.getElementById('analysisTotalRange');
+    if (rangeEl) rangeEl.textContent = currentChecked.toLocaleString();
 
+    const foundEl = document.getElementById('analysisTotalFound');
+    if (foundEl) foundEl.textContent = totalFound.toLocaleString();
+
+    // 渲染常规统计树
     const container = document.getElementById('filterStatsList');
-    if (!container || !stats) return;
+    if (container && stats) {
+        let html = '';
+        let prevCount = currentChecked;
+
+        stats.forEach(stat => {
+            let rawRate = prevCount > 0 ? (stat.passCount / prevCount * 100) : 0;
+            let displayRate = rawRate % 1 === 0 ? rawRate.toFixed(0) : rawRate.toFixed(1);
+            const hue = Math.min(rawRate * 1.2, 120);
+
+            html += `
+                <div class="analysis-row">
+                    <div class="analysis-item-name">${stat.name}</div>
+                    <div class="analysis-item-count">${stat.passCount.toLocaleString()}个种子</div>
+                    <div class="analysis-rate-box" style="border-left-color: hsl(${hue}, 70%, 50%);">
+                        <span>通过率:</span>
+                        <span>${displayRate}%</span>
+                    </div>
+                </div>
+            `;
+            prevCount = stat.passCount;
+        });
+        container.innerHTML = html;
+    }
+
+    // 渲染次优解结果
+    const trackerContainer = document.getElementById('trackerResultsContainer');
+    if (trackerContainer) {
+        if (trackerData) {
+            const currentHash = trackerData.maxValue + "_" + (trackerData.topSeeds ? trackerData.topSeeds.map(s => s.seed).join(',') : "");
+            
+            // 如果特征码跟上次一样，说明前10名根本没变
+            if (currentHash === lastTrackerHash) {
+                return;
+            }
+            // 如果变了，更新记录，并允许下方代码进行渲染
+            lastTrackerHash = currentHash;
+
+            let tHtml = `
+                <div style="margin-top: 20px; padding-top: 20px; border-top: 2px dashed #e5e7eb;">
+                    <div style="font-size: 15px; font-weight: bold; color: #96558B; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+                        <span>🎯 次优解追踪：${trackerData.label}</span>
+                    </div>
+                    <div style="font-size: 13px; color: #4b5563; margin-bottom: 15px; background: #f9fafb; padding: 10px; border-radius: 6px; border: 1px solid #f3f4f6;">
+                        目标要求: <b style="color:#111827;">${trackerData.targetValue}</b> &nbsp;|&nbsp; 当前范围内最大值: <span style="font-size: 16px; font-weight: 900; color: #d32f2f;">${trackerData.maxValue < 0 ? 0 : trackerData.maxValue}</span>
+                    </div>
+            `;
+
+            if (trackerData.topSeeds && trackerData.topSeeds.length > 0) {
+                tHtml += `<div style="display: flex; flex-direction: column; gap: 8px;">`;
+                
+                // 按值从大到小，再按种子号从小到大排序
+                trackerData.topSeeds.sort((a, b) => b.value - a.value || a.seed - b.seed).forEach(item => {
+                    
+                    if (item.details) {
+                        seedDetailsCache[item.seed] = {
+                            details: item.details,
+                            enabled: item.enabledFeatures || {}
+                        };
+                    }
+
+                    tHtml += `
+                        <div style="background: white; border: 1px solid #e9d5ff; padding: 10px 15px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+                            <div style="font-size: 14px; color: #374151;">
+                                种子: <b style="font-size: 15px; color: #111827;">${item.seed}</b> 
+                                <span style="margin-left: 10px; color: #6b7280; font-size: 13px;">
+                                    包含目标: <span style="color: #d32f2f; font-weight: bold; font-size: 14px;">${item.value}</span>
+                                </span>
+                            </div>
+                            <div class="seed-item-actions">
+                                <button type="button" class="btn-detail" onclick="showSeedDetail(${item.seed})">简介</button>
+                                <button type="button" class="btn-copy" onclick="copySeed(${item.seed})">复制</button>
+                            </div>
+                        </div>
+                    `;
+                });
+                tHtml += `</div>`;
+            } else {
+                tHtml += `<div style="font-size: 13px; color: #9ca3af; text-align: center; padding: 20px; background: #f9fafb; border-radius: 6px;">暂未找到任何出现次数大于 0 的种子。</div>`;
+            }
+            
+            tHtml += `</div>`;
+            trackerContainer.innerHTML = tHtml;
+        } else {
+            trackerContainer.innerHTML = '';
+            lastTrackerHash = ""; // 清空时也重置特征码
+        }
+    }
+}
+
+function refreshMaxTracker() {
+    const container = document.getElementById('trackerOptionsContainer');
+    if (!container) return;
+
+    const currentSelected = document.querySelector('input[name="maxTracker"]:checked')?.value;
 
     let html = '';
-    let prevCount = currentChecked;
+    let optionIndex = 0;
 
-    stats.forEach(stat => {
-        let rawRate = prevCount > 0 ? (stat.passCount / prevCount * 100) : 0; //这是展示在通过第前关的基础上的种子，在当前关卡的通过率
-        let displayRate = rawRate % 1 === 0 ? rawRate.toFixed(0) : rawRate.toFixed(1);
+    //天气条件
+    if (document.getElementById('weatherEnabled').checked) {
+        const weatherRows = document.querySelectorAll('.weather-condition-row');
+        weatherRows.forEach((row, index) => {
+            const season = row.querySelector('.weather-season-select').value;
+            const start = row.querySelector('.weather-start-day').value;
+            const end = row.querySelector('.weather-end-day').value;
+            const min = row.querySelector('.weather-min-rain').value;
+            const val = `weather_${index}`;
+            const isChecked = currentSelected === val ? 'checked' : '';
+            
+            html += `
+                <label class="tracker-radio-label">
+                    <input type="radio" name="maxTracker" value="${val}" ${isChecked}>
+                    <span class="tracker-text">[天气] 第1年${season}季 ${start}-${end}日 (至少下雨: ${min}天)</span>
+                </label>
+            `;
+            optionIndex++;
+        });
+    }
 
-        const hue = Math.min(rawRate * 1.2, 120);
+    //仙子条件
+    if (document.getElementById('fairyEnabled').checked) {
+        const fairyRows = document.querySelectorAll('.fairy-condition-row');
+        fairyRows.forEach((row, index) => {
+            const sy = row.querySelector('.fairy-start-year').value;
+            const ss = row.querySelector('.fairy-start-season').value;
+            const sd = row.querySelector('.fairy-start-day').value;
+            const ey = row.querySelector('.fairy-end-year').value;
+            const es = row.querySelector('.fairy-end-season').value;
+            const ed = row.querySelector('.fairy-end-day').value;
+            const min = row.querySelector('.fairy-min-count').value;
+            const val = `fairy_${index}`;
+            const isChecked = currentSelected === val ? 'checked' : '';
 
-        html += `
-            <div class="analysis-row">
-                <div class="analysis-item-name">${stat.name}</div>
-                <div class="analysis-item-count">${stat.passCount.toLocaleString()}个种子</div>
-                <div class="analysis-rate-box" style="border-left-color: hsl(${hue}, 70%, 50%);">
-                    <span>通过率:</span>
-                    <span>${displayRate}%</span>
-                </div>
-            </div>
-        `;
-        //下一关的起点是本关留存的种子
-        prevCount = stat.passCount;
+            html += `
+                <label class="tracker-radio-label">
+                    <input type="radio" name="maxTracker" value="${val}" ${isChecked}>
+                    <span class="tracker-text">[仙子] 第${sy}年${ss}${sd}日 - 第${ey}年${es}${ed}日 (至少出现: ${min}次)</span>
+                </label>
+            `;
+            optionIndex++;
+        });
+    }
+
+    if (html === '') {
+        container.innerHTML = '<div style="color: #999; font-size: 13px; text-align: center; padding: 10px 0;">暂无启用的天气或仙子条件。</div>';
+    } else {
+        container.innerHTML = html;
+    }
+
+    const radios = container.querySelectorAll('input[name="maxTracker"]');
+    radios.forEach(radio => {
+        radio.dataset.wasChecked = radio.checked;
+        
+        radio.addEventListener('click', function(e) {
+            if (this.dataset.wasChecked === 'true') {
+                this.checked = false;
+                this.dataset.wasChecked = 'false';
+            } else {
+                radios.forEach(r => r.dataset.wasChecked = 'false');
+                this.dataset.wasChecked = 'true';
+            }
+        });
     });
+}
 
-    container.innerHTML = html;
+function clearTrackerSelection() {
+    const radios = document.querySelectorAll('input[name="maxTracker"]');
+    radios.forEach(r => r.checked = false);
 }
 
 connectWebSocket();

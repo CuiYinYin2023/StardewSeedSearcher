@@ -171,8 +171,8 @@ namespace StardewSeedSearcher
                 var weatherDetailsCache = new ConcurrentDictionary<int, WeatherDetailResult>();
                 var results = new List<int>();
                 var stopwatch = Stopwatch.StartNew();
-                int totalSeeds = (int)request.EndSeed - request.StartSeed + 1;
-                int checkedCount = 0;
+                long totalSeeds = request.EndSeed - request.StartSeed + 1;
+                long checkedCount = 0;
 
                 // 配置所有搜种功能
                 var features = InitializeFeatures(request);
@@ -222,7 +222,98 @@ namespace StardewSeedSearcher
 
                 // 发送开始消息
                 await BroadcastMessage(new { type = "start", total = totalSeeds });
-            
+
+               int currentMaxTrackedValue = -1;
+                var topTrackedSeeds = new List<Dictionary<string, object>>(); 
+                object trackerLock = new object();
+                string trackedLabel = "";
+                int trackedTarget = 0;
+                bool hasTracker = false;
+
+                Action<int, int> trackerCallback = (seed, value) => 
+                {
+                    if (value <= 0) return; 
+
+                    if (value < currentMaxTrackedValue) return;
+                    if (value == currentMaxTrackedValue && topTrackedSeeds.Count >= 10) return;
+
+                    var details = CollectAllDetails(seed, request.UseLegacyRandom, features);
+                    var enabledFeat = GetEnabledFeatures(request);
+                    bool updated = false;
+                    
+                    // 加锁
+                    lock (trackerLock)
+                    {
+                        if (value > currentMaxTrackedValue)
+                        {
+                            currentMaxTrackedValue = value;
+                            topTrackedSeeds.Clear();
+                            topTrackedSeeds.Add(new Dictionary<string, object> {
+                                { "seed", seed }, { "value", value }, { "details", details }, { "enabledFeatures", enabledFeat }
+                            });
+                            updated = true;
+                        }
+                        else if (value == currentMaxTrackedValue && topTrackedSeeds.Count < 10)
+                        {
+                            if (!topTrackedSeeds.Any(s => (int)s["seed"] == seed))
+                            {
+                                topTrackedSeeds.Add(new Dictionary<string, object> {
+                                    { "seed", seed }, { "value", value }, { "details", details }, { "enabledFeatures", enabledFeat }
+                                });
+                                updated = true;
+                            }
+                        }
+                    }
+
+                    if (updated)
+                    {
+                        channel.Writer.TryWrite(new SearchMessage("best_record_update", new {
+                            type = "best_record_update",
+                            label = trackedLabel,
+                            maxValue = currentMaxTrackedValue,
+                            targetValue = trackedTarget,
+                            topSeeds = topTrackedSeeds.ToList()
+                        }));
+                    }
+                };
+
+                if (!string.IsNullOrEmpty(request.TrackedCondition))
+                {
+                    var parts = request.TrackedCondition.Split('_');
+                    if (parts.Length == 2 && int.TryParse(parts[1], out int index))
+                    {
+                        string[] seasonNames = { "春", "夏", "秋", "冬" };
+                        if (parts[0] == "weather" && request.WeatherConditions != null && request.WeatherConditions.Count > index)
+                        {
+                            var dto = request.WeatherConditions[index];
+                            trackedLabel = $"[天气] 第1年{seasonNames[dto.Season]}季 {dto.StartDay}-{dto.EndDay}日";
+                            trackedTarget = dto.MinRainDays;
+                            hasTracker = true;
+                            
+                            var wp = features.OfType<WeatherPredictor>().FirstOrDefault();
+                            if (wp != null && wp.Conditions.Count > index)
+                            {
+                                wp.Conditions[index].IsRecordBest = true;     // 贴标签
+                                wp.OnRecordBestUpdate = trackerCallback;      // 插钩子
+                            }
+                        }
+                        else if (parts[0] == "fairy" && request.FairyConditions != null && request.FairyConditions.Count > index)
+                        {
+                            var dto = request.FairyConditions[index];
+                            trackedLabel = $"[仙子] 第{dto.StartYear}年{seasonNames[dto.StartSeason]}{dto.StartDay}日 - 第{dto.EndYear}年{seasonNames[dto.EndSeason]}{dto.EndDay}日";
+                            trackedTarget = dto.MinOccurrences;
+                            hasTracker = true;
+                            
+                            var fp = features.OfType<FairyPredictor>().FirstOrDefault();
+                            if (fp != null && fp.Conditions.Count > index)
+                            {
+                                fp.Conditions[index].IsRecordBest = true;
+                                fp.OnRecordBestUpdate = trackerCallback;
+                            }
+                        }
+                    }
+                }
+
                 var sortedFeatures = features.Where(f => f.IsEnabled).OrderBy(f=>f.EstimateCost(request.UseLegacyRandom)).ToList();
 
                 // 多线程暴力搜索 （同时是 Channel 的生产者）
@@ -235,7 +326,7 @@ namespace StardewSeedSearcher
                         .ToList();
 
                     // 使用 Partitioner 减少线程调度开销
-                    var rangePartitioner = Partitioner.Create(request.StartSeed, request.EndSeed + 1);
+                    var rangePartitioner = Partitioner.Create((long)request.StartSeed, request.EndSeed + 1);
 
                     // 预留一个核心给 Channel 消费者以防止进度不能及时更新，单核时则不能避免
                     int degreeOfParallelism = Math.Max(1, Environment.ProcessorCount - 1);
@@ -249,11 +340,11 @@ namespace StardewSeedSearcher
                     {
                         Parallel.ForEach(rangePartitioner, parallelOptions, (range, state) =>
                         {
-                            for (int seed = (int)range.Item1; seed < range.Item2; seed++)
+                            for (long seedLong = range.Item1; seedLong < range.Item2; seedLong++)
                             {
                                 // 提前终止
                                 if (linkedCts.Token.IsCancellationRequested) break;
-
+                                int seed = (int)seedLong;
                                 // 检查是否符合所有启用的功能条件
                                 bool allMatch = true;
                                 foreach (var feature in sortedFeatures)  // 使用排序后的列表
@@ -265,8 +356,8 @@ namespace StardewSeedSearcher
                                     }
                                     featurePassCounts.AddOrUpdate(feature.Name, 1, (key, val) => val + 1);
                                 }
-
-                                int localChecked = Interlocked.Increment(ref checkedCount);
+                                
+                                long localChecked = Interlocked.Increment(ref checkedCount);
 
                                 if (allMatch)
                                 {
@@ -299,6 +390,20 @@ namespace StardewSeedSearcher
                                     double progress = (double)localChecked / totalSeeds * 100;
                                     double speed = localChecked / stopwatch.Elapsed.TotalSeconds;
 
+                                    object trackerData = null;
+                                    if (hasTracker)
+                                    {
+                                        lock (trackerLock)
+                                        {
+                                            trackerData = new {
+                                                label = trackedLabel,
+                                                maxValue = currentMaxTrackedValue,
+                                                targetValue = trackedTarget,
+                                                topSeeds = topTrackedSeeds.ToList()
+                                            };
+                                        }
+                                    }
+
                                     channel.Writer.TryWrite(new SearchMessage("progress", new
                                     {
                                         type = "progress",
@@ -307,7 +412,8 @@ namespace StardewSeedSearcher
                                         progress = Math.Round(progress, 2),
                                         speed = Math.Round(speed, 0),
                                         elapsed = Math.Round(stopwatch.Elapsed.TotalSeconds, 1),
-                                        featureStats = stats
+                                        featureStats = stats,
+                                        trackerData =trackerData
                                     }));
                                 }
                             }
@@ -333,6 +439,20 @@ namespace StardewSeedSearcher
                     passCount = featurePassCounts[f.Name]
                 }).ToList();
 
+                object finalTrackerData = null;
+                if (hasTracker)
+                {
+                    lock (trackerLock)
+                    {
+                        finalTrackerData = new {
+                            label = trackedLabel,
+                            maxValue = currentMaxTrackedValue,
+                            targetValue = trackedTarget,
+                            topSeeds = topTrackedSeeds.ToList()
+                        };
+                    }
+                }
+
                 // 发送完成消息
                 // 发送最后一次精确的进度更新。
                 // 这确保了即使用户的搜索范围小于100，或者搜索提前结束，
@@ -345,7 +465,8 @@ namespace StardewSeedSearcher
                     progress = Math.Floor(finalProgress), // 这里也取整
                     speed = Math.Round(checkedCount / stopwatch.Elapsed.TotalSeconds, 0),
                     elapsed = Math.Round(stopwatch.Elapsed.TotalSeconds, 1),
-                    featureStats = finalStats // 最终统计数据及时返回
+                    featureStats = finalStats, // 最终统计数据及时返回
+                    trackerData = finalTrackerData
                 });
                 
                 // 广播"完成"消息
@@ -635,6 +756,9 @@ namespace StardewSeedSearcher
 
         [JsonPropertyName("outputLimit")]
         public int OutputLimit { get; set; }
+
+        [JsonPropertyName("trackedCondition")]
+        public string TrackedCondition {get; set;}
     }
 
     /// <summary>
