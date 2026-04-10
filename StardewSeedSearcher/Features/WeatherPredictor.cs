@@ -167,7 +167,7 @@ namespace StardewSeedSearcher.Features
         /// <summary>
         /// 按概率计算春秋雨天
         /// </summary>
-        private bool IsRainyDaySpringFall(int gameID, int absoluteDay, bool useLegacyRandom)
+        public bool IsRainyDaySpringFall(int gameID, int absoluteDay, bool useLegacyRandom)
         {
             int seed = HashHelper.GetRandomSeed(locationHash, gameID, absoluteDay - 1, 0, 0, useLegacyRandom);
             Random rng = new Random(seed);
@@ -178,7 +178,7 @@ namespace StardewSeedSearcher.Features
         /// <summary>
         /// 按概率计算夏季雨天
         /// </summary>
-        private bool IsRainyDaySummer(int gameID, int absoluteDay, bool useLegacyRandom, int dayOfMonth)
+        public bool IsRainyDaySummer(int gameID, int absoluteDay, bool useLegacyRandom, int dayOfMonth)
         {
             int rainSeed = HashHelper.GetRandomSeed(
                 absoluteDay - 1, 

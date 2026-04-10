@@ -1239,17 +1239,34 @@ function showSeedDetail(seed) {
 
     // 只有启用了仙子功能才显示
     if (enabled.fairy && details.fairy && details.fairy.days) {
+        // 1. 检查是否存在任何一个失效（被拦截）的仙子
+        const hasBlockedFairy = details.fairy.days.some(f => f.isBlocked);
+
         const fairyText = details.fairy.days.map(f => {
             const prefix = f.year === 1 ? '' : `${f.year}年`;
-            return `${prefix}${SeasonNames[f.season]}${f.day}`;
+            const dateText = `${prefix}${SeasonNames[f.season]}${f.day}`;
+            
+            // 如果次日下雨（isBlocked 为 true），则显示为蓝色
+            if (f.isBlocked) {
+                return `<span style="color: #3498db;" title="次日雨天导致仙子失效">${dateText}</span>`;
+            }
+            return dateText;
         }).join('、');
+
+        // 2. 根据是否存在失效仙子，决定是否显示底部提示行
+        const footerNote = hasBlockedFairy ? `
+            <div style="font-size: 12px; color: #3498db; margin-top: 5px; line-height: 1.2;">
+                * 蓝色为次日雨天导致失效的仙子
+            </div>` : '';
 
         const fairyHtml = `
             <div class="weather-season">
                 <div class="weather-season-title">仙子（${details.fairy.days.length}个）：</div>
                 <div class="weather-days">${fairyText}</div>
+                ${footerNote}
             </div>
         `;
+        
         document.getElementById('sidebarFairyContent').innerHTML = fairyHtml;
         document.getElementById('fairySection').style.display = 'block';
     } else {
