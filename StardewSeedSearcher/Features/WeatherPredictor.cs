@@ -13,6 +13,8 @@ namespace StardewSeedSearcher.Features
         public int EndDay { get; set; }
         public int MinRainDays { get; set; }
 
+        public bool IsRecordBest { get; set; }
+
         public int AbsoluteStartDay => TimeHelper.DateToAbsoluteDay(1, Season, StartDay);
         public int AbsoluteEndDay => TimeHelper.DateToAbsoluteDay(1, Season, EndDay);
     }
@@ -26,8 +28,12 @@ namespace StardewSeedSearcher.Features
         public string Name => "天气预测";
         public bool IsEnabled { get; set; } = true;
         public int locationHash = HashHelper.GetHashFromString("location_weather");
+        
+        public Action<int, int> OnRecordBestUpdate { get; set; }
 
-
+        /// <summary>
+        /// 检查种子是否符合筛选条件
+        /// </summary>
         /// <summary>
         /// 检查种子是否符合筛选条件
         /// </summary>
@@ -46,34 +52,53 @@ namespace StardewSeedSearcher.Features
             foreach (var condition in sortedConditions)
             {
                 int rainCount = 0;
-                int totalInRange = condition.AbsoluteEndDay - condition.AbsoluteStartDay + 1;
                 
-                // 每一天检查
-                for (int day = condition.AbsoluteStartDay; day <= condition.AbsoluteEndDay; day++)
+                if (condition.IsRecordBest)
                 {
-                    int season = condition.Season;
-                    int dayOfMonth = ((day - 1) % 28) + 1;
-                    
-                    // 检查当天是否下雨
-                    if (IsRainyDay(season, dayOfMonth, day, gameID, useLegacyRandom, greenRainDay))
+                    for (int day = condition.AbsoluteStartDay; day <= condition.AbsoluteEndDay; day++)
                     {
-                        // 下雨则增加计数
-                        rainCount++;
-                        
-                        // 提前成功：已经满足最少雨天数，不用算后面的
-                        if (rainCount >= condition.MinRainDays)
-                            break;
-                    }
+                        if (rainCount + condition.AbsoluteEndDay - day + 1 < condition.MinRainDays) 
+                            break; 
 
-                    // 剩余天数不足以满足最小需求时，提前失败
-                    int remainingDays = condition.AbsoluteEndDay - day;
-                    if (rainCount + remainingDays < condition.MinRainDays)
+                        int season = condition.Season;
+                        int dayOfMonth = ((day - 1) % 28) + 1;
+                        
+                        if (IsRainyDay(season, dayOfMonth, day, gameID, useLegacyRandom, greenRainDay))
+                        {
+                            if (++rainCount >= condition.MinRainDays) break;
+                        }
+                    }
+                    
+                    if (rainCount < condition.MinRainDays)
+                    {
+                        OnRecordBestUpdate?.Invoke(gameID, rainCount);
                         return false; 
+                    }
                 }
-                
-                // 这个条件不满足，直接返回 false
-                if (rainCount < condition.MinRainDays)
-                    return false;
+                else
+                {
+                    for (int day = condition.AbsoluteStartDay; day <= condition.AbsoluteEndDay; day++)
+                    {
+                        int season = condition.Season;
+                        int dayOfMonth = ((day - 1) % 28) + 1;
+                        
+                        // 检查当天是否下雨
+                        if (IsRainyDay(season, dayOfMonth, day, gameID, useLegacyRandom, greenRainDay))
+                        {
+                            rainCount++;
+                            if (rainCount >= condition.MinRainDays)
+                                break;
+                        }
+
+                        // 剩余天数不足以满足最小需求时，提前失败
+                        int remainingDays = condition.AbsoluteEndDay - day;
+                        if (rainCount + remainingDays < condition.MinRainDays)
+                            return false; 
+                    }
+                    
+                    if (rainCount < condition.MinRainDays)
+                        return false;
+                }
             }
 
             return true;

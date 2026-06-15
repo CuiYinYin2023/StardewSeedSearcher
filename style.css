@@ -23,42 +23,62 @@ body {
 
 .header {
     display: flex;
-    align-items: center;        /* 垂直居中 */
-    justify-content: center;   /* 水平居中 */
-    gap: 20px;                 /* 图片与文字之间的间距 */
-    margin-bottom: 30px;       /* 与下方内容的间距 */
+    align-items: center;
+    /* 垂直居中 */
+    justify-content: center;
+    /* 水平居中 */
+    gap: 20px;
+    /* 图片与文字之间的间距 */
+    margin-bottom: 30px;
+    /* 与下方内容的间距 */
 }
 
 .header-title-box {
-    text-align: center;        /* 标题文字居中 */
+    text-align: center;
+    /* 标题文字居中 */
     color: white;
 }
 
 /* 统一设置两个图片的样式 */
 .header-icon {
-    width: 90px;               /* 根据需要调整尺寸 */
-    height: 90px;              /* 宽高必须相等 */
-    border-radius: 12px;       /* 圆角方形，数值可根据需要调整 */
-    object-fit: cover;         /* 确保图片不会被拉伸变形 */
-    border: 2px solid #fff;    /* 可选：给圆形加一个白边，看起来更精致 */
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15); /* 可选：增加轻微阴影 */
+    width: 90px;
+    /* 根据需要调整尺寸 */
+    height: 90px;
+    /* 宽高必须相等 */
+    border-radius: 12px;
+    /* 圆角方形，数值可根据需要调整 */
+    object-fit: cover;
+    /* 确保图片不会被拉伸变形 */
+    border: 2px solid #fff;
+    /* 可选：给圆形加一个白边，看起来更精致 */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    /* 可选：增加轻微阴影 */
 }
+
 /* 链接容器：垂直排列 */
 .header-links {
     display: flex;
-    flex-direction: column; /* 纵向排列 */
-    gap: 5px;               /* 链接块之间的间距 */
-    margin-left: 10px;      /* 与左边头像的间距 */
+    flex-direction: column;
+    /* 纵向排列 */
+    gap: 5px;
+    /* 链接块之间的间距 */
+    margin-left: 10px;
+    /* 与左边头像的间距 */
 }
 
 /* 单个链接块：长方形 3:1 */
 .platform-link {
     display: block;
-    width: 75px;            /* 宽度 */
-    height: 25px;           /* 高度 (3:1 比例) */
-    background: rgba(255, 255, 255, 0.1); /* 默认背景，方便没图时预览 */
-    border-radius: 4px;     /* 微圆角 */
-    overflow: hidden;       /* 超出部分隐藏 */
+    width: 75px;
+    /* 宽度 */
+    height: 25px;
+    /* 高度 (3:1 比例) */
+    background: rgba(255, 255, 255, 0.1);
+    /* 默认背景，方便没图时预览 */
+    border-radius: 4px;
+    /* 微圆角 */
+    overflow: hidden;
+    /* 超出部分隐藏 */
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     border: 1px solid rgba(255, 255, 255, 0.2);
 }
@@ -67,7 +87,8 @@ body {
 .platform-link img {
     width: 100%;
     height: 100%;
-    object-fit: cover;      /* 填充整个长方形 */
+    object-fit: cover;
+    /* 填充整个长方形 */
     display: block;
 }
 
@@ -1002,22 +1023,25 @@ input[type="number"] {
 }
 
 .input-with-button input {
-    padding: 12px 95px 12px 12px !important; 
+    padding: 12px 95px 12px 12px !important;
 }
 
 .button-group {
     position: absolute;
     right: 6px;
     display: flex;
-    gap: 4px; /* 两个按钮之间的间距 */
+    gap: 4px;
+    /* 两个按钮之间的间距 */
     opacity: 0;
     transition: opacity 0.3s ease;
-    pointer-events: none; /* 隐藏时不可点击 */
+    pointer-events: none;
+    /* 隐藏时不可点击 */
 }
 
 .input-with-button:hover .button-group {
     opacity: 1;
-    pointer-events: auto; /* 显示时可点击 */
+    pointer-events: auto;
+    /* 显示时可点击 */
 }
 
 .btn-quick-set {
@@ -1031,7 +1055,8 @@ input[type="number"] {
     cursor: pointer;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     transition: all 0.3s ease;
-    white-space: nowrap; /* 禁止换行 */
+    white-space: nowrap;
+    /* 禁止换行 */
 }
 
 .input-with-button:hover .btn-quick-set {
@@ -1074,7 +1099,9 @@ input[type="number"] {
     font-size: 16px;
 }
 
-.analysis-summary::-webkit-details-marker { display: none; }
+.analysis-summary::-webkit-details-marker {
+    display: none;
+}
 
 .analysis-summary::before {
     content: '▶';
@@ -1084,7 +1111,7 @@ input[type="number"] {
     transition: transform 0.2s;
 }
 
-.analysis-details[open] > .analysis-summary::before {
+.analysis-details[open]>.analysis-summary::before {
     transform: rotate(90deg);
 }
 
@@ -1110,7 +1137,7 @@ input[type="number"] {
     display: flex;
     align-items: center;
     margin-bottom: 12px;
-    padding-left: 10px; 
+    padding-left: 10px;
 }
 
 .analysis-item-name {
@@ -1135,7 +1162,7 @@ input[type="number"] {
     padding: 8px 12px;
     border-left: 4px solid #10b981;
     border-radius: 4px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     font-weight: bold;
     color: #374151;
     font-size: 14px;
@@ -1150,4 +1177,131 @@ input[type="number"] {
     font-size: 13px;
     color: #6b7280;
     line-height: 1.8;
+}
+
+.tracker-details {
+    margin-bottom: 20px;
+    padding: 0;
+    background-color: transparent;
+    border: none;
+    border-radius: 0;
+    transition: all 0.3s;
+}
+
+.tracker-summary {
+    font-size: 14px;
+    color: #96558B;
+    font-weight: bold;
+    cursor: pointer;
+    outline: none;
+    list-style: none;
+    user-select: none;
+}
+
+.tracker-summary::-webkit-details-marker { display: none; }
+.tracker-summary::before {
+    content: '▶';
+    display: inline-block;
+    color: #96558B;
+    font-size: 0.8em;
+    margin-right: 8px;
+    transition: transform 0.2s;
+}
+
+.tracker-details[open] > .tracker-summary {
+    color: #96558B;
+}
+
+.tracker-details[open] > .tracker-summary::before {
+    transform: rotate(90deg);
+}
+
+.tracker-content {
+    margin-top: 15px;
+    padding-top: 0;
+    border-top: none;
+}
+
+.tracker-options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.tracker-radio-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    color: #374151;
+    cursor: pointer;
+    background: #fff;
+    padding: 10px 14px;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    transition: all 0.2s;
+}
+
+.tracker-radio-label:has(input[type="radio"]:checked) {
+    background-color: #fcf1fa;
+    border-color: #e9d5ff;
+    color: #96558B;
+    font-weight: 500;
+}
+
+.tracker-radio-label:hover {
+    border-color: #d1d5db;
+    background-color: #f9fafb;
+}
+
+.tracker-radio-label:has(input[type="radio"]:checked):hover {
+    border-color: #d8b4fe;
+    background-color: #fdf2f8;
+}
+
+.tracker-radio-label input[type="radio"] {
+    cursor: pointer;
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    accent-color: #96558B;
+    flex-shrink: 0;
+}
+
+.tracker-text {
+    flex: 1;
+    line-height: 1.4;
+}
+
+.btn-clear-tracker {
+    margin-top: 15px;
+    font-size: 13px;
+    padding: 6px 14px;
+    border-radius: 6px;
+    border: 1px solid #e5e7eb;
+    background: #fff;
+    color: #6b7280;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-clear-tracker .icon {
+    font-size: 1.1em;
+    line-height: 1;
+    color: #9ca3af;
+    transition: color 0.2s;
+}
+
+.btn-clear-tracker:hover {
+    color: #d32f2f;
+    background-color: #ffebee;
+    border-color: #ffcdd2;
+}
+
+.btn-clear-tracker:hover .icon {
+    color: #d32f2f;
 }
