@@ -26,6 +26,7 @@ namespace StardewSeedSearcher.Features
         public string Name => "天气预测";
         public bool IsEnabled { get; set; } = true;
         public int locationHash = HashHelper.GetHashFromString("location_weather");
+        private static readonly int SummerRainChanceHash = HashHelper.GetHashFromString("summer_rain_chance");
 
         private WeatherCondition[] _sortedConditions = [];
 
@@ -176,7 +177,7 @@ namespace StardewSeedSearcher.Features
             int rainSeed = HashHelper.GetRandomSeed(
                 absoluteDay - 1, 
                 gameID / 2, 
-                HashHelper.GetHashFromString("summer_rain_chance"), 0, 0, useLegacyRandom);
+                SummerRainChanceHash, 0, 0, useLegacyRandom);
             Random rainRng = new Random(rainSeed);
             double rainChance = 0.12 + 0.003 * (dayOfMonth - 1);
             return rainRng.NextDouble() < rainChance;
