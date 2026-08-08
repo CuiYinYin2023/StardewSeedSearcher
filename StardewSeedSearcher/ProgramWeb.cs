@@ -24,7 +24,7 @@ namespace StardewSeedSearcher
 
 
         // 获得种子简介信息
-        private static object CollectAllDetails(int seed, bool useLegacy, List<ISearchFeature> features)
+        internal static object CollectAllDetails(int seed, bool useLegacy, List<ISearchFeature> features)
         {
             WeatherDetailResult weatherDetail = null;
             List<object> fairyDays = null;
@@ -84,6 +84,12 @@ namespace StardewSeedSearcher
 
         public static void Main(string[] args)
         {
+            if (args.Any(arg => arg.Equals("--worker", StringComparison.OrdinalIgnoreCase)))
+            {
+                SearchWorker.RunAsync().GetAwaiter().GetResult();
+                return;
+            }
+
             // 拉取猪车物品列表
             TravelingCartData.Initialize();
             
@@ -462,7 +468,7 @@ namespace StardewSeedSearcher
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        private static List<ISearchFeature> InitializeFeatures(SearchRequest request)
+        internal static List<ISearchFeature> InitializeFeatures(SearchRequest request)
         {
             var features = new List<ISearchFeature>();
             // 配置天气功能
@@ -589,6 +595,11 @@ namespace StardewSeedSearcher
                 features.Add(cartPredictor);
             }
 
+            foreach (var feature in features)
+            {
+                feature.Prepare();
+            }
+
             return features;
         }
 
@@ -597,7 +608,7 @@ namespace StardewSeedSearcher
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        private static object GetEnabledFeatures(SearchRequest request) => new
+        internal static object GetEnabledFeatures(SearchRequest request) => new
         {
             weather = request.WeatherConditions?.Count > 0, // 如果为null则false，否则判断数量是否大于0
             weatherSeasons = request.WeatherConditions?.Select(c => c.Season).Distinct().ToList() ?? [],

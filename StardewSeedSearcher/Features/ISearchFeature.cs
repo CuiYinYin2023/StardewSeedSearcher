@@ -12,6 +12,9 @@ namespace StardewSeedSearcher.Features
         /// <summary>是否启用此功能</summary>
         bool IsEnabled { get; set; }
 
+        /// <summary>Precomputes immutable data used by the search hot path.</summary>
+        void Prepare() { }
+
         /// <summary>
         /// 检查种子是否符合此功能的筛选条件
         /// </summary>

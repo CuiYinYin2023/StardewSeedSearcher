@@ -4,6 +4,8 @@ namespace StardewSeedSearcher.Features
 {
     public class MonsterLevelPredictor : ISearchFeature
     {
+        private MonsterLevelCondition[] _sortedConditions = [];
+
         public List<MonsterLevelCondition> Conditions { get; set; } = new();
         
         public string Name => "怪物层";
@@ -28,15 +30,30 @@ namespace StardewSeedSearcher.Features
         /// <summary>
         /// 检查种子是否匹配所有条件（AND关系）
         /// </summary>
+        public void Prepare()
+        {
+            _sortedConditions = Conditions
+                .OrderBy(EstimateCostPerCondition)
+                .ToArray();
+        }
+
+        private void EnsurePrepared()
+        {
+            if (_sortedConditions.Length != Conditions.Count)
+            {
+                Prepare();
+            }
+        }
+
         public bool Check(int gameID, bool useLegacyRandom)
         {
             if (!IsEnabled) return true;
 
-            // 动态排序
-            var sortedConditions = Conditions.OrderBy(EstimateCostPerCondition).ToList();
+            EnsurePrepared();
 
+            // 动态排序
             // 遍历每个条件
-            foreach (var condition in sortedConditions)
+            foreach (var condition in _sortedConditions)
             {
                 // 检查指定日期和层数范围内是否有感染层
                 for (int day = condition.AbsoluteStartDay; day <= condition.AbsoluteEndDay; day++)
@@ -104,7 +121,8 @@ namespace StardewSeedSearcher.Features
             if (!IsEnabled || Conditions.Count == 0) return 0;
             
             // 找到范围最小（检查次数最少）的条件
-            var bestCondition = Conditions.OrderBy(EstimateCostPerCondition).First();
+            EnsurePrepared();
+            var bestCondition = _sortedConditions[0];
             
             // 返回该条件的 RNG 总调用次数
             return EstimateCostPerCondition(bestCondition);

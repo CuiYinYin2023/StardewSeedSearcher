@@ -26,25 +26,41 @@ namespace StardewSeedSearcher.Features
     {
         public bool IsEnabled { get; set; }
         public List<FairyCondition> Conditions { get; set; } = new();
+        private FairyCondition[] _sortedConditions = [];
+        private readonly WeatherPredictor _weatherPredictor = new();
 
         public string Name => "仙子预测";
+
+        public void Prepare()
+        {
+            _sortedConditions = Conditions
+                .OrderBy(EstimateCostPerCondition)
+                .ToArray();
+        }
+
+        private void EnsurePrepared()
+        {
+            if (_sortedConditions.Length != Conditions.Count)
+            {
+                Prepare();
+            }
+        }
 
         public bool Check(int seed, bool useLegacyRandom)
         {
             if (Conditions.Count == 0)
                 return true;
 
+            EnsurePrepared();
+
             // 实例化天气预测器并预计算绿雨日，用于次日天气判定
-            var wp = new WeatherPredictor();
-            int greenRainDay = wp.GetGreenRainDay(seed, useLegacyRandom);
+            int greenRainDay = _weatherPredictor.GetGreenRainDay(seed, useLegacyRandom);
 
             // 动态排序
             // 仙子概率极低（1%），所以范围越窄的条件越容易在极短时间内证明“失败”
             // 优先检查预计耗时最短且最容易失败的范围
-            var sortedConditions = Conditions.OrderBy(EstimateCostPerCondition).ToList();
-
             // 所有条件都必须满足（AND）
-            foreach (var condition in sortedConditions)
+            foreach (var condition in _sortedConditions)
             {
                 int foundCount = 0;
                 
@@ -65,7 +81,7 @@ namespace StardewSeedSearcher.Features
                         int nextDayAbs = day + 1;
                         var nextDate = TimeHelper.AbsoluteDaytoDate(nextDayAbs);
 
-                        bool isNextDayRainy = wp.IsRainyDay(
+                        bool isNextDayRainy = _weatherPredictor.IsRainyDay(
                             nextDate.season, 
                             nextDate.day, 
                             nextDayAbs, 
@@ -128,7 +144,8 @@ namespace StardewSeedSearcher.Features
             int callsPerDay = useLegacyRandom ? 1 : 11;
 
             // 找到范围最窄的条件
-            var bestCondition = Conditions.OrderBy(EstimateCostPerCondition).First();
+            EnsurePrepared();
+            var bestCondition = _sortedConditions[0];
             
             // 期望开销 = 预期检查天数 * 单日成本
             return EstimateCostPerCondition(bestCondition) * callsPerDay;

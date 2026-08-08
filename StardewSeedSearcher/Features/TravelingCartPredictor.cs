@@ -59,23 +59,39 @@ namespace StardewSeedSearcher.Features
     {
         public bool IsEnabled { get; set; }
         public List<CartCondition> Conditions { get; set; } = new();
+        private CartCondition[] _sortedConditions = [];
 
         public string Name => "猪车预测";
+
+        public void Prepare()
+        {
+            _sortedConditions = Conditions
+                .OrderBy(EstimateCostPerCondition)
+                .ToArray();
+        }
+
+        private void EnsurePrepared()
+        {
+            if (_sortedConditions.Length != Conditions.Count)
+            {
+                Prepare();
+            }
+        }
 
         public bool Check(int seed, bool useLegacyRandom)
         {
             if (Conditions.Count == 0)
                 return true;
 
+            EnsurePrepared();
+
             // --- 动态排序优化 ---
             // 按照分数从小到大排序，优先执行最稀有、范围最小的条件
-            var sortedConditions = Conditions.OrderBy(EstimateCostPerCondition).ToList();
-
             int guaranteeSeed = HashHelper.GetRandomSeed(12 * seed, 0, 0, 0, 0, useLegacyRandom);
             int originalGuarantee = new Random(guaranteeSeed).Next(2, 31);
 
             // 所有条件都必须满足（AND）
-            foreach (var condition in sortedConditions)
+            foreach (var condition in _sortedConditions)
             {
                 // 找到 minOccurrences 个匹配即可提前退出
                 int matches = 0;
@@ -132,7 +148,8 @@ namespace StardewSeedSearcher.Features
             if (Conditions.Count == 0) return 0;
             
             // 取排序后第一个条件的期望开销
-            var bestCondition = Conditions.OrderBy(EstimateCostPerCondition).First();
+            EnsurePrepared();
+            var bestCondition = _sortedConditions[0];
                 
             return (int)EstimateCostPerCondition(bestCondition);
         }

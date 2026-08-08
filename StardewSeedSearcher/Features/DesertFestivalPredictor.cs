@@ -39,6 +39,9 @@ namespace StardewSeedSearcher.Features
             "Harvey", "Elliott", "Demetrius", "Maru", "Robin", "Sebastian", "Linus",
             "Wizard", "Jas", "Marnie", "Shane", "Leah", "Dwarf", "Sandy", "Willy"
         };
+
+        // Eligible vendor order is fixed; cache it for the allocation-free check path.
+        private static readonly string[][] VENDOR_POOLS = BuildVendorPools();
         
         /// <summary>
         /// 检查种子是否满足筛选条件（ISearchFeature接口实现）
@@ -48,7 +51,8 @@ namespace StardewSeedSearcher.Features
             if (!IsEnabled)
                 return true;
 
-            return MeetsVendorRequirement(gameID, useLegacyRandom, RequireJas, RequireLeah);
+            return MeetsVendorRequirementWithoutAllocations(
+                gameID, useLegacyRandom, RequireJas, RequireLeah);
         }
 
         /// <summary>
@@ -174,7 +178,63 @@ namespace StardewSeedSearcher.Features
         /// </summary>
         /// <param name="d">相对日期（0=春15, 1=春16, 2=春17）</param>
         /// <returns>候选村民列表（保持固定顺序）</returns>
-        private List<string> BuildVendorPool(int d)
+        private static bool MeetsVendorRequirementWithoutAllocations(
+            int gameID, bool useLegacyRandom, bool requireJas, bool requireLeah)
+        {
+            if (!requireJas && !requireLeah)
+                return true;
+
+            bool hasJas = false;
+            bool hasLeah = false;
+            Span<int> indexBuffer = stackalloc int[CHARACTERS_IN_ORDER.Count];
+
+            // Stack-backed indices reproduce List.RemoveAt without creating
+            // dictionaries and lists for every checked seed.
+            for (int d = 0; d < 3; d++)
+            {
+                string[] vendorPool = VENDOR_POOLS[d];
+                Span<int> activeIndices = indexBuffer[..vendorPool.Length];
+                for (int i = 0; i < activeIndices.Length; i++)
+                    activeIndices[i] = i;
+
+                int activeCount = activeIndices.Length;
+                int seed = HashHelper.GetRandomSeed(15 + d, gameID / 2, 0, 0, 0, useLegacyRandom);
+                Random rng = new Random(seed);
+
+                for (int i = 0; i < d * 2; i++)
+                    RemoveAt(activeIndices, ref activeCount, rng.Next(activeCount));
+
+                for (int i = 0; i < 2; i++)
+                {
+                    int selectedIndex = rng.Next(activeCount);
+                    string selectedVendor = vendorPool[activeIndices[selectedIndex]];
+                    hasJas |= selectedVendor == "Jas";
+                    hasLeah |= selectedVendor == "Leah";
+                    RemoveAt(activeIndices, ref activeCount, selectedIndex);
+                }
+
+                if ((!requireJas || hasJas) && (!requireLeah || hasLeah))
+                    return true;
+            }
+
+            return false;
+        }
+
+        private static void RemoveAt(Span<int> indices, ref int count, int index)
+        {
+            indices.Slice(index + 1, count - index - 1).CopyTo(indices.Slice(index));
+            count--;
+        }
+
+        private static string[][] BuildVendorPools()
+        {
+            var pools = new string[3][];
+            for (int d = 0; d < pools.Length; d++)
+                pools[d] = BuildVendorPool(d).ToArray();
+            return pools;
+        }
+
+        private static List<string> BuildVendorPool(int d)
         {
             var pool = new List<string>();
             var exclusion = SCHEDULE_EXCLUSION[d];

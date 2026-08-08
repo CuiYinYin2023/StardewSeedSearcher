@@ -1,6 +1,9 @@
 let ws = null;
+let wsConnectionToken = 0;
+let wsReconnectTimer = null;
 let isSearching = false;
 let foundSeeds = [];
+let foundSeedSet = new Set();
 let currentSearchUseLegacy = false;
 let seedDetailsCache = {};
 let nextStartSeed = 0;
@@ -17,6 +20,134 @@ let monsterLevelConditions = [];
 let nextMonsterLevelIndex = 1;
 
 let ALL_CART_ITEM_NAMES = [];
+let pendingAnalysisUpdate = null;
+let analysisUpdateTimer = null;
+let lastAnalysisRenderTime = 0;
+const ANALYSIS_RENDER_INTERVAL = 500;
+
+const DEFAULT_BACKEND_ORIGIN = 'http://localhost:5000';
+const HYBRID_BACKEND_ORIGIN = 'http://localhost:5050';
+const BACKEND_STORAGE_KEY = 'stardewSeedSearcher.backendOrigin';
+const BACKEND_MODE_STORAGE_KEY = 'stardewSeedSearcher.backendMode';
+const BACKEND_ORIGINS_STORAGE_KEY = 'stardewSeedSearcher.backendOrigins';
+
+function getBackendDefaultOrigin(mode) {
+    return mode === 'hybrid' ? HYBRID_BACKEND_ORIGIN : DEFAULT_BACKEND_ORIGIN;
+}
+
+function normalizeBackendOrigin(value, fallback = DEFAULT_BACKEND_ORIGIN) {
+    const raw = (value || '').trim();
+    if (!raw) return fallback;
+
+    const withProtocol = /^https?:\/\//i.test(raw) ? raw : `http://${raw}`;
+    try {
+        const url = new URL(withProtocol);
+        return url.origin;
+    } catch {
+        return fallback;
+    }
+}
+
+function loadBackendSettings() {
+    const savedMode = localStorage.getItem(BACKEND_MODE_STORAGE_KEY);
+    let mode = savedMode === 'hybrid' ? 'hybrid' : 'csharp';
+    const origins = {
+        csharp: DEFAULT_BACKEND_ORIGIN,
+        hybrid: HYBRID_BACKEND_ORIGIN
+    };
+
+    try {
+        const savedOrigins = JSON.parse(localStorage.getItem(BACKEND_ORIGINS_STORAGE_KEY) || '{}');
+        if (savedOrigins && typeof savedOrigins === 'object') {
+            if (savedOrigins.csharp) {
+                origins.csharp = normalizeBackendOrigin(savedOrigins.csharp, DEFAULT_BACKEND_ORIGIN);
+            }
+            if (savedOrigins.hybrid) {
+                origins.hybrid = normalizeBackendOrigin(savedOrigins.hybrid, HYBRID_BACKEND_ORIGIN);
+            }
+        }
+    } catch {
+        // 忽略损坏的本地配置，继续使用默认地址。
+    }
+
+    const oldOrigin = localStorage.getItem(BACKEND_STORAGE_KEY);
+    if (oldOrigin) {
+        const guessedMode = oldOrigin === HYBRID_BACKEND_ORIGIN ? 'hybrid' : oldOrigin === DEFAULT_BACKEND_ORIGIN ? 'csharp' : mode;
+        origins[guessedMode] = normalizeBackendOrigin(oldOrigin, getBackendDefaultOrigin(guessedMode));
+        mode = guessedMode;
+    }
+
+    const params = new URLSearchParams(window.location.search);
+    const fromQuery = params.get('backend') || params.get('api');
+    if (fromQuery) {
+        const origin = normalizeBackendOrigin(fromQuery, getBackendDefaultOrigin(mode));
+        mode = origin === HYBRID_BACKEND_ORIGIN ? 'hybrid' : origin === DEFAULT_BACKEND_ORIGIN ? 'csharp' : mode;
+        origins[mode] = origin;
+    }
+
+    return { mode, origins };
+}
+
+function saveBackendSettings() {
+    localStorage.setItem(BACKEND_MODE_STORAGE_KEY, backendMode);
+    localStorage.setItem(BACKEND_STORAGE_KEY, backendOrigin);
+    localStorage.setItem(BACKEND_ORIGINS_STORAGE_KEY, JSON.stringify(backendOrigins));
+}
+
+const backendSettings = loadBackendSettings();
+let backendOrigins = backendSettings.origins;
+let backendMode = backendSettings.mode;
+let backendOrigin = backendOrigins[backendMode] || getBackendDefaultOrigin(backendMode);
+saveBackendSettings();
+
+function apiUrl(path) {
+    return `${backendOrigin}${path}`;
+}
+
+function webSocketUrl(path) {
+    const url = new URL(path, backendOrigin);
+    url.protocol = url.protocol === 'https:' ? 'wss:' : 'ws:';
+    return url.toString();
+}
+
+function setBackendMode(mode, shouldReconnect = true) {
+    backendMode = mode === 'hybrid' ? 'hybrid' : 'csharp';
+    backendOrigin = backendOrigins[backendMode] || getBackendDefaultOrigin(backendMode);
+    saveBackendSettings();
+
+    updateBackendControls();
+    if (shouldReconnect) {
+        reconnectBackend();
+    }
+}
+
+function setBackendOriginForMode(mode, value, shouldReconnect = true) {
+    const nextMode = mode === 'hybrid' ? 'hybrid' : 'csharp';
+    backendOrigins[nextMode] = normalizeBackendOrigin(value, getBackendDefaultOrigin(nextMode));
+
+    if (backendMode === nextMode) {
+        backendOrigin = backendOrigins[nextMode];
+    }
+
+    saveBackendSettings();
+    updateBackendControls();
+
+    if (shouldReconnect && backendMode === nextMode) {
+        reconnectBackend();
+    }
+}
+
+function reconnectBackend() {
+    if (ws) {
+        ws.onopen = null;
+        ws.onmessage = null;
+        ws.onerror = null;
+        ws.onclose = null;
+        ws.close();
+    }
+    connectWebSocket();
+    loadCartItems();
+}
 
 const elements = {
     form: document.getElementById('searchForm'),
@@ -62,6 +193,101 @@ const elements = {
     cartConditionsContainer: document.getElementById('cartConditionsContainer'),
     cartConditionError: document.getElementById('cartConditionError')
 };
+
+function updateBackendControls() {
+    const csharpInput = document.getElementById('backendOriginCsharp');
+    const hybridInput = document.getElementById('backendOriginHybrid');
+    const popover = document.getElementById('backendPopover');
+    const widget = document.getElementById('connectionWidget');
+    if (!csharpInput || !hybridInput) return;
+
+    csharpInput.value = backendOrigins.csharp || DEFAULT_BACKEND_ORIGIN;
+    hybridInput.value = backendOrigins.hybrid || HYBRID_BACKEND_ORIGIN;
+
+    document.querySelectorAll('.backend-option').forEach(option => {
+        option.classList.toggle('active', option.dataset.backendMode === backendMode);
+    });
+
+    if (widget && popover) {
+        widget.classList.toggle('open', popover.classList.contains('open'));
+    }
+}
+
+function setBackendPopoverOpen(isOpen) {
+    const widget = document.getElementById('connectionWidget');
+    const popover = document.getElementById('backendPopover');
+    const toggle = document.getElementById('backendToggle');
+    if (!popover) return;
+
+    popover.classList.toggle('open', isOpen);
+    if (widget) widget.classList.toggle('open', isOpen);
+    if (toggle) toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+}
+
+function initializeBackendControls() {
+    const toggle = document.getElementById('backendToggle');
+    const popover = document.getElementById('backendPopover');
+    const originInputs = document.querySelectorAll('.backend-origin-input');
+    const backendOptions = document.querySelectorAll('.backend-option');
+    if (!toggle || !popover || originInputs.length === 0) return;
+
+    updateBackendControls();
+
+    backendOptions.forEach(option => {
+        option.addEventListener('click', () => {
+            setBackendMode(option.dataset.backendMode);
+        });
+    });
+
+    originInputs.forEach(input => {
+        input.addEventListener('click', (event) => {
+            // 点击地址框时仍然保留面板，不触发页面外点击关闭。
+            event.stopPropagation();
+        });
+
+        input.addEventListener('focus', () => {
+            setBackendMode(input.dataset.backendMode);
+        });
+
+        input.addEventListener('change', () => {
+            setBackendOriginForMode(input.dataset.backendMode, input.value);
+        });
+
+        input.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                input.blur();
+            }
+        });
+    });
+
+    toggle.addEventListener('click', (event) => {
+        event.stopPropagation();
+        setBackendPopoverOpen(!popover.classList.contains('open'));
+    });
+
+    popover.addEventListener('click', (event) => {
+        event.stopPropagation();
+    });
+
+    document.addEventListener('click', () => {
+        setBackendPopoverOpen(false);
+    });
+
+    setBackendMode(backendMode, false);
+}
+
+function updateConnectionState(text, state) {
+    const pill = document.getElementById('connectionPill');
+    const normalizedState = ['connected', 'disconnected', 'connecting'].includes(state) ? state : 'connecting';
+
+    elements.connectionStatus.textContent = text;
+    elements.connectionStatus.className = `connection-status ${normalizedState}`;
+
+    if (pill) {
+        pill.classList.remove('connected', 'disconnected', 'connecting');
+        pill.classList.add(normalizedState);
+    }
+}
 
 // 混合宝箱数据
 const MINE_CHEST_ITEMS = {
@@ -396,7 +622,7 @@ function validateMonsterLevelCondition(condition) {
 // 加载所有猪车物品列表
 async function loadCartItems() {
     try {
-        const response = await fetch('http://localhost:5000/api/cart-items');
+        const response = await fetch(apiUrl('/api/cart-items'));
         ALL_CART_ITEM_NAMES = await response.json();
         initializeCartItemList(); // 更新datalist
     } catch (error) {
@@ -519,6 +745,7 @@ function updateOutputLimitMax() {
 document.addEventListener('DOMContentLoaded', function () {
 
     // 天气条件初始化
+    initializeBackendControls();
     addWeatherCondition();
 
     // 仙子条件初始化
@@ -565,30 +792,46 @@ document.addEventListener('DOMContentLoaded', updateOutputLimitMax);
 document.getElementById('startSeed').addEventListener('change', updateOutputLimitMax);
 
 function connectWebSocket() {
-    elements.connectionStatus.textContent = '连接中...';
-    elements.connectionStatus.className = 'connection-status connecting';
+    const token = ++wsConnectionToken;
+    if (wsReconnectTimer) {
+        clearTimeout(wsReconnectTimer);
+        wsReconnectTimer = null;
+    }
+    if (ws) {
+        ws.onopen = null;
+        ws.onmessage = null;
+        ws.onerror = null;
+        ws.onclose = null;
+        if (ws.readyState === WebSocket.OPEN || ws.readyState === WebSocket.CONNECTING) {
+            ws.close();
+        }
+    }
 
-    ws = new WebSocket('ws://localhost:5000/ws');
+    updateConnectionState('连接中...', 'connecting');
 
-    ws.onopen = () => {
-        elements.connectionStatus.textContent = '✓ 已连接';
-        elements.connectionStatus.className = 'connection-status connected';
+    const socket = new WebSocket(webSocketUrl('/ws'));
+    ws = socket;
+
+    socket.onopen = () => {
+        if (token !== wsConnectionToken || socket !== ws) return;
+        updateConnectionState('✓ 已连接', 'connected');
     };
 
-    ws.onmessage = (event) => {
+    socket.onmessage = (event) => {
+        if (token !== wsConnectionToken || socket !== ws) return;
         const data = JSON.parse(event.data);
         handleWebSocketMessage(data);
     };
 
-    ws.onerror = () => {
-        elements.connectionStatus.textContent = '✗ 连接失败';
-        elements.connectionStatus.className = 'connection-status disconnected';
+    socket.onerror = () => {
+        if (token !== wsConnectionToken || socket !== ws) return;
+        updateConnectionState('✗ 连接失败', 'disconnected');
     };
 
-    ws.onclose = () => {
-        elements.connectionStatus.textContent = '✗ 未连接';
-        elements.connectionStatus.className = 'connection-status disconnected';
-        setTimeout(connectWebSocket, 5000);
+    socket.onclose = () => {
+        if (token !== wsConnectionToken || socket !== ws) return;
+        updateConnectionState('✗ 未连接', 'disconnected');
+        wsReconnectTimer = setTimeout(connectWebSocket, 5000);
     };
 }
 
@@ -596,6 +839,7 @@ function handleWebSocketMessage(data) {
     switch (data.type) {
         case 'start':
             foundSeeds = [];
+            foundSeedSet.clear();
             elements.seedList.innerHTML = '';
             elements.resultsSection.style.display = 'block';
 
@@ -605,7 +849,7 @@ function handleWebSocketMessage(data) {
             document.getElementById('analysisStoppedEarly').textContent = '?';
             document.getElementById('analysisStoppedEarly').style.color = '#999';
 
-            const filterStatsList = document.getElementById('filterstatsList');
+            const filterStatsList = document.getElementById('filterStatsList');
             if (filterStatsList) { filterStatsList.innerHTML = ''; }
             break;
 
@@ -626,11 +870,15 @@ function handleWebSocketMessage(data) {
             elements.progressBar.textContent = progressInt + '%';
             //把统计更新掉
             if (data.featureStats && data.featureStats.length > 0) {
-                updateAnalysisUI(data.featureStats, data.checkedCount, foundSeeds.length);
+                scheduleAnalysisUpdate(data.featureStats, data.checkedCount, foundSeeds.length);
             }
             break;
 
         case 'found':
+            if (foundSeedSet.has(data.seed)) {
+                break;
+            }
+            foundSeedSet.add(data.seed);
             foundSeeds.push(data.seed);
             elements.foundCount.textContent = foundSeeds.length;
 
@@ -659,6 +907,7 @@ function handleWebSocketMessage(data) {
             break;
 
         case 'complete':
+            flushPendingAnalysisUpdate();
             elements.statusMessage.textContent = data.cancelled
                 ? `搜索已停止，共找到 ${data.totalFound} 个符合条件的种子`
                 : `搜索完成！找到 ${data.totalFound} 个符合条件的种子`;
@@ -708,6 +957,18 @@ function updateResultsSummary() {
 /**
  * 导出结果到 TXT 文件
  */
+function normalizeCartMatch(match) {
+    return {
+        Year: match.Year ?? match.year,
+        Season: match.Season ?? match.season,
+        Day: match.Day ?? match.day,
+        AbsoluteDay: match.AbsoluteDay ?? match.absoluteDay,
+        ItemName: match.ItemName ?? match.itemName,
+        Quantity: match.Quantity ?? match.quantity,
+        Price: match.Price ?? match.price
+    };
+}
+
 function exportResultsToTxt() {
     if (foundSeeds.length === 0) {
         alert("没有可导出的种子结果！");
@@ -845,7 +1106,7 @@ elements.form.addEventListener('submit', async (e) => {
 
     // 如果正在搜索，点击按钮则停止搜索
     if (isSearching) {
-        await fetch('http://localhost:5000/api/stop', { method: 'POST' });
+        await fetch(apiUrl('/api/stop'), { method: 'POST' });
         return;
     }
 
@@ -1117,7 +1378,7 @@ elements.form.addEventListener('submit', async (e) => {
 
     // 发送搜索请求
     try {
-        const response = await fetch('http://localhost:5000/api/search', {
+        const response = await fetch(apiUrl('/api/search'), {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -1326,7 +1587,7 @@ function showSeedDetail(seed) {
     if (enabled.cart && details.cart && details.cart.matches && details.cart.matches.length > 0) {
 
         // 1. 按AbsoluteDay升序排序，确保展示顺序正确
-        const sortedMatches = [...details.cart.matches].sort((a, b) => a.AbsoluteDay - b.AbsoluteDay);
+        const sortedMatches = details.cart.matches.map(normalizeCartMatch).sort((a, b) => a.AbsoluteDay - b.AbsoluteDay);
 
         // 2. 按物品名分组（保持首次出现顺序）
         const groupMap = new Map();
@@ -1434,6 +1695,34 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 });
+
+function scheduleAnalysisUpdate(stats, currentChecked, totalFound) {
+    pendingAnalysisUpdate = { stats, currentChecked, totalFound };
+    const now = performance.now();
+    const remaining = ANALYSIS_RENDER_INTERVAL - (now - lastAnalysisRenderTime);
+
+    if (remaining <= 0) {
+        flushPendingAnalysisUpdate();
+        return;
+    }
+
+    if (!analysisUpdateTimer) {
+        analysisUpdateTimer = setTimeout(flushPendingAnalysisUpdate, remaining);
+    }
+}
+
+function flushPendingAnalysisUpdate() {
+    if (analysisUpdateTimer) {
+        clearTimeout(analysisUpdateTimer);
+        analysisUpdateTimer = null;
+    }
+    if (!pendingAnalysisUpdate) return;
+
+    const update = pendingAnalysisUpdate;
+    pendingAnalysisUpdate = null;
+    lastAnalysisRenderTime = performance.now();
+    updateAnalysisUI(update.stats, update.currentChecked, update.totalFound);
+}
 
 function updateAnalysisUI(stats, currentChecked, totalFound) {
     document.getElementById('analysisTotalRange').textContent = currentChecked.toLocaleString();

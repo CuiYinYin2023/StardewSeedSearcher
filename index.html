@@ -10,7 +10,22 @@
 </head>
 
 <body>
-    <div class="connection-status" id="connectionStatus">连接中...</div>
+    <div class="connection-widget" id="connectionWidget">
+        <div class="connection-pill connecting" id="connectionPill">
+            <div class="connection-status connecting" id="connectionStatus">连接中...</div>
+            <button type="button" class="backend-toggle" id="backendToggle" aria-label="选择后端" title="选择后端"></button>
+        </div>
+        <div class="backend-popover" id="backendPopover" aria-label="后端选择面板">
+            <div class="backend-option" data-backend-mode="csharp">
+                <button type="button" class="backend-option-label" data-backend-mode="csharp">C#:</button>
+                <input type="text" class="backend-origin-input" id="backendOriginCsharp" data-backend-mode="csharp" value="http://localhost:5000" aria-label="C# 后端地址">
+            </div>
+            <div class="backend-option" data-backend-mode="hybrid">
+                <button type="button" class="backend-option-label" data-backend-mode="hybrid">Go＆C#:</button>
+                <input type="text" class="backend-origin-input" id="backendOriginHybrid" data-backend-mode="hybrid" value="http://localhost:5050" aria-label="Go 与 C# 混合后端地址">
+            </div>
+        </div>
+    </div>
 
     <div class="container">
         <div class="header">
